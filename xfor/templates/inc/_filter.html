@@ -1,0 +1,36 @@
+<div class="cd-filter">
+    <form method="get" class="cd-filter-form cd-filter-form--last">
+        <div class="cd-filter-block">
+            <h4>Сортировка</h4>
+            <div class="cd-filter-content">
+                <div class="cd-select cd-filters">
+                    {{filter.form.ordering}}
+                </div>
+            </div>
+        </div>
+        <div class="cd-filter-block">
+            <h4>Персонализация</h4>
+            <ul class="cd-filter-content cd-filters list" style="list-style: none;">
+                <li>
+                    {{filter.form.is_interesting}}
+                    <label class="radio-label" for="radio1">Сначала интересные посты</label>
+                </li>
+                <li>
+                    {{filter.form.is_popular}}
+                    <label class="radio-label" for="radio2">Сначала популярные посты</label>
+                </li>
+                <input type="hidden" name="page" value="{{page_obj.number}}">
+            </ul>
+        </div>
+        <button class="cd-filter__submit cd-filter__submit--clear" style="margin-bottom: 10px;" type="button">убрать
+            фильтры</button>
+        <button class="cd-filter__submit" type="submit">Применить</button>
+    </form>
+    <div class="cd-close">
+        <svg fill="#fff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+            <path
+                d="M 7.7070312 6.2929688 L 6.2929688 7.7070312 L 23.585938 25 L 6.2929688 42.292969 L 7.7070312 43.707031 L 25 26.414062 L 42.292969 43.707031 L 43.707031 42.292969 L 26.414062 25 L 43.707031 7.7070312 L 42.292969 6.2929688 L 25 23.585938 L 7.7070312 6.2929688 z" />
+        </svg>
+    </div>
+</div>
+<a class="cd-filter-trigger">Настройки ленты</a>
