@@ -152,7 +152,6 @@ cython_debug/
 #.idea/
 
 secrets/
-tokens.py
 secret_settings.py
 media/
 .vscode/
