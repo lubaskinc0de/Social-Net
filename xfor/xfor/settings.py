@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-from .secrets.secret_settings import PersonalEmail,SecretKey
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = SecretKey.get_secret_key()
+SECRET_KEY = 'your secret key'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -140,12 +139,12 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
-EMAIL_HOST = PersonalEmail.get_host()
-EMAIL_PORT = PersonalEmail.get_port()
-EMAIL_HOST_USER = PersonalEmail.get_from_email()
-EMAIL_HOST_PASSWORD = PersonalEmail.get_from_email_password()
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+EMAIL_HOST = 'your host'
+EMAIL_PORT = 'your post'
+EMAIL_HOST_USER = 'your emai'
+EMAIL_HOST_PASSWORD = 'your email password'
+EMAIL_USE_TLS = True # 'your tls'
+EMAIL_USE_SSL = False # 'your ssl'
 
 CACHES = {
     'default': {
