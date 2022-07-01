@@ -71,10 +71,5 @@ def create_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
         Token.objects.create(user=instance,token=authentication_token.make_token(user=instance))
 
-@receiver(post_delete, sender=User)
-def delete_user_profile(sender, instance, using, **kwargs):
-    Profile.objects.filter(user=instance).delete()
-    Token.objects.filter(user=instance).delete()
-
 
 User.add_to_class('followers', models.ManyToManyField('self',through=Contact,related_name='following',symmetrical=False)) # динамически добавляем поле в модель User, первый аргумент название поля
