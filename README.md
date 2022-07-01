@@ -1,7 +1,7 @@
 
 # My social net.
 
-This is my little project, I'm working very hard on it, I'm sure it has a great future. Its development is underway, and it is not finished yet, I have not yet come up with a decent name for it
+This is my little project, I'm working very hard on it and I'm sure it has a great future. Its development is underway and it is not finished yet. I have not yet come up with a decent name for it
 
 
 ## License
