@@ -46,7 +46,7 @@ class Profile(models.Model):
         verbose_name_plural = 'Профили'
         ordering = ['-created_at']
 
-
+# TODO: remove token model
 class Token(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name='token',related_query_name='token',verbose_name='Пользователь')
     token = models.CharField(max_length=100,editable=False,verbose_name='Токен')

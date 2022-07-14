@@ -15,16 +15,16 @@ function getCookie(name) {
 }
 
 $(document).ready(function () {
-
     $('.like-form').on('submit', function (e) {
         var $this = $(this)
-        var post_id = $this.children('input[name=post_id]').val()
         var csrf = getCookie('csrftoken')
+        var post_id = $this.children('input[name=post_id]').val()
         e.preventDefault()
         $.ajax({
-            data: {'csrfmiddlewaretoken': csrf, 'post_id': post_id },
+            headers: { 'X-CSRFToken': csrf },
+            data: { 'post_id': post_id },
             url: "/api/add-like/",
-            method: 'POST',
+            method: 'PUT',
             success: function (response) {
                 if (response.is_like == 'remove') {
                     $this.children('.lenta-card__svg--like-btn').children('.lenta-card__svg--like').css({ fill: '#fff' })
@@ -33,7 +33,7 @@ $(document).ready(function () {
                     $this.children('.lenta-card__svg--like-btn').children('.lenta-card__svg--like').css({ fill: '#ff0000' })
                     $this.parent('.lenta-card__body-icons--left').children('.lenta-card__likes-count').html(Number($this.parent('.lenta-card__body-icons--left').children('.lenta-card__likes-count').html()) + 1)
                 }
-            }
+            },
         })
     })
 
@@ -44,15 +44,16 @@ $(document).ready(function () {
         var csrf = getCookie('csrftoken')
         e.preventDefault()
         $.ajax({
-            data: {'csrfmiddlewaretoken': csrf, 'comment_id': comment_id},
+            headers: { 'X-CSRFToken': csrf },
+            data: { 'comment_id': comment_id },
             url: "/api/add-like-comment/",
-            method: 'POST',
+            method: 'PUT',
             success: function (response) {
                 if (response.is_like == 'remove') {
                     $this.children('.comment__like-btn').children('.comment__like-svg').css({ fill: '#fff' })
                     $this.children('.comment__like-btn').children('.comment__like-cnt').html(Number($this.children('.comment__like-btn').children('.comment__like-cnt').html()) - 1)
                 } else if (response.is_like == 'add') {
-                    $this.children('.comment__like-btn').children('.comment__like-svg').css({fill: '#ff0000'})
+                    $this.children('.comment__like-btn').children('.comment__like-svg').css({ fill: '#ff0000' })
                     $this.children('.comment__like-btn').children('.comment__like-cnt').html(Number($this.children('.comment__like-btn').children('.comment__like-cnt').html()) + 1)
                 }
             }
@@ -79,15 +80,15 @@ $(document).ready(function () {
         adaptiveHeight: true
     })
 
-    $('.lenta-card__comments-add-comment__form').on('submit',function(e){
+    $('.lenta-card__comments-add-comment__form').on('submit', function (e) {
         let body = $(this).children('textarea[name=body]')
         let images = $(this).children('input[name=images]')
         console.log(images.val())
-        if(!body.val() && !images.val()) {
+        if (!body.val() && !images.val()) {
             e.preventDefault()
-            body.attr('placeholder','Комментарий не должен быть пустым')
-            body.css('border-color','#f52b2b85')
-            setTimeout(function(){body.css('border-color','#a39e9e')},1000)
+            body.attr('placeholder', 'Комментарий не должен быть пустым')
+            body.css('border-color', '#f52b2b85')
+            setTimeout(function () { body.css('border-color', '#a39e9e') }, 1000)
         }
     })
 })

@@ -106,7 +106,7 @@ class PostDetail(LoginRequiredMixin,FormMixin,DetailView):
         this_user = self.request.user
         post_comments = Comment.objects.filter(post_id=self.object.pk,is_active=True).annotate(
             is_user_liked_comment=Exists(this_user.liked_comments.filter(id=OuterRef('id')))\
-            ,like_cnt=Count('liked')).select_related('author','author__profile')\
+            ,like_cnt=Count('liked', distinct=True)).select_related('author','author__profile')\
             .prefetch_related('images_comment')
         context['comments'] = post_comments
         return context
@@ -140,7 +140,7 @@ class PostDetail(LoginRequiredMixin,FormMixin,DetailView):
         messages.error(self.request,f'''Ошибка валидации!\n{form.errors.as_text().strip("* body * ")}\n''')
         return super().form_invalid(form)
     
-
+# TODO: make app for profiles
 @login_required(login_url='login')
 def get_profile(request,pk):
     return HttpResponse(pk)

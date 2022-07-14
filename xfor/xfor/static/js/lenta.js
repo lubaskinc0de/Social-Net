@@ -17,13 +17,14 @@ function getCookie(name) {
 $(document).ready(function () {
     $('.like-form').on('submit', function (e) {
         var $this = $(this)
-        var post_id = $this.children('input[name=post_id]').val()
         var csrf = getCookie('csrftoken')
+        var post_id = $this.children('input[name=post_id]').val()
         e.preventDefault()
         $.ajax({
-            data: {'csrfmiddlewaretoken': csrf, 'post_id': post_id },
+            headers: {'X-CSRFToken': csrf},
+            data: {'post_id': post_id},
             url: "/api/add-like/",
-            method: 'POST',
+            method: 'PUT',
             success: function (response) {
                 if (response.is_like == 'remove') {
                     $this.children('.lenta-card__svg--like-btn').children('.lenta-card__svg--like').css({ fill: '#fff' })
@@ -32,7 +33,7 @@ $(document).ready(function () {
                     $this.children('.lenta-card__svg--like-btn').children('.lenta-card__svg--like').css({ fill: '#ff0000' })
                     $this.parent('.lenta-card__body-icons--left').children('.lenta-card__likes-count').html(Number($this.parent('.lenta-card__body-icons--left').children('.lenta-card__likes-count').html()) + 1)
                 }
-            }
+            },
         })
     })
 
