@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from .secrets.secret_settings import PersonalEmail, SecretKey
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'your secret key'
+
+# TODO: make .env file for this
+SECRET_KEY = SecretKey.get_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,9 +46,11 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_filters',
     'mptt',
+    'rest_framework',
     'main.apps.MainConfig',
     'authentication.apps.AuthenticationConfig',
     'api.apps.ApiConfig',
+    'corsheaders',
 ]
 
 INTERNAL_IPS = [
@@ -55,6 +60,7 @@ INTERNAL_IPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -114,6 +120,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# TODO: remove this when i rewrite auth to REST
+LOGIN_REDIRECT_URL = 'home'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -139,12 +148,13 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
-EMAIL_HOST = 'your host'
-EMAIL_PORT = 'your post'
-EMAIL_HOST_USER = 'your emai'
-EMAIL_HOST_PASSWORD = 'your email password'
-EMAIL_USE_TLS = True # 'your tls'
-EMAIL_USE_SSL = False # 'your ssl'
+# TODO: make .env file for this
+EMAIL_HOST = PersonalEmail.get_host()
+EMAIL_PORT = PersonalEmail.get_port()
+EMAIL_HOST_USER = PersonalEmail.get_from_email()
+EMAIL_HOST_PASSWORD = PersonalEmail.get_from_email_password()
+EMAIL_USE_TLS = False # 'your tls'
+EMAIL_USE_SSL = True # 'your ssl'
 
 CACHES = {
     'default': {
@@ -157,3 +167,24 @@ CACHES = {
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# REST API
+
+REST_FRAMEWORK = {
+    # настройки DRF
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer', 
+        'rest_framework.renderers.BrowsableAPIRenderer', 
+        ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+        ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #'rest_framework.authentication.TokenAuthentication', # бэкэнд для token-based аутентификации
+        'rest_framework.authentication.SessionAuthentication', # бэкэнд для session-based аутентификации
+        ),
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
