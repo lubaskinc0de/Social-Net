@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_filters',
     'mptt',
     'rest_framework',
+    'rest_framework.authtoken',
     'main.apps.MainConfig',
     'authentication.apps.AuthenticationConfig',
     'api.apps.ApiConfig',
@@ -156,6 +157,8 @@ EMAIL_HOST_PASSWORD = PersonalEmail.get_from_email_password()
 EMAIL_USE_TLS = False # 'your tls'
 EMAIL_USE_SSL = True # 'your ssl'
 
+AUTHENTICATION_SITENAME = 'xFor'
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache', # кэширование в файловой системе
@@ -182,7 +185,7 @@ REST_FRAMEWORK = {
         ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        #'rest_framework.authentication.TokenAuthentication', # бэкэнд для token-based аутентификации
+        'rest_framework.authentication.TokenAuthentication', # бэкэнд для token-based аутентификации
         'rest_framework.authentication.SessionAuthentication', # бэкэнд для session-based аутентификации
         ),
 }

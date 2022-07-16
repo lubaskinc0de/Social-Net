@@ -1,7 +1,11 @@
 from rest_framework.exceptions import ValidationError
 
-def validate_id(id: str) -> bool:
-    return id.isdigit()
+def validate_id(id):
+    if type(id) not in (int, str):
+        return False
+    if type(id == str):
+        return id.isdigit()
+    return True
 
 def validate_like_request_data(request, model_name: str) -> int:
     try:

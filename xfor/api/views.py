@@ -1,5 +1,5 @@
 from main.models import Post,Comment
-from .helpers.classes.views.api_view import AddLikeAPIView, AddLentaCommentAPIView as LentaCommentAPIView
+from .helpers.classes.views import AddLikeAPIView, AddLentaCommentAPIView as LentaCommentAPIView
 
 class PostAddLikeAPIView(AddLikeAPIView):
     model = Post

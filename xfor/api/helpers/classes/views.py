@@ -32,5 +32,3 @@ class AddLentaCommentAPIView(APIView):
         except:
             return Response(status=400)
         return Response(data={'status': 'success'}, status=200)
-
-

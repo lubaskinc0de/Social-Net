@@ -1,0 +1,22 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}Подтверждение регистрации{% endblocktrans %}
+{% endblock subject %}
+
+{% block text_body %}
+Поздравляем вас с регистрацией на сайте {{sitename}}
+{{url}}
+
+{% trans "Спасибо, что пользуетесь нашим сайтом!" %}
+{% endblock text_body %}
+
+{% block html_body %}
+<p>{% blocktrans %}Вы получили это письмо, потому что должны завершить процесс регистрации{% endblocktrans %}</p>
+
+<p>Проследуйте на этот адрес для завершения регистрации на {{sitename}}:</p>
+<p><a href="{{url}}">{{url}}</a></p>
+
+<p>{% trans "Спасибо, что пользуетесь нашим сайтом!" %}</p>
+
+{% endblock html_body %}

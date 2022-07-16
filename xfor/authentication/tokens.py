@@ -1,11 +1,10 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import six
 
-# TODO: change _make_hash_value token
 class AuthenticationToken(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
-        email_field = user.get_email_field_name()
-        email = getattr(user, email_field, "") or ""
-        token = f"{user.pk}{user.password}{timestamp}{user.get_username()}{email}"
-        return token
+        return (
+            six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_active)
+        )
 
 authentication_token = AuthenticationToken()
