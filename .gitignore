@@ -153,5 +153,5 @@ cython_debug/
 
 secrets/
 secret_settings.py
-media/
+photos/
 .vscode/
