@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from .filters import PostFilter
 from django.views.generic import CreateView,DetailView,ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .helpers import get_filters, validate_img
+from .other_helpers.functions.helpers import get_filters, validate_img
 from django.views.generic.edit import FormMixin
 from django.db.models import Count, Exists, OuterRef
 

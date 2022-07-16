@@ -25,7 +25,7 @@ $(document).ready(function () {
             data: {'post_id': post_id},
             url: "/api/add-like/",
             method: 'PUT',
-            success: function (response) {
+            success(response) {
                 if (response.is_like == 'remove') {
                     $this.children('.lenta-card__svg--like-btn').children('.lenta-card__svg--like').css({ fill: '#fff' })
                     $this.parent('.lenta-card__body-icons--left').children('.lenta-card__likes-count').html(Number($this.parent('.lenta-card__body-icons--left').children('.lenta-card__likes-count').html()) - 1)
@@ -45,10 +45,11 @@ $(document).ready(function () {
         e.preventDefault()
         if(message.val().length >= 1) {
             $.ajax({
-                data: {'csrfmiddlewaretoken': csrf, 'post_id': post_id,'body': message.val()},
+                headers: {'X-CSRFToken': csrf},
+                data: {'post_id': post_id,'body': message.val()},
                 url: "/api/add-lenta-comment/",
                 method: 'POST',
-                success: function (response) {
+                success(response) {
                     if(response.status == 'success') {
                         message.val('')
                         message.css('border-color','#00ff7383')
@@ -58,6 +59,11 @@ $(document).ready(function () {
                         message.css('border-color','#f52b2b85')
                         setTimeout(function(){message.css('border-color','#a39e9e')},1000)
                     }
+                },
+                error(response) {
+                    message.attr('placeholder','Ошибка сервера!')
+                    message.css('border-color','#f52b2b85')
+                    setTimeout(function(){message.css('border-color','#a39e9e')},1000)
                 }
             })
         } else {

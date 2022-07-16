@@ -7,6 +7,7 @@ class PostForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         errors = {}
+        print(cleaned_data)
 
         if not cleaned_data.get('title',None) and not cleaned_data.get('content',None) and not cleaned_data.get('images',None):
             errors['__all__'] = forms.ValidationError('Заполните хотя бы одно поле')

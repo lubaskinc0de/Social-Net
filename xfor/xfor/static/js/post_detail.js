@@ -25,7 +25,7 @@ $(document).ready(function () {
             data: { 'post_id': post_id },
             url: "/api/add-like/",
             method: 'PUT',
-            success: function (response) {
+            success(response) {
                 if (response.is_like == 'remove') {
                     $this.children('.lenta-card__svg--like-btn').children('.lenta-card__svg--like').css({ fill: '#fff' })
                     $this.parent('.lenta-card__body-icons--left').children('.lenta-card__likes-count').html(Number($this.parent('.lenta-card__body-icons--left').children('.lenta-card__likes-count').html()) - 1)
@@ -48,7 +48,7 @@ $(document).ready(function () {
             data: { 'comment_id': comment_id },
             url: "/api/add-like-comment/",
             method: 'PUT',
-            success: function (response) {
+            success(response) {
                 if (response.is_like == 'remove') {
                     $this.children('.comment__like-btn').children('.comment__like-svg').css({ fill: '#fff' })
                     $this.children('.comment__like-btn').children('.comment__like-cnt').html(Number($this.children('.comment__like-btn').children('.comment__like-cnt').html()) - 1)
