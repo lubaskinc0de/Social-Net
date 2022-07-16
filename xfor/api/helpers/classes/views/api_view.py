@@ -1,4 +1,3 @@
-from pyexpat import model
 from rest_framework.views import APIView
 from rest_framework.views import Response
 from rest_framework.views import APIView
