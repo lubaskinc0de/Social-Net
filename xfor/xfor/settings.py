@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-from .secrets.secret_settings import PersonalEmail, SecretKey
+from datetime import timedelta
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,8 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-# TODO: make .env file for this
-SECRET_KEY = SecretKey.get_secret_key()
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
+
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -47,7 +51,7 @@ INSTALLED_APPS = [
     'django_filters',
     'mptt',
     'rest_framework',
-    'rest_framework.authtoken',
+    'knox',
     'main.apps.MainConfig',
     'authentication.apps.AuthenticationConfig',
     'api.apps.ApiConfig',
@@ -121,9 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# TODO: remove this when i rewrite auth to REST
-LOGIN_REDIRECT_URL = 'home'
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -149,11 +150,11 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
-# TODO: make .env file for this
-EMAIL_HOST = PersonalEmail.get_host()
-EMAIL_PORT = PersonalEmail.get_port()
-EMAIL_HOST_USER = PersonalEmail.get_from_email()
-EMAIL_HOST_PASSWORD = PersonalEmail.get_from_email_password()
+
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = False # 'your tls'
 EMAIL_USE_SSL = True # 'your ssl'
 
@@ -185,9 +186,16 @@ REST_FRAMEWORK = {
         ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication', # бэкэнд для token-based аутентификации
+        'knox.auth.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication', # бэкэнд для session-based аутентификации
         ),
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+REST_KNOX = {
+  'TOKEN_TTL': timedelta(days=2),
+  'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+  'TOKEN_LIMIT_PER_USER': 1,
+  'AUTO_REFRESH': True,
+}
