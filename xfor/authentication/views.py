@@ -1,15 +1,15 @@
 from .helpers.classes.views import RegisterAPIView, ActivateAPIView, AnonymousTokenCreateView
-from knox.views import LogoutView
+from djoser.views import TokenDestroyView
 
 class UserRegisterAPIView(RegisterAPIView):
-    '''Endpoint for user registration'''
+    '''Endpoint for user registration (create account)'''
 
 class UserActivateAPIView(ActivateAPIView):
-    '''Endpoint for user activation'''
+    '''Endpoint for user activation (set is_active to True)'''
 
 class UserLoginAPIView(AnonymousTokenCreateView):
-    '''Endpoint for user log-in'''
+    '''Endpoint for user log-in (make token)'''
 
-class UserLogoutAPIView(LogoutView):
-    '''Endpoint for user log-out'''
+class UserLogoutAPIView(TokenDestroyView):
+    '''Endpoint for user log-out (destroy token)'''
 

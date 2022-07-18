@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django_filters',
     'mptt',
     'rest_framework',
-    'knox',
+    'rest_framework.authtoken',
     'main.apps.MainConfig',
     'authentication.apps.AuthenticationConfig',
     'api.apps.ApiConfig',
@@ -186,16 +186,9 @@ REST_FRAMEWORK = {
         ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'knox.auth.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication', # бэкэнд для session-based аутентификации
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         ),
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-REST_KNOX = {
-  'TOKEN_TTL': timedelta(days=2),
-  'USER_SERIALIZER': 'knox.serializers.UserSerializer',
-  'TOKEN_LIMIT_PER_USER': 1,
-  'AUTO_REFRESH': True,
-}
