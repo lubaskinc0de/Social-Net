@@ -14,7 +14,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ('email', 'username','first_name', 'last_name', 'password', 'is_active')
         extra_kwargs = {
             'password': {'write_only': True, 'validators':[validate_password]},
-            'is_active': {'read_only': True}
+            'is_active': {'read_only': True},
+            'first_name': {'required': True},
+            'last_name': {'required': True},
         }
 
     def create(self, validated_data):

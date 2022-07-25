@@ -1,18 +1,35 @@
-import django_filters
+from django_filters import rest_framework as filters
 from .models import Post
 from django.forms import CheckboxInput,Select
 from django.db.models import Count
 from django.db.models import Case, Value, When
 
-class PostFilter(django_filters.FilterSet):
+class PostFilter(filters.FilterSet):
     CHOICES = (
         ('created_at','Сначала старые'),
         ('-created_at','Сначала новые'),
     )
 
-    is_interesting = django_filters.BooleanFilter(method='filter_interesting',distinct=True,widget=CheckboxInput(attrs={'class':'filter','id':'radio1','checked':False}))
-    is_popular = django_filters.BooleanFilter(method='filter_popular',distinct=True,widget=CheckboxInput(attrs={'class':'filter','id':'radio2','checked':False}))
-    ordering = django_filters.ChoiceFilter(choices=CHOICES,method='ordering_filter',widget=Select(attrs={'class':'filter','id':'ordering'}))
+    is_interesting = filters.BooleanFilter(
+        method='filter_interesting',
+        distinct=True,
+        widget=CheckboxInput(attrs={'class':'filter','id':'radio1','checked':False}),
+        label='Интересные',
+    )
+    
+    is_popular = filters.BooleanFilter(
+        method='filter_popular',
+        distinct=True,
+        widget=CheckboxInput(attrs={'class':'filter','id':'radio2','checked':False}),
+        label='Популярные',
+    )
+
+    ordering = filters.ChoiceFilter(
+        choices=CHOICES,
+        method='ordering_filter',
+        widget=Select(attrs={'class':'filter','id':'ordering'}),
+        label='По дате',
+    )
 
     class Meta:
         model = Post

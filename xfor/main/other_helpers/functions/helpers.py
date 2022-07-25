@@ -1,22 +1,19 @@
-def validate_img_size(images) -> bool:
-    for img in images:
-        if img.size / 1024 / 1024 > 8:
-            return False
-    return True
+from django.forms.fields import ImageField as ImageFieldValidator
+from rest_framework import serializers
 
-def validate_img(images) -> bool:
+def run_images_validators(images):
     if images == []:
-        return True
+        return
 
-    elif len(images) <= 10:
-        if validate_img_size(images=images):
-            return True
-    return False
-
-def get_filters(GET) -> str:
-    get_par = ''
-    get_dict = dict(GET.items())
-    get_dict.pop('page',None)
-    if get_dict:
-        get_par = '&'.join([f'{k}={v}' for k, v in get_dict.items()]) + '&'
-    return str(get_par)
+    if len(images) > 10:
+        raise serializers.ValidationError(detail={'length':'Недопустимое кол-во файлов, максимальное кол-во файлов - 10'})
+        
+    images_validator(images)
+    
+def images_validator(images):
+    img_validator = ImageFieldValidator().to_python
+    
+    for image in images:
+        if image.size / 1024 / 1024 > 8:
+            raise serializers.ValidationError(detail={'file': 'Файл, который вы загрузили, слишком большой.'})
+        img_validator(image)

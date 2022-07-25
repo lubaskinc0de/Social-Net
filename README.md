@@ -32,7 +32,7 @@ This is my little project, I'm working very hard on it and I'm sure it has a gre
 - Likes, views, comments on posts
 - A comment system with infinite nesting
 - Up to 10 photos per post!
-- Any number of photos to comment!
+- Up to 10 photos per comment!
 - Likes on comments
 - Fully configured admin site
 - Excellent optimization!

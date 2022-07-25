@@ -22,7 +22,7 @@ class Image(models.Model):
 
 class Post(models.Model):
     profile = models.ForeignKey(Profile,null=True,on_delete=models.CASCADE,related_name='posts_profile',verbose_name='Профиль')
-    title = models.CharField(max_length=150,verbose_name='Название')
+    title = models.CharField(max_length=150,verbose_name='Название', blank=True)
     content = models.TextField(verbose_name='Контент',blank=True)
     created_at = models.DateTimeField(auto_now_add=True,verbose_name='Создано')
     updated_at = models.DateTimeField(auto_now=True,verbose_name='Обновлено')
@@ -58,9 +58,6 @@ class Comment(MPTTModel):
 
     def __str__(self) -> str:
         return f'Комментарий {self.pk}'
-    
-    def get_reply(self):
-        return self.get_descendants().select_related('parent','post','author')
 
     class Meta:
         verbose_name = 'Комментарий'

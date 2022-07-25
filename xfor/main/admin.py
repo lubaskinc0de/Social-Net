@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Post,Image,Comment
 from django.utils.safestring import mark_safe
+from mptt.admin import MPTTModelAdmin
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ['id','__str__','author','liked_count','viewers_count','created_at','updated_at','get_post_photo']
@@ -32,7 +33,7 @@ class PostAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.prefetch_related('liked','viewers','images')
 
-class CommentAdmin(admin.ModelAdmin):
+class CommentAdmin(MPTTModelAdmin):
     list_display = ['id','post'[:50],'author','liked_count','created_at','updated_at','is_reply','is_active']
     list_display_links = ['id','post']
     list_filter = ['is_active']

@@ -1,29 +1,27 @@
-from django.shortcuts import redirect
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Post,Comment,Image
-from .forms import PostForm,CommentForm
-from django.contrib import messages
-from django.urls import reverse_lazy
-from .filters import PostFilter
-from django.views.generic import CreateView,DetailView,ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .other_helpers.functions.helpers import get_filters, validate_img
-from django.views.generic.edit import FormMixin
+from django.shortcuts import get_object_or_404
+from .models import Post,Comment
 from django.db.models import Count, Exists, OuterRef
+from .other_helpers.classes.views import PartialViewSet, RetrievePartialDestoyAPIView
+from .serializers import PostSerializer, CommentSerializer, CommentUpdateSerializer
+from .filters import PostFilter, filters
+from rest_framework.views import Response
+from rest_framework.generics import ListCreateAPIView, ListAPIView
+from .mixins import CacheTreeQuerysetMixin, IsAuthorPermissionsMixin
+from rest_framework.exceptions import ValidationError
 
-class HomePage(LoginRequiredMixin,ListView):
-    login_url = reverse_lazy('login')
-    context_object_name = 'posts'
-    allow_empty = True
-    template_name = 'main/lenta.html'
-    paginate_by = 8
-
-    def get(self, *args, **kwargs):
-        if self.request.GET.get('is_popular') and self.request.GET.get('is_interesting'):
-            return redirect('home')
-        return super().get(*args, **kwargs)
-
+class PostViewSet(IsAuthorPermissionsMixin, PartialViewSet):
+    serializer_class = PostSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PostFilter
+    
+    def list(self, request, *args, **kwargs):
+        query_params = request.GET
+        if query_params.get('is_popular') and query_params.get('is_interesting'):
+            return Response(status=400)
+        return super().list(request, *args, **kwargs)
+    
     def get_queryset(self):
         this_user = self.request.user
         posts = Post.objects.annotate(
@@ -34,113 +32,127 @@ class HomePage(LoginRequiredMixin,ListView):
             .select_related('author','author__profile')\
             .prefetch_related('images')\
             .order_by('-created_at')
-        f = PostFilter(request=self.request,queryset=posts,data=self.request.GET).qs
-        return f
-
-    def get_context_data(self, *args , **kwargs):
-        context = super().get_context_data(*args,**kwargs)
-        f = PostFilter(request=self.request,queryset=self.get_queryset(),data=self.request.GET)
-        context['filter'] = f
-        context['filter_get'] = get_filters(self.request.GET)
-        return context
-
-class AddPost(LoginRequiredMixin,CreateView):
-    login_url = reverse_lazy('login')
-    template_name = 'main/add_post.html'
-    form_class = PostForm
-    success_url = reverse_lazy('home')
-
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        self.object = None # thx Nikolay Cherniy, required to fix a error ''' AddPost object has no attribute 'object' '''
-        if form.is_valid() and validate_img(request.FILES.getlist('images')):
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+        return posts
     
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.author_id = self.request.user.id
-        self.object.profile_id = self.request.user.profile.id
-        self.object.save()
-        images = self.request.FILES.getlist('images')
-        if images:
-            for image in images:
-                Image.objects.create(
-                    photo=image,
-                    author_id=self.request.user.id,
-                    post_id=self.object.id,
-                    )
-        return super().form_valid(form)
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.add_views(request.user)
 
-    def form_invalid(self, form):
-        messages.error(self.request,'Ошибка валидации!')
-        return super().form_invalid(form)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)  
 
-class PostDetail(LoginRequiredMixin,FormMixin,DetailView):
-    context_object_name = 'post'
-    template_name = 'main/post.html'
-    login_url = reverse_lazy('login')
-    form_class = CommentForm
+class CommentAPIView(ListCreateAPIView, CacheTreeQuerysetMixin):
+    serializer_class = CommentSerializer
+    depth = 2
 
     def get_queryset(self):
-        return Post.objects.annotate(
-        liked_cnt=Count('liked', distinct=True),
-        viewers_cnt= Count('viewers', distinct=True),
-        is_liked=Exists(self.request.user.liked.filter(id=OuterRef('id'))),
-        followed=Exists(self.request.user.following.filter(id=OuterRef('author_id'))),
-        ).select_related('author','author__profile')
-    
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object:
-            self.object.add_views(self.request.user)
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
-    
-    def get_success_url(self) -> str:
-        return reverse_lazy('post',kwargs={'pk':self.object.pk})
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         this_user = self.request.user
-        post_comments = Comment.objects.filter(post_id=self.object.pk,is_active=True).annotate(
+        post_id = self.post_id
+
+        comments = Comment.objects.filter(post_id=post_id,is_active=True).annotate(
             is_user_liked_comment=Exists(this_user.liked_comments.filter(id=OuterRef('id')))\
             ,like_cnt=Count('liked', distinct=True)).select_related('author','author__profile')\
             .prefetch_related('images_comment')
-        context['comments'] = post_comments
-        return context
+            
+        return self._get_cached_queryset(comments)
     
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        self.object = self.get_object()
-        if form.is_valid() and validate_img(self.request.FILES.getlist('images')):
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    def get_serializer_context(self):
+        """
+        Extra context provided to the serializer class.
+        """
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self,
+            'post_id': self.post_id
+        }
     
-    def form_valid(self, form):
-        self.obj = form.save(commit=False)
-        self.obj.post_id = self.object.id
-        self.obj.author_id = self.request.user.id
-        parent_id = self.request.POST.get('parent_id') if self.request.POST.get('parent_id') else None
-        self.obj.parent_id = parent_id
-        self.obj.save()
-        images = self.request.FILES.getlist('images')
-        if images:
-            for image in images:
-                Image.objects.create(
-                    photo=image,
-                    author_id=self.request.user.id,
-                    comment_id=self.obj.id,
-                    )
-        return super().form_valid(form)
+    def set_post_id(self, post_id: int):
+        try:
+            self.post_id = get_object_or_404(Post, id=post_id).id
+        except Http404 as err:
+            self.post_id = None
+            raise err
     
-    def form_invalid(self, form):
-        messages.error(self.request,f'''Ошибка валидации!\n{form.errors.as_text().strip("* body * ")}\n''')
-        return super().form_invalid(form)
+    def list(self, *args, **kwargs):
+        self.set_post_id(kwargs.get('pk'))
+        return super().list(*args, **kwargs)
     
+    def create(self, request, *args, **kwargs):
+        self.set_post_id(kwargs.get('pk'))
+        return super().create(request, *args, **kwargs)
+        
+class CommentDescendantsAPIView(ListAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        this_user = self.request.user
+
+        descendants = self.instance.get_descendants().filter(is_active=True).annotate(
+            is_user_liked_comment=Exists(this_user.liked_comments.filter(id=OuterRef('id')))\
+            ,like_cnt=Count('liked', distinct=True)).select_related('author','author__profile')\
+            .prefetch_related('images_comment')
+        
+        return descendants
+            
+    
+    def set_instance(self, comment_id: int):
+        self.instance = get_object_or_404(Comment, id=comment_id)
+        
+        if self.instance.level != 0:
+            raise ValidationError(detail={'error': 'instance is not a root'})
+    
+    def list(self, *args, **kwargs):
+        self.set_instance(kwargs.get('pk'))
+        return super().list(*args, **kwargs)
+
+class CommentDetailAPIView(IsAuthorPermissionsMixin, RetrievePartialDestoyAPIView):
+    serializer_class = CommentSerializer
+    update_serializer_class = CommentUpdateSerializer
+
+    def get_queryset(self):
+        this_user = self.request.user
+        
+        comments = Comment.objects.filter(is_active=True).annotate(
+            is_user_liked_comment=Exists(this_user.liked_comments.filter(id=OuterRef('id')))\
+            ,like_cnt=Count('liked', distinct=True)).select_related('author','author__profile')\
+            .prefetch_related('images_comment')
+
+        return comments
+
+    def get_serializer_context(self):
+        """
+        Extra context provided to the serializer class.
+        """
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self,
+            'not_children': True,
+        }
+    
+    def get_serializer_class(self):
+        """
+        Return the class to use for the serializer.
+        Defaults to using `self.serializer_class`.
+
+        You may want to override this if you need to provide different
+        serializations depending on the incoming request.
+
+        (Eg. admins get full serialization, others get basic serialization)
+        """
+        assert self.serializer_class is not None, (
+            "'%s' should either include a `serializer_class` attribute, "
+            "or override the `get_serializer_class()` method."
+            % self.__class__.__name__
+        )
+
+        if self.request.method == 'PATCH':
+            return self.update_serializer_class
+
+        return self.serializer_class
+
 # TODO: make app for profiles
 @login_required(login_url='login')
-def get_profile(request,pk):
+def get_profile(request, pk):
     return HttpResponse(pk)
