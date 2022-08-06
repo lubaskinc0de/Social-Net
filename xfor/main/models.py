@@ -66,3 +66,4 @@ class Comment(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['-created_at']
+

@@ -1,0 +1,300 @@
+.register-main {
+    background: #F1F5FE;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif
+}
+
+.invalid-tooltip {
+    font-size: .85em;
+}
+
+.invalid-feedback {
+    font-size: .85em;
+}
+
+/* Circle */
+
+.circle {
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+    width: 2534px;
+    height: 2534px;
+    background: #F7FAFF;
+    box-shadow: 0 4px 70px 6px rgba(217, 229, 255, 0.25);
+    animation-name: fadeCircle;
+    animation-duration: .7s;
+    animation-timing-function: ease-in-out;
+    animation-delay: .5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards
+}
+
+.circle--login {
+    width: 1950px;
+    height: 1950px;
+    animation-name: fadeCircleLogin
+}
+
+@keyframes fadeCircleLogin {
+    0% {
+        width: 2250px;
+        height: 2250px
+    }
+
+    25% {
+        width: 1750px;
+        height: 1750px
+    }
+
+    50% {
+        width: 1250px;
+        height: 1250px
+    }
+
+    75% {
+        width: 750px;
+        height: 750px
+    }
+
+    100% {
+        width: 450px;
+        height: 450px
+    }
+}
+
+/* Animations */
+
+@keyframes fadeCircle {
+    0% {
+        width: 2534px;
+        height: 2534px
+    }
+
+    25% {
+        width: 2000px;
+        height: 2000px
+    }
+
+    50% {
+        width: 1500px;
+        height: 1500px
+    }
+
+    75% {
+        width: 1000px;
+        height: 1000px
+    }
+
+    100% {
+        width: 534px;
+        height: 534px
+    }
+}
+
+@keyframes fadeForm {
+    0% {
+        opacity: 0
+    }
+
+    25% {
+        opacity: .25
+    }
+
+    50% {
+        opacity: .5
+    }
+
+    75% {
+        opacity: .75
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+/* Register form */
+
+.register-form__title {
+    color: #364e6d;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+    margin-bottom: 17px
+}
+
+.register-form__input {
+    font-size: 14px;
+    line-height: 16px;
+    height: 45px;
+    width: 100%;
+    border: 2px solid #E9F2FF;
+    border-radius: 5px;
+    padding-left: 25px;
+    border-color: #7ab1ff81;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+.register-form__input:focus {
+    outline: 0;
+    border: 2px solid #3c89fcad
+}
+
+.register-form__input--valid {
+    border-color: #00ff738e;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    padding-right: calc(1.5em + 0.75rem);
+    background-position: right calc(0.375em + 3px) center;
+    background-size: calc(0.75em + 6px) calc(0.75em + 6px)
+}
+
+.register-form__input--not-valid {
+    border-color: #ec425371;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    padding-right: calc(1.5em + 0.75rem);
+    background-position: right calc(0.375em + 3px) center;
+    background-size: calc(0.75em + 6px) calc(0.75em + 6px);
+}
+
+.register-form-container {
+    opacity: 0;
+    background: #fff;
+    box-shadow: 0 6px 50px rgba(217, 229, 255, 0.7);
+    border-radius: 20px;
+    max-width: 415px;
+    padding: 31px 30px;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    animation-name: fadeForm;
+    animation-duration: .7s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 1.4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    margin: 0 auto
+}
+
+.register-form-container--horizontal {
+    max-width: 500px;
+}
+
+.register-form__field {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.register-form__field:hover .invalid-tooltip {
+    display: block;
+}
+
+.register-form__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00f320;
+    border-radius: 5px;
+    height: 45px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+    text-transform: uppercase;
+    border: 0;
+    width: 100%;
+    cursor: pointer;
+    transition: background .2s linear
+}
+
+.register-form__btn:hover {
+    background: #00ec0c
+}
+
+.register-form__btn:focus {
+    outline: 0;
+}
+
+.register-form__btn--sign {
+    background: #185ebb;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff
+}
+
+.register-form__btn--sign:hover {
+    background: #1957a8;
+    color: #fff
+}
+
+.register-form__divider {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px
+}
+
+@media (max-width: 991px) {
+    .register-form-container {
+        max-width: 500px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .invalid-feedback {
+        display: block;
+        font-size: .84em;
+    }
+
+    .register-form__col {
+        flex: none;
+    }
+
+    .register-form__field {
+        margin-bottom: 13px;
+    }
+
+    .register-form__field:hover .invalid-tooltip {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .circle {
+        display: none;
+    }
+
+    .register-form-container {
+        max-width: 100%;
+        padding: 27px 26px;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .register-form__title {
+        font-size: 18px;
+    }
+
+    .register-form__input {
+        height: 44px;
+    }
+
+    .register-form__divider {
+        margin-top: 3px;
+        margin-bottom: 3px;
+        font-size: 14px;
+    }
+
+    .register-form__btn {
+        height: 42px;
+        font-size: 13px;
+    }
+}

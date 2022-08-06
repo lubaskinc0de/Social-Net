@@ -61,6 +61,29 @@ class CommentSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField(read_only=True)
 
     def _get_childrens_with_childrens(self, childrens):
+        '''
+        This method is designed to form a flat list of node descendants up to the second level
+        thereby greatly facilitating the work of the frontend.
+
+        Because it does not have to go through a complex tree structure of descendants
+        provided that we give only 3 nodes to each page and also output only descendants of level 2 inclusive.
+
+        This does not cause a strong overhead,
+        but this has not been tested on a large number of nodes and levels.
+
+        Alternative solution to achieve a tree structure is
+        to remove this method and slightly edit get_children():
+
+        def get_children(self, obj):
+            if not self.context.get('not_children'):
+                childrens = obj.get_children()[:2]
+                return self.__class__(childrens, many=True, context=self.context).data
+        
+        Provided that the QuerySet in the view was cached in advance via mptt.utils.get_cached_trees()
+        this will not cause any queries to the database.
+        
+        The entire overhead can occur only because of copies of the list.
+        '''
         childrens_with_childrens = []
         for children in childrens:
             children_children = children.get_children()[:1]
