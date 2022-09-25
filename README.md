@@ -1,4 +1,7 @@
-![socialnet_logo](https://user-images.githubusercontent.com/100635212/192161740-a11e5fbc-d6ad-4cdc-b49a-93528fd96aae.png)
+
+<p align=center>
+<img src="https://user-images.githubusercontent.com/100635212/192161740-a11e5fbc-d6ad-4cdc-b49a-93528fd96aae.png" width="130">
+</p>
 
 ## Description
 
