@@ -1,6 +1,8 @@
+![socialnet_logo](https://user-images.githubusercontent.com/100635212/192161740-a11e5fbc-d6ad-4cdc-b49a-93528fd96aae.png)
+
 ## Description
 
-This is my little project, I'm working very hard on it and I'm sure it has a great future. Its development is underway and it is not finished yet. I have not yet come up with a decent name for it
+This is my little project, I'm working very hard on it and I'm sure it has a great future. Its development is underway and it is not finished yet. His name is KWIK :)
 
 
 ## License
