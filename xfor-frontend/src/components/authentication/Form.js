@@ -1,37 +1,67 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import Cirlce from './Circle';
 import './authentication.css';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Buttons from './FormComponents/FormButtons';
+import {showComponent, shiftWithoutMutation} from '../../lib/authentication';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 
 export default function Form(props) {
-    function getAPIErrors(APIErrors) {
-        if (APIErrors.length !== 0) {
-            return (
-                <div className='alert alert-danger' role='alert'>
-                    <p>{APIErrors[0]}</p>
-                </div>
-            );
-        }
-    }
+    const APIErrors = props.APIErrors;
+
+    const handleClose = () => {
+        props.setAPIErrors(shiftWithoutMutation(APIErrors));
+    };
+
     return (
-        <main className='register-main'>
-            {props.circle || <Cirlce></Cirlce>}
-            <div
-                className={
-                    props.horizontal
-                        ? 'register-form-container register-form-container--horizontal'
-                        : 'register-form-container'
-                }>
-                <form onSubmit={props.handleSubmit}>
-                    <h1 className='register-form__title'>{props.title}</h1>
-                    {getAPIErrors(props.APIErrors)}
-                    <div className='register-form__fields row'>
-                        {props.fields}
-                    </div>
-                    {props.buttons}
-                </form>
-            </div>
-        </main>
+        <Container
+            sx={{
+                height: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+            component='main'
+            maxWidth='xs'>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '100%',
+                }}>
+                {showComponent(
+                    <Typography variant='h5'>{props.title}</Typography>,
+                    !APIErrors.length,
+                )}
+
+                {showComponent(
+                    <Grid item xs={12}>
+                        <Alert onClose={handleClose} severity='error'>
+                            {props.APIErrors[0]}
+                        </Alert>
+                    </Grid>,
+                    APIErrors.length,
+                )}
+
+                <Box
+                    component='form'
+                    noValidate
+                    onSubmit={props.handleSubmit}
+                    sx={{mt: 3, width: '100%'}}>
+                    <Stack spacing={2}>{props.fields}</Stack>
+                    <Buttons
+                        handleSubmit={props.handleSubmit}
+                        setShowErrors={props.setShowErrors}
+                        {...props.buttons}></Buttons>
+                </Box>
+            </Box>
+        </Container>
     );
 }

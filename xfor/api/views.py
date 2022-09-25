@@ -1,14 +1,16 @@
-from main.models import Post,Comment
-from .helpers.classes.views import AddLikeAPIView, AddLentaCommentAPIView as LentaCommentAPIView
+from .helpers.generics import LikeGenericAPIView
+from .serializers import PostLikeSerializer, CommentLikeSerializer
 
-class PostAddLikeAPIView(AddLikeAPIView):
-    model = Post
+class PostAddLikeAPIView(LikeGenericAPIView):
+    '''Like the post'''
+
     instance_name = 'post'
+    serializer_class = PostLikeSerializer
+    lookup_field = 'liked'
 
-class CommentAddLikeAPIView(AddLikeAPIView):
-    model = Comment
+class CommentAddLikeAPIView(LikeGenericAPIView):
+    '''Like the comment'''
+    
     instance_name= 'comment'
-
-class AddLentaCommentAPIView(LentaCommentAPIView):
-    comment_model = Comment
-    post_model = Post
+    serializer_class = CommentLikeSerializer
+    lookup_field = 'liked'

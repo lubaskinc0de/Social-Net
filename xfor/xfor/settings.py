@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+import sys
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,16 +26,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # Initialise environment variables
-env = environ.Env()
+env = environ.Env(
+    DEBUG=(bool, True),
+    CACHE_BACKEND=(str, 'django.core.cache.backends.filebased.FileBasedCache'),
+    CACHE_LOCATION=(str, os.path.join(BASE_DIR, 'cache')),
+    SQL_ENGINE=(str, 'django.db.backends.sqlite3'),
+    SQL_DATABASE=(str, 'db.sqlite3'),
+    SQL_USER=(str, 'user'),
+    SQL_PASSWORD=(str, 'password'),
+    SQL_HOST=(str, 'localhost'),
+    SQL_PORT=(str, '5432'),
+)
+
 environ.Env.read_env()
 
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 4000
 
 # Application definition
 
@@ -51,16 +64,23 @@ INSTALLED_APPS = [
     'django_filters',
     'mptt',
     'rest_framework',
-    'rest_framework.authtoken',
+    'knox',
+    'cities_light',
     'main.apps.MainConfig',
     'authentication.apps.AuthenticationConfig',
     'api.apps.ApiConfig',
+    'geo_api.apps.GeoApiConfig',
+    'profiles.apps.ProfilesConfig',
     'corsheaders',
 ]
 
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda _: DEBUG,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -71,7 +91,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'xfor.middlewares.TimezoneMiddleware'
 ]
 
 ROOT_URLCONF = 'xfor.urls'
@@ -99,13 +120,21 @@ WSGI_APPLICATION = 'xfor.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+def get_database_name() -> str:
+    if env('SQL_DATABASE') == 'postgresql':
+        return env('POSTGRES_DB')
+    return 'db.sqlite3'
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": env('SQL_ENGINE'),
+        "NAME": get_database_name(),
+        "USER": env('SQL_USER'),
+        "PASSWORD": env('SQL_PASSWORD'),
+        "HOST": env('SQL_HOST'),
+        "PORT": env('SQL_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -147,25 +176,23 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'xfor/static')
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+TESTS_MEDIA_ROOT = os.path.join(BASE_DIR, 'tests_media')
+
+if 'test' in sys.argv:
+    MEDIA_ROOT = TESTS_MEDIA_ROOT
+    MEDIA_URL = '/tests-media/'
 
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = False # 'your tls'
-EMAIL_USE_SSL = True # 'your ssl'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 
 AUTHENTICATION_SITENAME = 'xFor'
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache', # кэширование в файловой системе
-        'LOCATION': os.path.join(BASE_DIR, 'django_cache'), # то куда кэшируем
-    }
-}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -175,7 +202,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REST API
 
 REST_FRAMEWORK = {
-    # настройки DRF
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer', 
         'rest_framework.renderers.BrowsableAPIRenderer', 
@@ -186,13 +212,30 @@ REST_FRAMEWORK = {
         ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'knox.auth.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         ),
 
     'DEFAULT_PAGINATION_CLASS': 'main.pagination.PageParamAPIPagination',
-    
     'PAGE_SIZE': 3,
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000'
+]
+
+REST_KNOX = {
+    'TOKEN_TTL': timedelta(hours=24),
+    'AUTO_REFRESH': True,
+}
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru']
+CITIES_LIGHT_INDEX_SEARCH_NAMES = True
+CITIES_LIGHT_APP_NAME = 'geo_api'
+
+CACHES = {
+    'default': {
+        'BACKEND': env('CACHE_BACKEND'),
+        'LOCATION': env('CACHE_LOCATION'),
+    }
+}

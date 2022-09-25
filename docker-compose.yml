@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+
+    backend:
+        build: ./xfor
+        command: python manage.py runserver 0.0.0.0:8000
+        ports:
+            - 8000:8000
+        env_file:
+            - ./xfor/xfor/.env
+        environment:
+            - CACHE_LOCATION=redis://backend_redis:6379
+            - CACHE_BACKEND=django.core.cache.backends.redis.RedisCache
+            - SQL_ENGINE=django.db.backends.postgresql
+            - SQL_DATABASE=postgresql
+            - DATABASE=postgres
+        depends_on:
+            - backend_redis
+            - backend_database
+
+    backend_redis:
+        image: redis:7.0.4-alpine
+        ports:
+            - 6379:6378
+
+    backend_database:
+        image: postgres:14.5-alpine
+        volumes:
+            - backend_postgres_data:/var/lib/postgresql/data/
+        env_file:
+            - ./xfor/xfor/.env
+
+    frontend:
+        build: ./xfor-frontend
+        command: npm start
+        ports:
+            - 3000:3000
+        depends_on:
+            - backend
+
+volumes:
+    backend_postgres_data:

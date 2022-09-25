@@ -1,23 +1,27 @@
 from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
-from .helpers import path_and_rename
+from .helpers.helpers import PathAndRename
 from authentication.models import Profile
 from mptt.models import MPTTModel, TreeForeignKey
+from datetime import datetime
 
 class Image(models.Model):
-    post = models.ForeignKey('Post',related_name='images',related_query_name='images',on_delete=models.CASCADE,verbose_name='Пост',null=True,blank=True)
-    comment = models.ForeignKey('Comment',related_name='images_comment',related_query_name='images_comment',on_delete=models.CASCADE,verbose_name='Комментарий',null=True,blank=True)
-    photo = models.ImageField(verbose_name='Фото',upload_to=path_and_rename)
+    post = models.ForeignKey('Post', related_name='images',related_query_name='images',on_delete=models.CASCADE,verbose_name='Пост',null=True,blank=True)
+    comment = models.ForeignKey('Comment', related_name='images_comment',related_query_name='images_comment',on_delete=models.CASCADE,verbose_name='Комментарий',null=True,blank=True)
+
+    photo = models.ImageField(verbose_name='Фото',\
+        upload_to=PathAndRename('photos/posts/{}/{}/'.format(datetime.now().year, datetime.now().month)))
+        
     author = models.ForeignKey(User,verbose_name='Автор',on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True,verbose_name='Дата создания')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.photo.name.split('/')[-1]
 
     class Meta:
-        verbose_name = 'Фотографии'
-        verbose_name_plural = 'Фото'
+        verbose_name = 'фото'
+        verbose_name_plural = 'Фотографии'
         ordering = ('created_at',)
 
 class Post(models.Model):
@@ -30,19 +34,19 @@ class Post(models.Model):
     author = models.ForeignKey(User,verbose_name='Автор',on_delete=models.CASCADE)
     liked = models.ManyToManyField(User,verbose_name='Лайкнувшие',related_name='liked',related_query_name='liked',blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title or self.content[:10] or self.author.username
 
-    def get_absolute_url(self):
-        return reverse('post',kwargs={'pk':self.pk})
+    def get_absolute_url(self) -> str:
+        return reverse('post', kwargs={'pk': self.pk})
 
-    def add_views(self,user):
-        is_view = user in self.viewers.all()
-        if not is_view:
-            self.viewers.add(user)
+    def add_views(self, user: User) -> None:
+        '''Adds a view to the post, or if there is already a view, does nothing'''
+
+        self.viewers.add(user)
 
     class Meta:
-        verbose_name = 'Пост'
+        verbose_name = 'пост'
         verbose_name_plural = 'Посты'
         ordering = ('-created_at',)
 
@@ -60,7 +64,7 @@ class Comment(MPTTModel):
         return f'Комментарий {self.pk}'
 
     class Meta:
-        verbose_name = 'Комментарий'
+        verbose_name = 'комментарий'
         verbose_name_plural = 'Комментарии'
         ordering = ('-created_at',)
 

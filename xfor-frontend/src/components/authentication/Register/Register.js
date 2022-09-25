@@ -1,57 +1,56 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable default-case */
 import React, {useEffect, useState} from 'react';
-import RegisterForm from './RegisterForm';
-import RegisterFormStep2 from './RegisterFormStep2';
+
+import RegisterFormStepOne from './steps/RegisterFormStepOne';
+import RegisterFormStepTwo from './steps/RegisterFormStepTwo';
+import RegisterFormStepThree from './steps/RegisterFormStepThree';
+import RegisterFormStepFour from './steps/RegisterFormStepFour';
+
 import {useNavigate} from 'react-router-dom';
 import API from '../../../api/authentication';
+import {parseAPIAxiosErrors} from '../../../lib/authentication';
+import lodash_merge from 'lodash/merge';
+
+import Page404 from '../../Page404';
 
 export default function Register() {
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
     const [APIErrors, setAPIErrors] = useState([]);
-    const navigate = useNavigate();
-    const lastStep = 1;
+    const [isFetching, setIsFetching] = useState(false);
 
-    const handleSubmit = () => {
-        API.register(formData)
-            .then(() => {
-                navigate('/login/');
-            })
-            .catch((err) => {
-                prevStep();
-                if (err.code === 'ERR_NETWORK') {
-                    setAPIErrors([
-                        'Cервер недоступен, повторите попытку позже.',
-                    ]);
-                    return;
-                }
-                setAPIErrors(
-                    Object.values(err.response.data).reduce((arr, el) => {
-                        if (el instanceof Array) {
-                            return [...arr, ...el];
-                        }
-                        return [...arr, el];
-                    }),
-                );
-            });
+    const navigate = useNavigate();
+    const lastStep = 4;
+
+    const handleSubmit = (data) => {
+        setIsFetching(true)
+
+        const request = API.register(data);
+
+        request.then(() => {
+            navigate('/login/');
+        }).catch((err) => {
+            const errors = parseAPIAxiosErrors(err);
+            setAPIErrors(errors);
+        }).finally(() => {
+            setIsFetching(false);
+        });
     };
 
     useEffect(() => {
         document.title = 'Регистрация';
-    });
-
-    useEffect(() => {
-        if (step > lastStep) {
-            handleSubmit();
-        }
-    });
+    }, []);
 
     const nextStep = (values) => {
-        setFormData({
-            ...formData,
-            ...values,
-        });
+        const formDataCopy = JSON.parse(JSON.stringify(formData));
+
+        setFormData(lodash_merge(formDataCopy, values));
+
+        if (step === lastStep) {
+            return handleSubmit(formDataCopy);
+        }
+
         setStep(step + 1);
     };
 
@@ -59,22 +58,37 @@ export default function Register() {
         setStep(step - 1);
     };
 
-    switch (step) {
-        case 0:
-            return (
-                <RegisterForm
-                    APIErrors={APIErrors}
-                    values={formData}
-                    nextStep={nextStep}></RegisterForm>
-            );
-        default:
-            return (
-                <RegisterFormStep2
-                    APIErrors={APIErrors}
-                    circle={<div className='circle circle--login'></div>}
-                    values={formData}
-                    nextStep={nextStep}
-                    prevStep={prevStep}></RegisterFormStep2>
-            );
-    }
+    const generalRegisterProps = {
+        setAPIErrors: setAPIErrors,
+        APIErrors: APIErrors,
+        values: formData,
+        nextStep: nextStep,
+        prevStep: prevStep,
+    };
+
+    const steps = {
+        1: (
+            <RegisterFormStepOne
+                title='Регистрация'
+                {...generalRegisterProps}></RegisterFormStepOne>
+        ),
+        2: (
+            <RegisterFormStepTwo
+                title='Как к вам обращаться?'
+                {...generalRegisterProps}></RegisterFormStepTwo>
+        ),
+        3: (
+            <RegisterFormStepThree
+                title='Настройте профиль'
+                {...generalRegisterProps}></RegisterFormStepThree>
+        ),
+        4: (
+            <RegisterFormStepFour
+                title='Выберите фото профиля'
+                isFetching={isFetching}
+                {...generalRegisterProps}></RegisterFormStepFour>
+        ),
+    };
+
+    return steps[step] || <Page404></Page404>;
 }

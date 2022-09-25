@@ -2,7 +2,7 @@
 
 from django.conf import settings
 from django.db import migrations, models
-import main.helpers
+import main.helpers.helpers
 
 
 class Migration(migrations.Migration):
@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='image',
             name='photo',
-            field=models.ImageField(upload_to=main.helpers.PathAndRename('photos/posts/2022/5/15/'), verbose_name='Фото'),
+            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRename('photos/posts/2022/5/15/'), verbose_name='Фото'),
         ),
     ]

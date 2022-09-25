@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import get_profile, PostViewSet, CommentAPIView, CommentDescendantsAPIView, CommentDetailAPIView
+from .views import PostViewSet, CommentAPIView, CommentDescendantsAPIView,\
+    CommentDetailAPIView, CommentCreateAPIView
 
 urlpatterns = [
     # Posts
@@ -9,7 +10,7 @@ urlpatterns = [
         'get': 'list', 
         'post': 'create',
         }
-    ), name='home'),
+    ), name='feed'),
 
     path('<int:pk>/', PostViewSet.as_view(
         {
@@ -25,7 +26,5 @@ urlpatterns = [
     path('comments/<int:pk>/',CommentAPIView.as_view(),name='post_comments'),
     path('comments/descendants/<int:pk>/', CommentDescendantsAPIView.as_view(), name='comment_descendants'),
     path('comment/<int:pk>/', CommentDetailAPIView.as_view(), name='comment'),
-    
-    # Profile
-    path('profile/<int:pk>/',get_profile,name='profile'),
+    path('comments/create/', CommentCreateAPIView.as_view(), name='comment_create'),
 ]

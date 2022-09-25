@@ -150,11 +150,10 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-secrets/
-secret_settings.py
-photos/
+xfor/media/photos/
+xfor/tests_media/photos/
 .vscode/
-
+cache/
 
 # React
 

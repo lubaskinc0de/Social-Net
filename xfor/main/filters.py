@@ -2,9 +2,11 @@ from django_filters import rest_framework as filters
 from .models import Post
 from django.forms import CheckboxInput,Select
 from django.db.models import Count
-from django.db.models import Case, Value, When
+from django.db.models import Exists, OuterRef
 
 class PostFilter(filters.FilterSet):
+    '''Post filter'''
+
     CHOICES = (
         ('created_at','Сначала старые'),
         ('-created_at','Сначала новые'),
@@ -35,30 +37,44 @@ class PostFilter(filters.FilterSet):
         model = Post
         fields = []
 
-    def ordering_filter(self,queryset,name,value):
+    def ordering_filter(self, queryset, name: str, value: str):
+        '''Order by created_at '''
+
         if self.data.get('is_interesting'):
-            followed = self.request.user.following.all()
-            return queryset.annotate(flag=Case(When(author__in=followed, then=Value('1')),default=Value('0'))).order_by('-flag',value)
+            following = self.request.user.profile.following
+            return queryset.annotate(flag=Exists(following.filter(id=OuterRef('author__profile__id'))))\
+                .order_by('-flag', value)
 
         if self.data.get('is_popular'):
-            return queryset.annotate(liked_cnt=Count('liked')).order_by('-liked_cnt',value)
+            return queryset.annotate(liked_cnt=Count('liked')).order_by('-liked_cnt', value)
 
         return queryset.order_by(value)
 
-    def filter_interesting(self,queryset,name,value):
-        if value:
-            followed = self.request.user.following.all()
-            if self.data.get('ordering'):
-                return queryset.annotate(flag=Case(When(author__in=followed, then=Value('1')),default=Value('0'))).order_by('-flag',self.data.get('ordering'))
+    def filter_interesting(self, queryset, name: str, value: bool):
+        '''Filter by user.profile.following posts'''
 
-            return queryset.annotate(flag=Case(When(author__in=followed, then=Value('1')),default=Value('0'),)).order_by('-flag','-created_at') # thx to Dan Tyan (this is fix bug with paginate_by)
-        return queryset
-    
-    def filter_popular(self,queryset,name,value):
-        if value:
-            if self.data.get('ordering'):
-                return queryset.annotate(liked_cnt=Count('liked')).order_by('-liked_cnt',self.data.get('ordering'))
-    
-            return queryset.annotate(liked_cnt=Count('liked')).order_by('-liked_cnt','-created_at') # сортируем по количевству лайков ( Count() вычисляет количевство ) 
+        if not value:
+            return queryset
+        
+        following = self.request.user.profile.following
+        ordering = self.data.get('ordering')
+        
+        if ordering:
+            return queryset.annotate(flag=Exists(following.filter(id=OuterRef('author__profile__id'))))\
+                .order_by('-flag', ordering)
 
-        return queryset
+        return queryset.annotate(flag=Exists(following.filter(id=OuterRef('author__profile__id'))))\
+            .order_by('-flag', '-created_at') # thx to Dan Tyan (this is fix bug with paginate_by)
+    
+    def filter_popular(self, queryset, name: str, value: bool):
+        '''Order by likes count'''
+
+        if not value:
+            return queryset
+        
+        ordering = self.data.get('ordering')
+
+        if ordering:
+            return queryset.annotate(liked_cnt=Count('liked')).order_by('-liked_cnt', ordering)
+    
+        return queryset.annotate(liked_cnt=Count('liked')).order_by('-liked_cnt','-created_at')

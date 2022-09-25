@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import main.helpers
+import main.helpers.helpers
 
 
 class Migration(migrations.Migration):
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='image',
             name='photo',
-            field=models.ImageField(upload_to=main.helpers.PathAndRename('photos/posts/2022/6/6/'), verbose_name='Фото'),
+            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRename('photos/posts/2022/6/6/'), verbose_name='Фото'),
         ),
         migrations.AlterField(
             model_name='image',
