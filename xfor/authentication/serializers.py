@@ -10,6 +10,7 @@ from django.utils.translation import gettext as _
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from main.mixins import ErrorMessagesSerializersMixin
+from typing import Union
 
 class UserCreateProfileSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     avatar = HybridImageField(required=False, allow_null=True)
@@ -28,7 +29,7 @@ class UserCreateProfileSerializer(ErrorMessagesSerializersMixin, serializers.Mod
         super().__init__(*args, **kwargs)
         self.fields['avatar'].error_messages['invalid'] = self.default_error_messages.get('invalid_image')
 
-    def validate_birthday(self, value: date) -> date | None:
+    def validate_birthday(self, value: date) -> Union[date, None]:
         today = date.today()
         
         if relativedelta(today, value).years < 14:
@@ -86,7 +87,7 @@ class UserCreateSerializer(ErrorMessagesSerializersMixin, serializers.ModelSeria
         self.validate_names(username, first_name, last_name)
         return super().validate(attrs)
 
-    def create(self, validated_data: OrderedDict):
+    def create(self, validated_data: OrderedDict) -> Union[User, None]:
         try:
             user = self.perform_create(validated_data)
             return user
@@ -99,7 +100,7 @@ class UserCreateSerializer(ErrorMessagesSerializersMixin, serializers.ModelSeria
                 setattr(profile, key, attrs.get(key))
         return profile
 
-    def perform_create(self, validated_data: OrderedDict):
+    def perform_create(self, validated_data: OrderedDict) -> User:
         password = validated_data.pop('password')
         profile_attrs: dict = validated_data.pop('profile', None)
 
