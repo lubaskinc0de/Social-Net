@@ -10,7 +10,7 @@ from knox.models import AuthToken
 
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name='profile',related_query_name='profile',verbose_name='Пользователь')
-    created_at = models.DateTimeField(auto_now_add=True,verbose_name='Создан')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     bio = models.CharField(max_length=100, verbose_name='Статус', blank=True)
 
     avatar = models.ImageField(verbose_name='Аватарка', blank=True, \
@@ -18,8 +18,8 @@ class Profile(models.Model):
         default='default/default.png')
 
     followers = models.ManyToManyField('self', through='Contact', related_name='following', symmetrical=False)
-    birthday = models.DateField(verbose_name='День рождения', null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, related_name='profile', null=True, blank=True)
+    birthday = models.DateField(verbose_name='День рождения', null=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, related_name='profile', null=True)
 
     def __str__(self) -> str:
         return self.user.username

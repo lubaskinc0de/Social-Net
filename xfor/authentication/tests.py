@@ -286,6 +286,25 @@ class AuthenticationTestCase(APITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data.get('profile')[0].code, 'required')
 
+    def test_registration_without_birthday_and_city(self):
+        '''A test that tries to register without birthday and city'''
+
+        url = reverse('reg')
+        data = copy.deepcopy(self.register_data)
+        data['profile'].pop('birthday')
+        data['profile'].pop('city')
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(response.data), 1)
+
+        profile = response.data.get('profile')
+
+        self.assertEqual(len(profile), 2)
+        self.assertEqual(profile.get('city')[0].code, 'required')
+        self.assertEqual(profile.get('birthday')[0].code, 'required')
+
     def test_registration_with_bad_password(self):
         '''A test that tries to register with bad password'''
 
@@ -432,7 +451,11 @@ class AuthenticationTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data.get('profile').get('avatar')[0].code, 'invalid')
+
+        profile = response.data.get('profile')
+        self.assertEqual(len(profile), 1)
+
+        self.assertEqual(profile.get('avatar')[0].code, 'invalid')
 
         data = copy.deepcopy(self.register_data)
         data['profile']['avatar'] = 'blabla'
@@ -441,7 +464,60 @@ class AuthenticationTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data.get('profile').get('avatar')[0].code, 'invalid')
+
+        profile = response.data.get('profile')
+        self.assertEqual(len(profile), 1)
+
+        self.assertEqual(profile.get('avatar')[0].code, 'invalid')
+
+
+    def test_registration_with_bad_birthday(self):
+        '''Test register with invalid birthday'''
+
+        url = reverse('reg')
+
+        data = copy.deepcopy(self.register_data)
+        data['profile']['birthday'] = 'alajhdeu'
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(response.data), 1)
+
+        profile = response.data.get('profile')
+        self.assertEqual(len(profile), 1)
+
+        self.assertEqual(profile.get('birthday')[0].code, 'invalid')
+
+
+        data = copy.deepcopy(self.register_data)
+        data['profile']['birthday'] = datetime.now()
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(response.data), 1)
+
+        profile = response.data.get('profile')
+        self.assertEqual(len(profile), 1)
+
+        self.assertEqual(profile.get('birthday')[0].code, 'invalid')
+
+    def test_registration_with_age_less_than_fourteen(self):
+        '''Test register with age less than fourteen'''
+
+        url = reverse('reg')
+
+        data = copy.deepcopy(self.register_data)
+        data['profile']['birthday'] = (datetime.today() - timedelta(days=(365 * 10))).date().strftime('%Y-%m-%d')
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(response.data), 1)
+
+        profile = response.data.get('profile')
+        self.assertEqual(len(profile), 1)
+
+        self.assertEqual(profile.get('birthday')[0].code, 'age_less_than_fourteen')
+
 
     def test_two_tokens_not_compare(self):
         '''A test that the two tokens received during login will not be equal'''

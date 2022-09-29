@@ -20,9 +20,7 @@ class UserCreateProfileSerializer(ErrorMessagesSerializersMixin, serializers.Mod
         'invalid_image': serializers.ImageField.default_error_messages\
             .get('invalid_image', _('Файл, который вы загрузили, поврежден или не является изображением')),
 
-        'age_less_than_fourteen': {
-            'birthday': _('Вам меньше четырнадцати лет.'),
-        },
+        'age_less_than_fourteen': _('Вам меньше четырнадцати лет.'),
     }
 
     def __init__(self, *args, **kwargs):
