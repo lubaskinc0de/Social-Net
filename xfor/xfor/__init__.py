@@ -1,0 +1,1 @@
+from authentication.schema import KnoxTokenScheme

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import logging
 from pathlib import Path
 import os
 from datetime import timedelta
@@ -72,6 +73,7 @@ INSTALLED_APPS = [
     'geo_api.apps.GeoApiConfig',
     'profiles.apps.ProfilesConfig',
     'corsheaders',
+    'drf_spectacular',
 ]
 
 INTERNAL_IPS = [
@@ -92,7 +94,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'xfor.middlewares.TimezoneMiddleware'
+    'xfor.middlewares.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'xfor.urls'
@@ -136,6 +138,12 @@ DATABASES = {
     }
 }
 
+# Migrations
+
+MIGRATION_MODULES = {
+    'cities_light': None,
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -165,7 +173,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -218,24 +225,42 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PAGINATION_CLASS': 'main.pagination.PageParamAPIPagination',
     'PAGE_SIZE': 3,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+# CORS
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000'
 ]
+
+# Knox tokens
 
 REST_KNOX = {
     'TOKEN_TTL': timedelta(hours=24),
     'AUTO_REFRESH': True,
 }
 
+# Cities light
+
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru']
 CITIES_LIGHT_INDEX_SEARCH_NAMES = True
 CITIES_LIGHT_APP_NAME = 'geo_api'
+
+# Caching
 
 CACHES = {
     'default': {
         'BACKEND': env('CACHE_BACKEND'),
         'LOCATION': env('CACHE_LOCATION'),
     }
+}
+
+# API Docs
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Kwik API',
+    'DESCRIPTION': 'Kwik API documentation',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }

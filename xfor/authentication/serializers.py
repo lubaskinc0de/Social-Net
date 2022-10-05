@@ -11,6 +11,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from main.mixins import ErrorMessagesSerializersMixin
 from typing import Union
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 class UserCreateProfileSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     avatar = HybridImageField(required=False, allow_null=True)
@@ -21,6 +22,8 @@ class UserCreateProfileSerializer(ErrorMessagesSerializersMixin, serializers.Mod
             .get('invalid_image', _('Файл, который вы загрузили, поврежден или не является изображением')),
 
         'age_less_than_fourteen': _('Вам меньше четырнадцати лет.'),
+
+        'age_more_than_onehundred_forty': _('Вы не можете указать возраст больше 140 лет.'),
     }
 
     def __init__(self, *args, **kwargs):
@@ -32,7 +35,10 @@ class UserCreateProfileSerializer(ErrorMessagesSerializersMixin, serializers.Mod
         
         if relativedelta(today, value).years < 14:
             self.fail('age_less_than_fourteen')
-
+        
+        if relativedelta(today, value).years > 140:
+            self.fail('age_more_than_onehundred_forty')
+        
         return value
 
     class Meta:
@@ -111,3 +117,6 @@ class UserCreateSerializer(ErrorMessagesSerializersMixin, serializers.ModelSeria
         user.save()
         profile.save()
         return user
+
+class KnoxTokenSerializer(AuthTokenSerializer):
+    expiry = serializers.DateTimeField(read_only=True, label=_('Expiry'))

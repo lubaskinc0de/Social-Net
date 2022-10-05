@@ -1,6 +1,8 @@
 from typing import TypeVar
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 
 class AuthorSerializer(serializers.ModelSerializer):
     '''Serializer of the data required to represent the author'''
@@ -16,6 +18,16 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name','last_name','avatar']
 
+@extend_schema_field({
+    'type': 'string',
+    'format': 'string',
+    'read_only': True,
+    'example': {
+        'first_name': 'string',
+        'last_name': 'string',
+        'avatar': 'string',
+    }
+})
 class CurrentAuthorField(serializers.Field):
     '''
     The author field, which requires the User object at the input and returns the author's data for it.

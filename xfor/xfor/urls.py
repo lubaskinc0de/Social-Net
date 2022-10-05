@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
 
@@ -39,6 +40,11 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('geo-api/', include('geo_api.urls')),
     path('peoples/', include('profiles.urls')),
+
+    # Documentation
+    path('docs/schema/', SpectacularAPIView.as_view(), name='docs_schema'),
+    path('docs/swagger/', SpectacularSwaggerView.as_view(url_name='docs_schema'), name='docs_swagger-ui'),
+
 ]
 
 if settings.DEBUG:

@@ -115,7 +115,7 @@ export default function RegisterFormStepThree(props) {
         };
 
         if (formik.values.country) {
-            setIsCitiesDisabled(false);
+            setIsCitiesDisabled(true);
             await fetchCities();
         } else {
             setIsCitiesDisabled(true);

@@ -1,5 +1,9 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 
+
+@extend_schema_field(OpenApiTypes.STR)
 class AlternateNameField(serializers.Field):
 
     def to_representation(self, value: str) -> str:

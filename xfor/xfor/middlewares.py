@@ -1,7 +1,9 @@
-from django.utils.timezone import activate
+import logging
+from django.utils import timezone as django_timezone
 from pytz import timezone
 from pytz.exceptions import UnknownTimeZoneError
-import logging
+
+LOGGER = logging.getLogger('django.server')
 
 class TimezoneMiddleware:
     '''Middleware that sets the time zone for the user based on the city he has chosen'''
@@ -10,19 +12,26 @@ class TimezoneMiddleware:
         self.get_response = get_response
 
     def __call__(self, request) -> None:
-        response = self.get_response(request)
+        logger = LOGGER
+        user = request.user
 
-        if not request.user.is_authenticated:
-            return response
+        if user.is_authenticated:
             
-        try:
-            tz = timezone(request.user.profile.city.timezone)
-            activate(tz)
-        except UnknownTimeZoneError:
-            logger = logging.getLogger(__name__)
-            logger.error(f'Unknown timezone error, timezone: {tz}')
-            activate('UTC')
-        except AttributeError:
-            activate('UTC')
+            try:
+                tz = timezone(user.profile.city.timezone)
+                django_timezone.activate(tz)
+
+                logger.info(
+                    '"%s" timezone: %s',
+                    str(request.method), str(tz)
+                )
+            
+            except UnknownTimeZoneError:
+                logger.warning('Unknown timezone error, timezone: %s', str(tz))
+                django_timezone.deactivate()
+                
+            except AttributeError:
+                django_timezone.deactivate()
         
+        response = self.get_response(request)
         return response

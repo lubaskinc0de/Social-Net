@@ -159,6 +159,11 @@ Contributions are always welcome!
 
 ![profile_admin](https://user-images.githubusercontent.com/100635212/190927649-c5396528-3cf6-4c70-9e39-81bbc2ac6fe0.png)
 
+
+## Docs
+
+![docs](https://user-images.githubusercontent.com/100635212/194025608-eac271c5-f327-4abb-82ea-0322dd560349.png)
+
 ## Register
 
 ![formstep1](https://user-images.githubusercontent.com/100635212/190927638-3aa4c77a-eb9f-414f-86de-06998c753e91.png)

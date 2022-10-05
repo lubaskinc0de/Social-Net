@@ -518,6 +518,23 @@ class AuthenticationTestCase(APITestCase):
 
         self.assertEqual(profile.get('birthday')[0].code, 'age_less_than_fourteen')
 
+    def test_registration_with_age_more_than_onehundred_forty(self):
+        '''Test register with age more than one hundred forty'''
+
+        url = reverse('reg')
+
+        data = copy.deepcopy(self.register_data)
+        data['profile']['birthday'] = (datetime.today() - timedelta(days=(365 * 142))).date().strftime('%Y-%m-%d')
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(response.data), 1)
+
+        profile = response.data.get('profile')
+        self.assertEqual(len(profile), 1)
+
+        self.assertEqual(profile.get('birthday')[0].code, 'age_more_than_onehundred_forty')
+
 
     def test_two_tokens_not_compare(self):
         '''A test that the two tokens received during login will not be equal'''

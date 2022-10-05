@@ -8,7 +8,7 @@ import main.helpers.helpers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cities_light', '0011_alter_city_country_alter_city_region_and_more'),
+        ('geo_api', '0002_alter_city_options_alter_country_options_and_more'),
         ('authentication', '0039_alter_region_unique_together_remove_region_country_and_more'),
     ]
 
@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='profile',
             name='city',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='profile', to='cities_light.city'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='profile', to='geo_api.city'),
         ),
         migrations.AlterField(
             model_name='profile',

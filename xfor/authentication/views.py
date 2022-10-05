@@ -1,13 +1,13 @@
 from djoser.serializers import ActivationSerializer
 from knox.views import LoginView, LogoutAllView, LogoutView
 from rest_framework import generics
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 
 from .helpers import (activate_user, send_activation_email, create_authtoken)
 from .permissions import IsAnonymous
-from .serializers import UserCreateSerializer                     
+from .serializers import UserCreateSerializer, KnoxTokenSerializer                   
 from .tokens import authentication_token
+from drf_spectacular.utils import extend_schema
 
 class UserRegisterAPIView(generics.CreateAPIView):
     '''Endpoint for user registration (create account)'''
@@ -19,10 +19,12 @@ class UserRegisterAPIView(generics.CreateAPIView):
 
 class UserLoginAPIView(LoginView):
     '''Endpoint for user log-in (make token)'''
+    
     permission_classes = (IsAnonymous,)
 
+    @extend_schema(request=KnoxTokenSerializer, responses=KnoxTokenSerializer)
     def post(self, request, format=None) -> Response:
-        serializer = AuthTokenSerializer(data=request.data)
+        serializer = KnoxTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token_data = create_authtoken(request, user, self.get_token_limit_per_user(), self.get_token_ttl())
@@ -40,5 +42,13 @@ class UserActivateAPIView(generics.GenericAPIView):
 class UserLogoutAPIView(LogoutView):
     '''Endpoint for user log-out (destroy token)'''
 
+    @extend_schema(request=None, responses=None)
+    def post(self, request, format=None):
+        return super().post(request, format)
+
 class UserLogoutAllAPIView(LogoutAllView):
     '''Endpoint for logout all user tokens (destroy all tokens)'''
+    
+    @extend_schema(request=None, responses=None)
+    def post(self, request, format=None):
+        return super().post(request, format)

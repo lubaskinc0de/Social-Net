@@ -29,7 +29,13 @@ export default function Register() {
         const request = API.register(data);
 
         request.then(() => {
-            navigate('/login/');
+            const successMessage = 'Вы успешно прошли регистрацию! Для того что бы вы могли войти в свой аккаунт проверьте почту, вам пришло письмо с инструкциями для активации аккаунта.'
+            
+            navigate('/login/', {
+                state: {
+                    message: successMessage
+                }
+            });
         }).catch((err) => {
             const errors = parseAPIAxiosErrors(err);
             setAPIErrors(errors);
@@ -39,7 +45,7 @@ export default function Register() {
     };
 
     useEffect(() => {
-        document.title = 'Регистрация';
+        document.title = 'Регистрация || KWIK';
     }, []);
 
     const nextStep = (values) => {

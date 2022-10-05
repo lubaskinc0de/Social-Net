@@ -4,9 +4,11 @@ from django.contrib.auth.models import User
 from geo_api.serializers import CitySerializer
 
 class UserSerializer(serializers.ModelSerializer):
+    groups = serializers.StringRelatedField(many=True, read_only=True)
+    
     class Meta:
         model = User
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'groups']
 
 class FollowersSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)

@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Union
 from django.contrib import admin
 from .models import Profile, Contact
@@ -6,9 +7,10 @@ from django.contrib.auth.models import User
 from knox.admin import AuthTokenAdmin
 from .models import CustomAuthToken
 from knox.models import AuthToken
+from dateutil.relativedelta import relativedelta
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['id','user','created_at','get_status', 'birthday','get_avatar', 'get_city']
+    list_display = ['id','user','created_at','get_status', 'get_years_old','get_avatar', 'get_city']
     list_display_links = ['id','user']
     search_fields = ['user__username','id', 'city__alternate_names']
     list_select_related = ['user', 'city']
@@ -21,6 +23,7 @@ class ProfileAdmin(admin.ModelAdmin):
             return mark_safe(f'<img src="{obj.avatar.url}" height="40" width="40">')
         else:
             return '-'
+
     get_avatar.short_description = 'Аватар'
 
     def get_status(self, obj: Profile) -> str:
@@ -32,6 +35,17 @@ class ProfileAdmin(admin.ModelAdmin):
         return obj.city.alternate_names or obj.city.name if obj.city else '-'
     
     get_city.short_description = 'Город'
+
+    def get_years_old(self, obj: Profile) -> Union[int, str]:
+        if not obj.birthday:
+            return '-'
+        
+        today = date.today()
+        years_old = relativedelta(today, obj.birthday).years
+
+        return years_old
+    
+    get_years_old.short_description = 'Полных лет'
 
 class ContactAdmin(admin.ModelAdmin):
     list_display = ['id','user_from_get_full_name','user_to_get_full_name','created_at']
@@ -51,7 +65,7 @@ class ContactAdmin(admin.ModelAdmin):
         return self.get_full_name(obj.user_from.user)
     user_from_get_full_name.short_description = 'От'
     
-    def user_to_get_full_name(self,obj):
+    def user_to_get_full_name(self, obj: Contact):
         return self.get_full_name(obj.user_to.user)
     user_to_get_full_name.short_description = 'На'
 

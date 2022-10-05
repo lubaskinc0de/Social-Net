@@ -18,6 +18,10 @@ export default function Form(props) {
         props.setAPIErrors(shiftWithoutMutation(APIErrors));
     };
 
+    const handleCloseMessage = () => {
+        props.setMessage('');
+    };
+
     return (
         <Container
             sx={{
@@ -38,7 +42,7 @@ export default function Form(props) {
                 }}>
                 {showComponent(
                     <Typography variant='h5'>{props.title}</Typography>,
-                    !APIErrors.length,
+                    !APIErrors.length && !props.message,
                 )}
 
                 {showComponent(
@@ -48,6 +52,15 @@ export default function Form(props) {
                         </Alert>
                     </Grid>,
                     APIErrors.length,
+                )}
+
+                {showComponent(
+                    <Grid item xs={12}>
+                        <Alert onClose={handleCloseMessage} severity='info'>
+                            {props.message}
+                        </Alert>
+                    </Grid>,
+                    props.message,
                 )}
 
                 <Box
