@@ -19,6 +19,32 @@ This is my little project, I'm working very hard on it and I'm sure it has a gre
 - thanks to [@arte_m_etra](https://github.com/artemetra)
 - and all python-antitoxic chat ❤️
 - thanks to https://t.me/pydjango chat
+
+## Stack
+
+### Backend
+- Python
+- Django
+- Django-REST-Framework
+- Django-MPTT
+- Django-Rest-Knox
+- Swagger
+- PostgreSQL
+- Docker
+- Redis
+- Celery (soon..)
+
+### Frontend
+- JavaScript
+- HTML 5
+- CSS 3
+- React
+- React Router
+- MUI
+- Webpack
+- Axios
+- Redux (soon..)
+- Redux Tool Kit (soon..)
   
 
 ## Badges
