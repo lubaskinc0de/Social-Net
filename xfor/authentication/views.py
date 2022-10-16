@@ -1,11 +1,12 @@
-from djoser.serializers import ActivationSerializer
 from knox.views import LoginView, LogoutAllView, LogoutView
 from rest_framework import generics
 from rest_framework.response import Response
+from django.contrib.auth.models import User
+from knox.models import AuthToken
 
 from .helpers import (activate_user, send_activation_email, create_authtoken)
 from .permissions import IsAnonymous
-from .serializers import UserCreateSerializer, KnoxTokenSerializer                   
+from .serializers import UserCreateSerializer, KnoxTokenSerializer, ActivationSerializer                 
 from .tokens import authentication_token
 from drf_spectacular.utils import extend_schema
 
@@ -22,16 +23,32 @@ class UserLoginAPIView(LoginView):
     
     permission_classes = (IsAnonymous,)
 
+    def get_post_response_data(self, request, token: str, instance: AuthToken, user: User):
+        UserSerializer = self.get_user_serializer_class()
+
+        data = {
+            'expiry': self.format_expiry_datetime(instance.expiry),
+            'token': token
+        }
+
+        if UserSerializer is not None:
+            data["user"] = UserSerializer(
+                user,
+                context=self.get_context()
+            ).data
+        return data
+
     @extend_schema(request=KnoxTokenSerializer, responses=KnoxTokenSerializer)
     def post(self, request, format=None) -> Response:
         serializer = KnoxTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token_data = create_authtoken(request, user, self.get_token_limit_per_user(), self.get_token_ttl())
-        return Response(self.get_post_response_data(*token_data))
+        return Response(self.get_post_response_data(*token_data, user))
 
 class UserActivateAPIView(generics.GenericAPIView):
     '''Endpoint for user activation (set user field is_active to True)'''
+
     serializer_class = ActivationSerializer
     token_generator = authentication_token # used in ActivationSerializer
     permission_classes = (IsAnonymous,)

@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {useLoad} from '../../../lib/authentication';
+import useLoad from '../../../hooks/useLoad';
 
 export default function FormButtons(props) {
     const isLoad = useLoad(200);

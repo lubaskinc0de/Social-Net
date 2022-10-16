@@ -85,6 +85,8 @@ Create a file .env along the path Social-Net/xfor/xfor/ and paste the following 
 ```txt
 SECRET_KEY=securekey113833
 
+USER_ACTIVATION_URL=localhost:3000/activate/
+
 EMAIL_HOST=your_email_host
 
 EMAIL_PORT=your_email_port

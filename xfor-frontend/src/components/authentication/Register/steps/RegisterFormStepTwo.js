@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState} from 'react';
 import Form from '../../Form';
 import {useFormik} from 'formik';
@@ -62,9 +61,7 @@ export default function RegisterFormStepTwo(props) {
 
     return (
         <Form
-            setAPIErrors={props.setAPIErrors}
             handleSubmit={formik.handleSubmit}
-            APIErrors={props.APIErrors}
             setShowErrors={setShowErrors}
             buttons={{prevButton: {prevStep: props.prevStep}}}
             fields={formFields}

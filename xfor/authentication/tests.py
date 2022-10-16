@@ -59,6 +59,27 @@ class AuthenticationTestCase(APITestCase):
     def authenticate(self, token: str) -> None:
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
     
+    def login(self):
+        url = reverse('login')
+        data = self.login_data
+        response = self.client.post(url, data)
+
+        return response
+    
+    def logout(self):
+        url = reverse('logout')
+        data = {}
+        response = self.client.post(url, data)
+
+        return response
+    
+    def logoutall(self):
+        url = reverse('logout_all')
+        data = {}
+        response = self.client.post(url, data)
+
+        return response
+    
     def test_register_authorized(self):
         '''A test to verify that an authorized user will receive a 403 error when trying to register'''
 
@@ -72,10 +93,8 @@ class AuthenticationTestCase(APITestCase):
     def test_login_authorized(self):
         '''A test to verify that an authorized user will receive a 403 error when trying to login'''
 
-        url = reverse('login')
-        data = self.login_data
         self.authenticate(self.token)
-        response = self.client.post(url, data)
+        response = self.login()
 
         self.assertEqual(response.status_code, 403)
     
@@ -155,6 +174,7 @@ class AuthenticationTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('token' in response.data)
         self.assertTrue('expiry' in response.data)
+        self.assertTrue('user' in response.data)
 
         user.delete() # clearing user
 
@@ -210,6 +230,21 @@ class AuthenticationTestCase(APITestCase):
         self.assertEqual(response.status_code, 204)
         response = self.activate_user(token, uid)
         self.assertEqual(response.status_code, 400)
+    
+    def test_activate_user_authorized(self):
+        '''A test that tries activate non-active user authorized'''
+
+        inactive_user: User = User.objects.create_user('AuthenticationTestCase_User_needs_activate_authorized', 'v1234@gmail.com', self.password)
+        inactive_user.is_active = False
+        inactive_user.save()
+
+        token = authentication_token.make_token(inactive_user)
+        uid = encode_uid(inactive_user.pk)
+
+        self.authenticate(self.token)
+        response = self.activate_user(token, uid)
+
+        self.assertEqual(response.status_code, 403)
     
     def test_registration_without_data(self):
         '''A test that tries to register without data'''
@@ -535,22 +570,76 @@ class AuthenticationTestCase(APITestCase):
 
         self.assertEqual(profile.get('birthday')[0].code, 'age_more_than_onehundred_forty')
 
-
     def test_two_tokens_not_compare(self):
         '''A test that the two tokens received during login will not be equal'''
         
-        url = reverse('login')
-        data = self.login_data
-        response = self.client.post(url, data)
+        response = self.login()
 
         self.assertEqual(response.status_code, 200)
+        self.assertTrue('token' in response.data)
         
         first_token: str = response.data.get('token')
 
-        response = self.client.post(url, data)
+        response = self.login()
 
         self.assertEqual(response.status_code, 200)
+        self.assertTrue('token' in response.data)
         
         second_token: str = response.data.get('token')
 
         self.assertFalse(first_token == second_token)
+    
+    def test_logout(self):
+        '''Test logout user'''
+
+        # Login
+
+        response = self.login()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('token' in response.data)
+        
+        token: str = response.data.get('token')
+        self.authenticate(token)
+
+        # Logout
+
+        response = self.logout()
+
+        self.assertEqual(response.status_code, 204)
+    
+    def test_logout_not_authorized(self):
+        '''Test logout user which not authorized'''
+        
+        response = self.logout()
+
+        self.assertEqual(response.status_code, 401)
+    
+    def test_logoutall(self):
+        '''Test logoutall user (destroy all tokens)'''
+
+        # Login
+
+        first_response, second_response = self.login(), self.login()
+        responses = (first_response, second_response)
+
+        self.assertTrue(all(map(lambda response: response.status_code == 200, responses)))
+        self.assertTrue(all(map(lambda response: 'token' in response.data, responses)))
+
+        first_token = first_response.data.get('token')
+        self.authenticate(first_token)
+
+        # Logout
+
+        response = self.logoutall()
+
+        self.assertEqual(response.status_code, 204)
+    
+    def test_logoutall_not_authorized(self):
+        '''Test logoutall user (destroy all tokens) which not authorized'''
+
+        response = self.logoutall()
+
+        self.assertEqual(response.status_code, 401)
+
+

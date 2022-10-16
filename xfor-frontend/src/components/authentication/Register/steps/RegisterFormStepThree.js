@@ -2,21 +2,34 @@
 import React, {useState} from 'react';
 import Form from '../../Form';
 import {useFormik} from 'formik';
-import {handleEnter, useContentLoading} from '../../../../lib/authentication';
+import {handleEnter} from '../../../../lib/authentication';
+import useContentLoading from '../../../../hooks/useContentLoading';
 import Input from '../../FormComponents/FormInput';
 import * as Yup from 'yup';
 import API from '../../../../api/authentication';
 import Box from '@mui/material/Box';
 import {createFilterOptions} from '@mui/material/Autocomplete';
 import moment from 'moment';
+import {useDispatch} from 'react-redux';
+import {setAPIErrors as setErrorsAPI} from '../../../../store/slices/authentication/APIErrorsSlice';
 
 export default function RegisterFormStepThree(props) {
+    const dispatch = useDispatch();
+
+    const setAPIErrors = (errors) => {
+        dispatch(
+            setErrorsAPI({
+                APIErrors: errors,
+            }),
+        );
+    };
+
     const loadCountries = async () => {
         try {
             const res = await API.getCountries();
             setCountries(res.data);
         } catch {
-            props.setAPIErrors([
+            setAPIErrors([
                 'Ошибка загрузки списка стран, повторите попытку позже.',
             ]);
         }
@@ -108,7 +121,7 @@ export default function RegisterFormStepThree(props) {
                 setCities(res.data);
                 setIsCitiesDisabled(false);
             } catch {
-                props.setAPIErrors([
+                setAPIErrors([
                     'Ошибка загрузки списка городов, повторите попытку позже.',
                 ]);
             }
@@ -333,9 +346,7 @@ export default function RegisterFormStepThree(props) {
 
     return (
         <Form
-            setAPIErrors={props.setAPIErrors}
             handleSubmit={formik.handleSubmit}
-            APIErrors={props.APIErrors}
             setShowErrors={setShowErrors}
             buttons={{prevButton: {prevStep: props.prevStep}}}
             fields={formFields}

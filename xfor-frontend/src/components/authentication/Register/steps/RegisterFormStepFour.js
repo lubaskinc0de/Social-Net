@@ -4,10 +4,11 @@ import Form from '../../Form';
 import {useFormik} from 'formik';
 import Input from '../../FormComponents/FormInput';
 import * as Yup from 'yup';
+import {useSelector} from 'react-redux';
 
 export default function RegisterFormStepFour(props) {
     const [showErrors, setShowErrors] = useState(false);
-
+    const isFetching = useSelector((state) => state.user.loading);
     const {avatar = ''} = props.values;
 
     const validationSchema = Yup.object({
@@ -74,18 +75,16 @@ export default function RegisterFormStepFour(props) {
 
     return (
         <Form
-            setAPIErrors={props.setAPIErrors}
             handleSubmit={(e) => {
                 if (formik.isValid) {
                     formik.handleSubmit(e);
                 }
                 e.preventDefault();
             }}
-            APIErrors={props.APIErrors}
             setShowErrors={setShowErrors}
             buttons={{
                 prevButton: {prevStep: props.prevStep},
-                loading: props.isFetching,
+                loading: isFetching,
             }}
             fields={formFields}
             title={props.title}></Form>

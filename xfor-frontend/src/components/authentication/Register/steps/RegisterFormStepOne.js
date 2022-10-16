@@ -1,8 +1,8 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState} from 'react';
 import Form from '../../Form';
 import {useFormik} from 'formik';
-import {handleEnter, useLoad} from '../../../../lib/authentication';
+import {handleEnter} from '../../../../lib/authentication';
+import useLoad from '../../../../hooks/useLoad';
 import Input from '../../FormComponents/FormInput';
 import {useNavigate} from 'react-router-dom';
 import * as Yup from 'yup';
@@ -105,8 +105,6 @@ export default function RegisterFormStepOne(props) {
 
     return (
         <Form
-            setAPIErrors={props.setAPIErrors}
-            APIErrors={props.APIErrors}
             handleSubmit={formik.handleSubmit}
             setShowErrors={setShowErrors}
             buttons={{

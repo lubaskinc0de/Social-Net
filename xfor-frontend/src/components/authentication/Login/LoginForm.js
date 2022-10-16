@@ -1,16 +1,19 @@
 import React, {useState} from 'react';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
-import {handleEnter, useLoad} from '../../../lib/authentication';
+import {handleEnter} from '../../../lib/authentication';
+import useLoad from '../../../hooks/useLoad';
 import Input from '../FormComponents/FormInput';
 import Form from '../Form';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
+import {useSelector} from 'react-redux'
 
 export default function LoginForm(props) {
     const [showErrors, setShowErrors] = useState(false);
     const navigate = useNavigate();
     const isLoad = useLoad(200);
+    const {loading} = useSelector(state => state.user)
 
     const validationSchema = Yup.object({
         username: Yup.string()
@@ -79,13 +82,11 @@ export default function LoginForm(props) {
 
     return (
         <Form
-            setAPIErrors={props.setAPIErrors}
-            APIErrors={props.APIErrors}
             handleSubmit={formik.handleSubmit}
             setShowErrors={setShowErrors}
             buttons={{
                 alterButton: signUpButton,
-                loading: props.isFetching,
+                loading: loading,
             }}
             message={props.message}
             setMessage={props.setMessage}

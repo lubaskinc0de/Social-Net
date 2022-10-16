@@ -9,3 +9,11 @@ class ProfileDetailAPIView(RetrieveAPIView):
 class ProfileAPIView(ListAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.select_related('user').prefetch_related('followers')
+
+class ProfileDetailsAPIView(RetrieveAPIView):
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        obj = self.request.user.profile
+        self.check_object_permissions(self.request, obj)
+        return obj

@@ -1,11 +1,9 @@
 /* Base */
 a {
-    text-decoration: none;
     color: inherit;
 }
 
 a:hover {
-    text-decoration: none;
     color: inherit;
 }
 
@@ -22,4 +20,79 @@ h6,
 p {
     margin: 0;
     padding: 0;
+}
+
+/* Page 404 */
+
+.page-404__container {
+    background-image: url(https://images.unsplash.com/photo-1432821596592-e2c18b78144f?dpr=2&fit=crop&fm=jpg&h=960&ixlib=rb-0.3.5&q=50&w=1440);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    padding: 16px;
+    justify-content: center;
+    align-items: center;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+.page-404__content {
+    width: 500px;
+    height: 300px;
+    position: relative;
+    background-color: #333;
+    padding: 45px 20px 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0 25px rgba(0, 0, 0, .5);
+    border-radius: 5px 5px 0 0;
+}
+
+.page-404__browser-bar {
+    display: flex;
+    align-items: center;
+    background: #f9f9f3;
+    padding: 8px;
+    overflow: hidden;
+    border-radius: 5px 5px 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.page-404__browser-bar__icons {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: 50%;
+    bottom: 50%;
+}
+
+.page-404__button {
+    display: inline-block;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+
+.page-404__close {
+    background: #fc635d;
+}
+
+.page-404__min {
+    background: #fdbc40;
+}
+
+.page-404__max {
+    background: #34c84a;
+}
+
+.page-404__browser-bar__title {
+    color: #333;
+    flex-grow: 1;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
 }

@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 from main.mixins import ErrorMessagesSerializersMixin
 from typing import Union
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from djoser.serializers import ActivationSerializer as DjoserActivationSerializer
 
 class UserCreateProfileSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     avatar = HybridImageField(required=False, allow_null=True)
@@ -120,3 +121,27 @@ class UserCreateSerializer(ErrorMessagesSerializersMixin, serializers.ModelSeria
 
 class KnoxTokenSerializer(AuthTokenSerializer):
     expiry = serializers.DateTimeField(read_only=True, label=_('Expiry'))
+
+class LoginPayloadSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField(read_only=True)
+    profile_id = serializers.PrimaryKeyRelatedField(source='profile', read_only=True)
+
+    def get_avatar(self, user: User):
+        field = serializers.ImageField()
+        field.bind('avatar', self)
+        return field.to_representation(user.profile.avatar)
+
+    class Meta:
+        model = User
+        fields = ['profile_id', 'first_name', 'last_name', 'avatar']
+        extra_kwargs = {
+            'first_name': {'read_only': True},
+            'last_name': {'read_only': True},
+        }
+
+class ActivationSerializer(DjoserActivationSerializer):
+    default_error_messages = {
+        'stale_token': _('Токен просрочен.'),
+        'invalid_token': _('Токен неправильный или поврежден.'),
+        'invalid_uid': _('Неправильный или поврежденный UID.')
+    }

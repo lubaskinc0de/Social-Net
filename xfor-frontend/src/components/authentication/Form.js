@@ -1,5 +1,3 @@
-/* eslint-disable no-useless-escape */
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import './authentication.css';
 import Alert from '@mui/material/Alert';
@@ -7,15 +5,19 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Buttons from './FormComponents/FormButtons';
-import {showComponent, shiftWithoutMutation} from '../../lib/authentication';
+import {showComponent} from '../../lib/authentication';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import {useSelector, useDispatch} from 'react-redux';
+import {shiftAPIErrors} from '../../store/slices/authentication/APIErrorsSlice';
 
 export default function Form(props) {
-    const APIErrors = props.APIErrors;
+    const APIErrors = useSelector((state) => state.APIErrors.APIErrors);
+    const message = props.message
+    const dispatch = useDispatch();
 
     const handleClose = () => {
-        props.setAPIErrors(shiftWithoutMutation(APIErrors));
+        dispatch(shiftAPIErrors());
     };
 
     const handleCloseMessage = () => {
@@ -42,25 +44,25 @@ export default function Form(props) {
                 }}>
                 {showComponent(
                     <Typography variant='h5'>{props.title}</Typography>,
-                    !APIErrors.length && !props.message,
+                    !APIErrors.length && !message,
                 )}
 
                 {showComponent(
                     <Grid item xs={12}>
                         <Alert onClose={handleClose} severity='error'>
-                            {props.APIErrors[0]}
+                            {APIErrors[0]}
                         </Alert>
                     </Grid>,
-                    APIErrors.length,
+                    APIErrors.length && !message,
                 )}
 
                 {showComponent(
                     <Grid item xs={12}>
                         <Alert onClose={handleCloseMessage} severity='info'>
-                            {props.message}
+                            {message}
                         </Alert>
                     </Grid>,
-                    props.message,
+                    message,
                 )}
 
                 <Box

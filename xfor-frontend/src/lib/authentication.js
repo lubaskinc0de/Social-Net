@@ -1,5 +1,3 @@
-import {useEffect, useState} from 'react';
-
 function handleEnter(event) {
     if (event.keyCode === 13) {
         const form = event.target.form;
@@ -9,56 +7,40 @@ function handleEnter(event) {
     }
 }
 
-function useLoad(time) {
-    const [isLoad, setIsLoad] = useState(false);
-
-    useEffect(() => {
-        setTimeout(setIsLoad, time, true);
-    }, [time]);
-
-    return isLoad;
-}
-
-function useContentLoading(effect, dependencies) {
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        const fetch = async () => {
-            setIsLoading(true);
-            await effect()
-            setIsLoading(false);
-        }
-        fetch()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, dependencies);
-
-    return isLoading;
-}
-
-function parseAPIAxiosErrors(err) {
+function parseAPIAxiosErrors(err, recursionDepth = 10) {
     if (err.response && err.response.status === 0) {
         return ['Cервер недоступен, повторите попытку позже.'];
     }
 
     if (err.response) {
+        const isInstanceOf = (object, type) => {
+            const typeName = type.name;
+            const objectConstructor = object.__proto__.constructor;
+            const isObjectInstanceOfType = objectConstructor.name === typeName;
+
+            return isObjectInstanceOfType;
+        };
+
         const getErrorsArray = (initial_array, el) => {
-            if (el instanceof Array) {
-                return [...initial_array, ...el];
-            }
-            if (el instanceof Object) {
+            if (isInstanceOf(el, Object)) {
                 return getErrorsArray(
                     initial_array,
-                    Object.values(el).reduce((arr, el) => {
-                        return getErrorsArray(arr, el);
-                    }, []),
+                    Object.values(el)
+                        .flat(recursionDepth)
+                        .reduce((arr, el) => {
+                            return getErrorsArray(arr, el);
+                        }, []),
                 );
             }
+
             return [...initial_array, el];
         };
 
-        return Object.values(err.response.data).reduce((arr, el) => {
-            return getErrorsArray(arr, el);
-        }, []);
+        return Object.values(err.response.data)
+            .flat(recursionDepth)
+            .reduce((arr, el) => {
+                return getErrorsArray(arr, el);
+            }, []);
     }
 
     if (err.request) {
@@ -75,17 +57,23 @@ function showComponent(component, show) {
     return component;
 }
 
-const shiftWithoutMutation = (array) => {
-    return array.filter((element) => {
-        return element !== array[0];
-    })
-};
+function getToken() {
+    return localStorage.getItem('userToken');
+}
+
+function setToken(token) {
+    localStorage.setItem('userToken', token);
+}
+
+function removeToken() {
+    localStorage.removeItem('userToken');
+}
 
 export {
     handleEnter,
-    useLoad,
-    useContentLoading,
     parseAPIAxiosErrors,
     showComponent,
-    shiftWithoutMutation,
+    getToken,
+    setToken,
+    removeToken,
 };

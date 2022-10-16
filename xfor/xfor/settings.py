@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import logging
 from pathlib import Path
 import os
 from datetime import timedelta
@@ -199,7 +198,10 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-AUTHENTICATION_SITENAME = 'xFor'
+# Activation email
+
+AUTHENTICATION_SITENAME = 'KWIK'
+USER_ACTIVATION_URL = env('USER_ACTIVATION_URL') + '{}/{}'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -239,6 +241,7 @@ CORS_ALLOWED_ORIGINS = [
 REST_KNOX = {
     'TOKEN_TTL': timedelta(hours=24),
     'AUTO_REFRESH': True,
+    'USER_SERIALIZER': 'authentication.serializers.LoginPayloadSerializer',
 }
 
 # Cities light

@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function FormSelect(props) {
-    
     const compare = (option, value) => {
         if (props.hasOwnProperty('compareFunc')) {
             return props.compareFunc(option, value);
@@ -32,7 +31,6 @@ export default function FormSelect(props) {
     };
 
     const renderInput = (params) => {
-
         const getEndAdornment = () => {
             if (props.loading) {
                 return <CircularProgress color='inherit' size={20} />;
