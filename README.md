@@ -43,8 +43,8 @@ This is my little project, I'm working very hard on it and I'm sure it has a gre
 - MUI
 - Webpack
 - Axios
-- Redux (soon..)
-- Redux Tool Kit (soon..)
+- Redux
+- Redux Tool Kit
   
 
 ## Badges
