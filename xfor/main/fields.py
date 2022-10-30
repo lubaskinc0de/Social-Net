@@ -44,3 +44,13 @@ class CurrentAuthorField(serializers.Field):
     
     def to_internal_value(self, data: T) -> T:
         return data
+
+class DateTimeTimezoneField(serializers.DateTimeField):
+    '''DateTime field with current user timezone'''
+    
+    def default_timezone(self):
+        request = self.context.get('request')
+
+        if request:
+            return request.timezone
+        return super().default_timezone()

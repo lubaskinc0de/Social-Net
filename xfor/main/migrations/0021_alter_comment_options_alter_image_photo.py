@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='image',
             name='photo',
-            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRename('photos/posts/2022/5/21/'), verbose_name='Фото'),
+            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRenameDate('photos/posts/2022/5/21/'), verbose_name='Фото'),
         ),
     ]

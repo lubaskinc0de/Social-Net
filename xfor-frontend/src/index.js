@@ -1,12 +1,13 @@
 import Register from './components/authentication/Register/Register';
 import Login from './components/authentication/Login/Login';
 import Logout from './components/authentication/Logout/Logout';
-import Activation from './components/authentication/Activation/Activation'
+import Feed from './components/feed/Feed';
+import Activation from './components/authentication/Activation/Activation';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Router from './router';
 import './index.css';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useSelectedTheme from './hooks/useSelectedTheme';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import {Provider as ReduxProvider} from 'react-redux';
@@ -37,21 +38,26 @@ const routes = [
     {
         path: '/activate/:uid/:token/',
         component: <Activation></Activation>,
+        protection: <AnonymousProtectedRoute></AnonymousProtectedRoute>,
+    },
+    {
+        path: '/feed/',
+        component: <Feed></Feed>,
         protection: (
-            <AnonymousProtectedRoute></AnonymousProtectedRoute>
-        )
-    }
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
+    },
 ];
 
 export default function App() {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const themeMode = useSelectedTheme();
 
     const theme = React.useMemo(
         () =>
             createTheme({
                 palette: {
-                    mode: prefersDarkMode ? 'dark' : 'light',
-                    ...(prefersDarkMode
+                    mode: themeMode,
+                    ...(themeMode === 'dark'
                         ? {
                               primary: {
                                   main: '#3f51b5',
@@ -63,18 +69,20 @@ export default function App() {
                         : {}),
                 },
             }),
-        [prefersDarkMode],
+        [themeMode],
     );
 
     return (
-        <ReduxProvider store={reduxStore}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline>
-                    <Router routes={routes}></Router>
-                </CssBaseline>
-            </ThemeProvider>
-        </ReduxProvider>
+        <ThemeProvider theme={theme}>
+            <CssBaseline>
+                <Router routes={routes}></Router>
+            </CssBaseline>
+        </ThemeProvider>
     );
 }
 
-root.render(<App />);
+root.render(
+    <ReduxProvider store={reduxStore}>
+        <App />
+    </ReduxProvider>,
+);

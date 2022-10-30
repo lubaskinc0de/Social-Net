@@ -47,8 +47,6 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 4000
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -76,7 +74,7 @@ INSTALLED_APPS = [
 ]
 
 INTERNAL_IPS = [
-    "127.0.0.1",
+    '127.0.0.1',
 ]
 
 DEBUG_TOOLBAR_CONFIG = {
@@ -191,6 +189,8 @@ if 'test' in sys.argv:
     MEDIA_ROOT = TESTS_MEDIA_ROOT
     MEDIA_URL = '/tests-media/'
 
+# Email
+
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
@@ -233,13 +233,13 @@ REST_FRAMEWORK = {
 # CORS
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    'http://localhost:3000',
 ]
 
 # Knox tokens
 
 REST_KNOX = {
-    'TOKEN_TTL': timedelta(hours=24),
+    'TOKEN_TTL': timedelta(hours=48),
     'AUTO_REFRESH': True,
     'USER_SERIALIZER': 'authentication.serializers.LoginPayloadSerializer',
 }

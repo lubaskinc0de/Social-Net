@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='image',
             name='photo',
-            field=models.ImageField(default='', upload_to=main.helpers.helpers.PathAndRename('photos/posts/2022/9/11/'), verbose_name='Фото'),
+            field=models.ImageField(default='', upload_to=main.helpers.helpers.PathAndRenameDate('photos/posts/2022/9/11/'), verbose_name='Фото'),
             preserve_default=False,
         ),
     ]

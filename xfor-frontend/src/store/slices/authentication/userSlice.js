@@ -28,8 +28,8 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         clearSuccess(state) {
-            state.success = initialState.success
-        }
+            state.success = initialState.success;
+        },
     },
     extraReducers: {
         // userRegister
@@ -88,25 +88,39 @@ const userSlice = createSlice({
         // userActivate
 
         [userActivate.pending](state) {
-            state.success = false
-            state.loading = true
+            state.success = false;
+            state.loading = true;
         },
 
         [userActivate.fulfilled](state) {
-            state.loading = false
-            state.success = true
+            state.loading = false;
+            state.success = true;
         },
 
         [userActivate.rejected](state, action) {
-            state.loading = false
-            state.rejected = true
-            state.errors = action.payload.APIErrors
+            state.loading = false;
+            state.rejected = true;
+            state.errors = action.payload.APIErrors;
         },
 
         // getUserDetails
+        [getUserDetails.pending](state) {
+            state.loading = true;
+        },
 
         [getUserDetails.fulfilled](state, action) {
             state.userInfo = action.payload;
+            state.loading = false;
+        },
+
+        [getUserDetails.rejected](state, action) {
+            const errorCode = action.payload.status_code;
+            state.loading = false;
+
+            if (errorCode === 401 && state.token) {
+                removeToken();
+                state.token = null;
+            }
         },
     },
 });

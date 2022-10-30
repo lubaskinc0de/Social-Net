@@ -1,5 +1,6 @@
 import logging
 from django.utils import timezone as django_timezone
+from django.conf import settings
 from pytz import timezone
 from pytz.exceptions import UnknownTimeZoneError
 
@@ -15,11 +16,15 @@ class TimezoneMiddleware:
         logger = LOGGER
         user = request.user
 
+        def set_default_tz():
+            request.timezone = timezone(settings.TIME_ZONE)
+
         if user.is_authenticated:
             
             try:
                 tz = timezone(user.profile.city.timezone)
                 django_timezone.activate(tz)
+                request.timezone = tz
 
                 logger.info(
                     '"%s" timezone: %s',
@@ -29,9 +34,13 @@ class TimezoneMiddleware:
             except UnknownTimeZoneError:
                 logger.warning('Unknown timezone error, timezone: %s', str(tz))
                 django_timezone.deactivate()
+                set_default_tz()
                 
             except AttributeError:
                 django_timezone.deactivate()
+                set_default_tz()
+        else:
+            set_default_tz()
         
         response = self.get_response(request)
         return response

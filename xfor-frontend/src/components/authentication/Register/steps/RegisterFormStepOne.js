@@ -1,19 +1,17 @@
 import React, {useState} from 'react';
 import Form from '../../Form';
 import {useFormik} from 'formik';
-import {handleEnter} from '../../../../lib/authentication';
 import useLoad from '../../../../hooks/useLoad';
-import Input from '../../FormComponents/FormInput';
 import {useNavigate} from 'react-router-dom';
 import * as Yup from 'yup';
 import Button from '@mui/material/Button';
+import FormFields from '../../FormFields';
 
 export default function RegisterFormStepOne(props) {
     const [showErrors, setShowErrors] = useState(false);
     const isLoad = useLoad(200);
     const navigate = useNavigate();
     const validationSchema = Yup.object({
-
         username: Yup.string()
             .max(50, 'Длина логина не должна превышать 50 символов!')
             .min(4, 'Длина логина не может быть меньше 4 символов')
@@ -27,7 +25,6 @@ export default function RegisterFormStepOne(props) {
         password2: Yup.string()
             .required('Укажите пароль повторно!')
             .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать!'),
-            
     });
 
     const {
@@ -73,21 +70,6 @@ export default function RegisterFormStepOne(props) {
         },
     ];
 
-    const formFields = fields.map((element) => {
-        return (
-            <Input
-                key={element.name}
-                showErrors={showErrors}
-                element={element}
-                value={formik.values[element.name]}
-                handleChange={formik.handleChange}
-                handleBlur={formik.handleBlur}
-                handleKeyDown={handleEnter}
-                touched={formik.touched}
-                errors={formik.errors}></Input>
-        );
-    });
-
     const signInButton = (
         <Button
             type='button'
@@ -110,7 +92,16 @@ export default function RegisterFormStepOne(props) {
             buttons={{
                 alterButton: signInButton,
             }}
-            fields={formFields}
+            fields={
+                <FormFields
+                    fields={fields}
+                    showErrors={showErrors}
+                    handleChange={formik.handleChange}
+                    handleBlur={formik.handleBlur}
+                    touched={formik.touched}
+                    errors={formik.errors}
+                    values={formik.values}></FormFields>
+            }
             title={props.title}></Form>
     );
 }

@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='image',
             name='photo',
-            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRename('photos/posts/%Y/%m/'), verbose_name='Фото'),
+            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRenameDate('photos/posts/%Y/%m/'), verbose_name='Фото'),
         ),
     ]

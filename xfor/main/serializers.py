@@ -1,7 +1,7 @@
 from typing import Collection, Iterable
 from rest_framework import serializers
 from .models import Image, Post, Comment
-from .fields import CurrentAuthorField
+from .fields import CurrentAuthorField, DateTimeTimezoneField
 from .helpers.helpers import run_images_validators
 from .mixins import ErrorMessagesSerializersMixin
 from django.utils.translation import gettext as _
@@ -19,7 +19,9 @@ class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer)
     is_user_liked_post = serializers.BooleanField(read_only=True)
     author = CurrentAuthorField(default=serializers.CurrentUserDefault())
     images = ImageSerializer(many=True, read_only=True)
-
+    created_at = DateTimeTimezoneField(read_only=True)
+    updated_at = DateTimeTimezoneField(read_only=True)
+    
     default_error_messages = {
         'empty_post': _('Пустой пост'),
     }

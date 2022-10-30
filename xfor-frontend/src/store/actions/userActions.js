@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import API from '../../api/authentication';
-import {parseAPIAxiosErrors} from '../../lib/authentication';
+import {parseAPIAxiosErrors} from '../../lib';
 import {setAPIErrors} from '../slices/authentication/APIErrorsSlice';
 
 export const userRegister = createAsyncThunk(
@@ -119,7 +119,7 @@ export const getUserDetails = createAsyncThunk(
             };
         } catch (err) {
             const APIErrors = [
-                'Не удалось получить данные о вас, скорее всего сервер недоступен. Повторите попытку позже!',
+                'Не удалось получить данные о вас, скорее всего сервер недоступен или ваша сессия истекла. Повторите попытку позже!',
             ];
 
             dispatch(
@@ -129,7 +129,7 @@ export const getUserDetails = createAsyncThunk(
             );
 
             return rejectWithValue({
-                APIErrors,
+                status_code: err.response.status,
             });
         }
     },

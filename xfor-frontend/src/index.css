@@ -1,4 +1,5 @@
 /* Base */
+
 a {
     color: inherit;
 }
@@ -95,4 +96,9 @@ p {
     text-align: center;
     font-size: 15px;
     font-weight: 500;
+}
+
+.flex-align__box {
+    display: flex;
+    align-items: center;
 }

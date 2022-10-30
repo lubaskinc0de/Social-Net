@@ -6,11 +6,8 @@ class AdminModelForm(Protocol):
 
     instance: Model
     cleaned_data: dict[str, Any]
-    _validate_unique: bool
     is_bound: bool
     data: Collection
-    _save: list
     files: Collection
-    _errors: dict['str', 'str']
-    fields: dict['str', Any]
+    fields: dict[str, Any]
     

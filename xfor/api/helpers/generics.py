@@ -11,11 +11,10 @@ class LikeGenericAPIView(LikeMixin, APIView):
 
     instance_name: is the name of the field in the serializer that accepts the ID of the 
 
-    lookup_field: the name of the m2m field of the object that stores likes
+    lookup_method: a method name on the model that accept one user argument and
+    add/remove a like from an instance and return:
+    True if the like is added, False if it is removed
     '''
-
-    instance_name: str = None
-    serializer_class: Serializer = None
 
     def put(self, request) -> Response:
         '''

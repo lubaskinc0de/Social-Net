@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const APIErrorsSlice = createSlice({
-    name: 'APIErrors',
+    name: 'APIErrorsSlice',
     initialState: {
         APIErrors: [],
     },

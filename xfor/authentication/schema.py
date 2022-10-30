@@ -5,7 +5,7 @@ class KnoxTokenScheme(OpenApiAuthenticationExtension):
     target_class = 'knox.auth.TokenAuthentication'
     name = 'knoxTokenAuth'
 
-    def get_security_definition(self, auto_schema):        
+    def get_security_definition(self, auto_schema) -> dict[str, str]:        
         return {
             'type': 'apiKey',
             'in': 'header',

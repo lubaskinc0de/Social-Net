@@ -2,9 +2,9 @@
 import React, {useState} from 'react';
 import Form from '../../Form';
 import {useFormik} from 'formik';
-import Input from '../../FormComponents/FormInput';
 import * as Yup from 'yup';
 import {useSelector} from 'react-redux';
+import FormFields from '../../FormFields';
 
 export default function RegisterFormStepFour(props) {
     const [showErrors, setShowErrors] = useState(false);
@@ -45,34 +45,6 @@ export default function RegisterFormStepFour(props) {
         },
     ];
 
-    const formFields = fields.map((element) => {
-        const getValue = () => {
-            if (element.hasOwnProperty('value')) {
-                return element.value;
-            }
-            return formik.values[element.name];
-        };
-
-        const getHandleChange = () => {
-            if (element.hasOwnProperty('handleChange')) {
-                return element.handleChange();
-            }
-            return formik.handleChange;
-        };
-
-        return (
-            <Input
-                key={element.name}
-                element={element}
-                showErrors={showErrors}
-                value={getValue()}
-                handleChange={getHandleChange()}
-                touched={formik.touched}
-                errors={formik.errors}
-                setError={formik.setFieldError}></Input>
-        );
-    });
-
     return (
         <Form
             handleSubmit={(e) => {
@@ -86,7 +58,17 @@ export default function RegisterFormStepFour(props) {
                 prevButton: {prevStep: props.prevStep},
                 loading: isFetching,
             }}
-            fields={formFields}
+            fields={
+                <FormFields
+                    fields={fields}
+                    setValue={formik.setFieldValue}
+                    showErrors={showErrors}
+                    handleChange={formik.handleChange}
+                    setFieldError={formik.setFieldError}
+                    touched={formik.touched}
+                    errors={formik.errors}
+                    values={formik.values}></FormFields>
+            }
             title={props.title}></Form>
     );
 }

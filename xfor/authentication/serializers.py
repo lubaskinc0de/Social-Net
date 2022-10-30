@@ -87,7 +87,7 @@ class UserCreateSerializer(ErrorMessagesSerializersMixin, serializers.ModelSeria
         if re.search(r'\d', last_name):
             self.fail('last_name_contains_digits')
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict):
         username, first_name, last_name = attrs.get('username'), attrs.get('first_name'), attrs.get('last_name')
         self.validate_names(username, first_name, last_name)
         return super().validate(attrs)

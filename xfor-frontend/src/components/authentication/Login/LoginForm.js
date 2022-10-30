@@ -1,19 +1,18 @@
 import React, {useState} from 'react';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
-import {handleEnter} from '../../../lib/authentication';
 import useLoad from '../../../hooks/useLoad';
-import Input from '../FormComponents/FormInput';
 import Form from '../Form';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
-import {useSelector} from 'react-redux'
+import {useSelector} from 'react-redux';
+import FormFields from '../FormFields';
 
 export default function LoginForm(props) {
     const [showErrors, setShowErrors] = useState(false);
     const navigate = useNavigate();
     const isLoad = useLoad(200);
-    const {loading} = useSelector(state => state.user)
+    const {loading} = useSelector((state) => state.user);
 
     const validationSchema = Yup.object({
         username: Yup.string()
@@ -50,21 +49,6 @@ export default function LoginForm(props) {
         },
     ];
 
-    const formFields = fields.map((element) => {
-        return (
-            <Input
-                key={element.name}
-                showErrors={showErrors}
-                element={element}
-                value={formik.values[element.name]}
-                handleChange={formik.handleChange}
-                handleBlur={formik.handleBlur}
-                handleKeyDown={handleEnter}
-                touched={formik.touched}
-                errors={formik.errors}></Input>
-        );
-    });
-
     const signUpButton = (
         <Button
             type='button'
@@ -90,7 +74,16 @@ export default function LoginForm(props) {
             }}
             message={props.message}
             setMessage={props.setMessage}
-            fields={formFields}
+            fields={
+                <FormFields
+                    fields={fields}
+                    showErrors={showErrors}
+                    handleChange={formik.handleChange}
+                    handleBlur={formik.handleBlur}
+                    touched={formik.touched}
+                    errors={formik.errors}
+                    values={formik.values}></FormFields>
+            }
             title={props.title}></Form>
     );
 }

@@ -36,7 +36,7 @@ export default function FormInput(props) {
         name: props.element.name,
     };
 
-    const textInput = (
+    const getTextInput = () => (
         <TextField
             type={props.element.type}
             label={props.element.label}
@@ -49,7 +49,7 @@ export default function FormInput(props) {
         />
     );
 
-    const picker = (
+    const getPicker = () => (
         <DatePicker
             value={props.value}
             label={props.element.label}
@@ -58,7 +58,8 @@ export default function FormInput(props) {
             maxDate={props.element.maxDate}
             textFieldProps={generalTextFieldProps}></DatePicker>
     );
-    const select = (
+
+    const getSelect = () => (
         <Select
             loading={props.element.loading}
             textFieldProps={generalTextFieldProps}
@@ -73,7 +74,7 @@ export default function FormInput(props) {
             value={props.value}></Select>
     );
 
-    const avatar = (
+    const getAvatar = () => (
         <Avatar
             width={props.element.width}
             height={props.element.height}
@@ -90,14 +91,16 @@ export default function FormInput(props) {
             label={props.element.label}></Avatar>
     );
 
-    const inputTypes = {
-        text: textInput,
-        password: textInput,
-        email: textInput,
-        date: picker,
-        select: select,
-        avatar: avatar,
-    };
+    const inputTypes =  {
+        text: getTextInput(),
+        password: getTextInput(),
+        email: getTextInput(),
+        date: getPicker(),
+        select: getSelect(),
+        avatar: getAvatar(),
+    }
 
-    return <>{inputTypes[props.element.type]}</>;
+    return (
+        inputTypes[props.element.type]
+    );
 }

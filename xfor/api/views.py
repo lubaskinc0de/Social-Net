@@ -6,11 +6,11 @@ class PostAddLikeAPIView(LikeGenericAPIView):
 
     instance_name = 'post'
     serializer_class = PostLikeSerializer
-    lookup_field = 'liked'
+    lookup_method = 'like'
 
 class CommentAddLikeAPIView(LikeGenericAPIView):
     '''Like the comment'''
     
     instance_name= 'comment'
     serializer_class = CommentLikeSerializer
-    lookup_field = 'liked'
+    lookup_method = 'like'

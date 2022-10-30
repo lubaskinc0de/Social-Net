@@ -152,6 +152,7 @@ cython_debug/
 
 xfor/media/photos/
 xfor/tests_media/photos/
+xfor/static/
 .vscode/
 cache/
 

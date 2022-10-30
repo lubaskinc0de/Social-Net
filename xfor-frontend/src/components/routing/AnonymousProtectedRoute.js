@@ -9,7 +9,7 @@ const AnonymousProtectedRoute = () => {
 
     useEffect(() => {
         if (token) {
-            navigate('/logout/');
+            navigate('/feed/');
         }
     }, [navigate, token]);
 

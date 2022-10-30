@@ -23,7 +23,7 @@ class UserLoginAPIView(LoginView):
     
     permission_classes = (IsAnonymous,)
 
-    def get_post_response_data(self, request, token: str, instance: AuthToken, user: User):
+    def get_post_response_data(self, request, token: str, instance: AuthToken, user: User) -> dict:
         UserSerializer = self.get_user_serializer_class()
 
         data = {
@@ -32,7 +32,7 @@ class UserLoginAPIView(LoginView):
         }
 
         if UserSerializer is not None:
-            data["user"] = UserSerializer(
+            data['user'] = UserSerializer(
                 user,
                 context=self.get_context()
             ).data
@@ -42,6 +42,7 @@ class UserLoginAPIView(LoginView):
     def post(self, request, format=None) -> Response:
         serializer = KnoxTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        
         user = serializer.validated_data['user']
         token_data = create_authtoken(request, user, self.get_token_limit_per_user(), self.get_token_ttl())
         return Response(self.get_post_response_data(*token_data, user))

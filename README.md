@@ -116,6 +116,12 @@ Create a file .env along the path Social-Net/xfor-frontend/ and paste the follow
 REACT_APP_BACKEND_URL=http://localhost:8000
 ```
 
+Collect static files
+
+```sh
+python manage.py collectstatic
+```
+
 Build images:
 
 ```sh

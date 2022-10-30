@@ -2,9 +2,7 @@
 import React, {useState} from 'react';
 import Form from '../../Form';
 import {useFormik} from 'formik';
-import {handleEnter} from '../../../../lib/authentication';
 import useContentLoading from '../../../../hooks/useContentLoading';
-import Input from '../../FormComponents/FormInput';
 import * as Yup from 'yup';
 import API from '../../../../api/authentication';
 import Box from '@mui/material/Box';
@@ -12,6 +10,7 @@ import {createFilterOptions} from '@mui/material/Autocomplete';
 import moment from 'moment';
 import {useDispatch} from 'react-redux';
 import {setAPIErrors as setErrorsAPI} from '../../../../store/slices/authentication/APIErrorsSlice';
+import FormFields from '../../FormFields';
 
 export default function RegisterFormStepThree(props) {
     const dispatch = useDispatch();
@@ -314,42 +313,22 @@ export default function RegisterFormStepThree(props) {
         },
     ];
 
-    const formFields = fields.map((element) => {
-        const getValue = () => {
-            if (element.hasOwnProperty('value')) {
-                return element.value;
-            }
-            return formik.values[element.name];
-        };
-
-        const getHandleChange = () => {
-            if (element.hasOwnProperty('handleChange')) {
-                return element.handleChange();
-            }
-            return formik.handleChange;
-        };
-
-        return (
-            <Input
-                key={element.name}
-                element={element}
-                setValue={formik.setFieldValue}
-                showErrors={showErrors}
-                value={getValue()}
-                handleChange={getHandleChange()}
-                handleBlur={formik.handleBlur}
-                handleKeyDown={handleEnter}
-                touched={formik.touched}
-                errors={formik.errors}></Input>
-        );
-    });
-
     return (
         <Form
             handleSubmit={formik.handleSubmit}
             setShowErrors={setShowErrors}
             buttons={{prevButton: {prevStep: props.prevStep}}}
-            fields={formFields}
+            fields={
+                <FormFields
+                    fields={fields}
+                    setValue={formik.setFieldValue}
+                    showErrors={showErrors}
+                    handleChange={formik.handleChange}
+                    handleBlur={formik.handleBlur}
+                    touched={formik.touched}
+                    errors={formik.errors}
+                    values={formik.values}></FormFields>
+            }
             title={props.title}></Form>
     );
 }

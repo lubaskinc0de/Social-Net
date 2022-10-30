@@ -4,8 +4,7 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from geo_api.models import City
-from main.helpers.helpers import PathAndRename
-from datetime import datetime
+from main.helpers.helpers import PathAndRenameDate
 from knox.models import AuthToken
 
 class Profile(models.Model):
@@ -14,7 +13,7 @@ class Profile(models.Model):
     bio = models.CharField(max_length=100, verbose_name='Статус', blank=True)
 
     avatar = models.ImageField(verbose_name='Аватарка', blank=True, \
-        upload_to=PathAndRename('photos/avatars/{}/{}/'.format(datetime.now().year, datetime.now().month)),\
+        upload_to=PathAndRenameDate('photos/avatars/'),
         default='default/default.png')
 
     followers = models.ManyToManyField('self', through='Contact', related_name='following', symmetrical=False)
@@ -38,7 +37,7 @@ class Contact(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True,verbose_name='Создано')
 
     def __str__(self) -> str:
-        return '{} подписан на {}'.format(self.user_from,self.user_to)
+        return '{} подписан на {}'.format(self.user_from, self.user_to)
 
     class Meta:
         ordering = ('-created_at',)
@@ -46,7 +45,7 @@ class Contact(models.Model):
         verbose_name_plural = 'Подписки'
         constraints = [
             models.CheckConstraint(
-                check =~ models.Q(user_from=models.F("user_to")), # Prohibits subscribing to yourself
+                check =~ models.Q(user_from=models.F('user_to')), # Prohibits subscribing to yourself
                 name = 'check_self_follow',
             )
         ]

@@ -42,7 +42,7 @@ class PostViewSet(IsAuthorPermissionsMixin, PartialViewSet):
             liked_count = Count('liked', distinct=True),
             author_in_user_following=Exists(this_user.profile.following.filter(id=OuterRef('author__profile__id'))), # Thx to Nikolay Cherniy
             is_user_liked_post=Exists(this_user.liked.filter(id=OuterRef('id'))))\
-            .select_related('author','author__profile')\
+            .select_related('author__profile')\
             .prefetch_related('images')\
             .order_by('-created_at')
         return posts

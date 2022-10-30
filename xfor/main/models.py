@@ -1,18 +1,14 @@
 from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
-from .helpers.helpers import PathAndRename
+from .helpers.helpers import PathAndRenameDate
 from authentication.models import Profile
 from mptt.models import MPTTModel, TreeForeignKey
-from datetime import datetime
 
 class Image(models.Model):
     post = models.ForeignKey('Post', related_name='images',related_query_name='images',on_delete=models.CASCADE,verbose_name='Пост',null=True,blank=True)
     comment = models.ForeignKey('Comment', related_name='images_comment',related_query_name='images_comment',on_delete=models.CASCADE,verbose_name='Комментарий',null=True,blank=True)
-
-    photo = models.ImageField(verbose_name='Фото',\
-        upload_to=PathAndRename('photos/posts/{}/{}/'.format(datetime.now().year, datetime.now().month)))
-        
+    photo = models.ImageField(verbose_name='Фото', upload_to=PathAndRenameDate('photos/posts/'))
     author = models.ForeignKey(User,verbose_name='Автор',on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True,verbose_name='Дата создания')
 
@@ -44,6 +40,18 @@ class Post(models.Model):
         '''Adds a view to the post, or if there is already a view, does nothing'''
 
         self.viewers.add(user)
+    
+    def like(self, user: User) -> None:
+        '''Like/dislike post, returns True if like false otherwise'''
+
+        is_like = self.liked.filter(id=user.id).exists()
+
+        if is_like:
+            self.liked.remove(user)
+            return False
+
+        self.liked.add(user)
+        return True
 
     class Meta:
         verbose_name = 'пост'
@@ -62,6 +70,18 @@ class Comment(MPTTModel):
 
     def __str__(self) -> str:
         return f'Комментарий {self.pk}'
+
+    def like(self, user: User) -> None:
+        '''Like/dislike comment, returns True if like false otherwise'''
+
+        is_like = self.liked.filter(id=user.id).exists()
+
+        if is_like:
+            self.liked.remove(user)
+            return False
+        
+        self.liked.add(user)
+        return True
 
     class Meta:
         verbose_name = 'комментарий'
