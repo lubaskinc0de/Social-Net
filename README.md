@@ -217,3 +217,18 @@ Contributions are always welcome!
 ![formstep4errors](https://user-images.githubusercontent.com/100635212/190927645-e79931ff-6677-4aa4-b42c-d6ed16dcba4a.png)
 
 
+## Feed
+
+![feederror](https://user-images.githubusercontent.com/100635212/198878924-41236ca2-7f83-4c9c-bdae-1787eb43222e.png)
+
+![feedloading](https://user-images.githubusercontent.com/100635212/198878925-cf7f2b0c-feb0-4356-8370-fe648715f431.png)
+
+![feed](https://user-images.githubusercontent.com/100635212/198878927-ef566062-c5a9-4183-9048-7092158098de.png)
+
+![feedlike](https://user-images.githubusercontent.com/100635212/198878929-89cdc432-04e0-4654-a37d-b7858577dc6b.png)
+
+![feedimagefull](https://user-images.githubusercontent.com/100635212/198878930-5854c8e5-770b-4d0c-82db-6daf5ee3c9c6.png)
+
+![feedlight](https://user-images.githubusercontent.com/100635212/198878932-35fc9b65-f0cc-4b1c-a0de-07650cd5eb87.png)
+
+
