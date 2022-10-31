@@ -1,44 +1,23 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Form from '../../Form';
 import {useFormik} from 'formik';
-import useContentLoading from '../../../../hooks/useContentLoading';
 import * as Yup from 'yup';
-import API from '../../../../api/authentication';
 import Box from '@mui/material/Box';
 import {createFilterOptions} from '@mui/material/Autocomplete';
 import moment from 'moment';
-import {useDispatch} from 'react-redux';
-import {setAPIErrors as setErrorsAPI} from '../../../../store/slices/authentication/APIErrorsSlice';
+import {useDispatch, useSelector} from 'react-redux';
 import FormFields from '../../FormFields';
+import {getCountries, getCities} from '../../../../store/actions/userActions';
+import {clearCities} from '../../../../store/slices/authentication/userSlice';
 
 export default function RegisterFormStepThree(props) {
     const dispatch = useDispatch();
-
-    const setAPIErrors = (errors) => {
-        dispatch(
-            setErrorsAPI({
-                APIErrors: errors,
-            }),
-        );
-    };
-
-    const loadCountries = async () => {
-        try {
-            const res = await API.getCountries();
-            setCountries(res.data);
-        } catch {
-            setAPIErrors([
-                'Ошибка загрузки списка стран, повторите попытку позже.',
-            ]);
-        }
-    };
-
-    const isCountriesLoading = useContentLoading(loadCountries, []);
+    const {cities, countries, loading} = useSelector((state) => state.user);
     const [showErrors, setShowErrors] = useState(false);
-    const [countries, setCountries] = useState([]);
-    const [cities, setCities] = useState([]);
-    const [isCitiesDisabled, setIsCitiesDisabled] = useState(false);
+
+    useEffect(() => {
+        dispatch(getCountries());
+    }, [dispatch]);
 
     const {
         birthday = null,
@@ -105,39 +84,26 @@ export default function RegisterFormStepThree(props) {
         },
     });
 
-    const loadCities = async () => {
-        const clearCities = () => {
-            formik.setFieldValue('city', null);
-            setCities([]);
-        };
-
-        const fetchCities = async () => {
-            try {
-                const res = await API.getCities(formik.values.country);
-                res.data.sort((a, b) =>
-                    a.alternate_names.localeCompare(b.alternate_names),
-                );
-                setCities(res.data);
-                setIsCitiesDisabled(false);
-            } catch {
-                setAPIErrors([
-                    'Ошибка загрузки списка городов, повторите попытку позже.',
-                ]);
-            }
-        };
-
-        if (formik.values.country) {
-            setIsCitiesDisabled(true);
-            await fetchCities();
-        } else {
-            setIsCitiesDisabled(true);
-            clearCities();
-        }
+    const flushCities = () => {
+        formik.setFieldValue('city', null);
+        dispatch(clearCities());
     };
 
-    const isCitiesLoading = useContentLoading(loadCities, [
-        formik.values.country,
-    ]);
+    useEffect(() => {
+        if (formik.values.country) {
+            dispatch(getCities(formik.values.country));
+        } else {
+            flushCities();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, formik.values.country]);
+
+    useEffect(() => {
+        if (loading && formik.values.country) {
+            flushCities()
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, formik.values.country])
 
     const fields = [
         {
@@ -158,7 +124,7 @@ export default function RegisterFormStepThree(props) {
             type: 'select',
             label: 'Страна',
             options: countries,
-            loading: isCountriesLoading,
+            loading: loading && !countries.length,
 
             compareFunc(option, value) {
                 return option.id === value.id;
@@ -225,9 +191,9 @@ export default function RegisterFormStepThree(props) {
             name: 'city',
             type: 'select',
             label: 'Город',
-            disabled: isCitiesDisabled,
+            disabled: !formik.values.country || loading,
             options: cities,
-            loading: isCitiesLoading,
+            loading: loading,
 
             filterOptions: createFilterOptions({
                 stringify: (option) => option.alternate_names,

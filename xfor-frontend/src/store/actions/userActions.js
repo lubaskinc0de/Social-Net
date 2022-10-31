@@ -21,8 +21,8 @@ export const userRegister = createAsyncThunk(
                 APIErrors,
             });
         }
-    }
-)
+    },
+);
 
 export const userLogin = createAsyncThunk(
     'user/login',
@@ -61,7 +61,7 @@ export const userLogout = createAsyncThunk(
                 },
             };
 
-            await API.logout(config)
+            await API.logout(config);
         } catch (err) {
             const APIErrors = parseAPIAxiosErrors(err);
 
@@ -82,17 +82,17 @@ export const userActivate = createAsyncThunk(
     'user/activate',
     async (data, {rejectWithValue}) => {
         try {
-            const {uid, token} = data
+            const {uid, token} = data;
             await API.activate(uid, token);
         } catch (err) {
-            const APIErrors = parseAPIAxiosErrors(err)
+            const APIErrors = parseAPIAxiosErrors(err);
 
             return rejectWithValue({
                 APIErrors,
             });
         }
-    }
-)
+    },
+);
 
 export const getUserDetails = createAsyncThunk(
     'user/getUserDetails',
@@ -130,6 +130,58 @@ export const getUserDetails = createAsyncThunk(
 
             return rejectWithValue({
                 status_code: err.response.status,
+            });
+        }
+    },
+);
+
+export const getCountries = createAsyncThunk(
+    'user/getCountries',
+    async (_, {dispatch, rejectWithValue, getState}) => {
+        try {
+            const response = await API.getCountries();
+            const countries = response.data;
+
+            return {
+                countries,
+            };
+        } catch (err) {
+            const APIErrors = parseAPIAxiosErrors(err);
+
+            dispatch(
+                setAPIErrors({
+                    APIErrors,
+                }),
+            );
+
+            return rejectWithValue({
+                APIErrors,
+            });
+        }
+    },
+);
+
+export const getCities = createAsyncThunk(
+    'user/getCities',
+    async (country_id, {dispatch, rejectWithValue, getState}) => {
+        try {
+            const response = await API.getCities(country_id);
+            const cities = response.data;
+
+            return {
+                cities,
+            };
+        } catch (err) {
+            const APIErrors = parseAPIAxiosErrors(err);
+
+            dispatch(
+                setAPIErrors({
+                    APIErrors,
+                }),
+            );
+
+            return rejectWithValue({
+                APIErrors,
             });
         }
     },

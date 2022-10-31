@@ -5,6 +5,8 @@ import {
     userLogout,
     userActivate,
     getUserDetails,
+    getCountries,
+    getCities,
 } from '../../actions/userActions';
 import {getToken, setToken, removeToken} from '../../../lib/authentication';
 
@@ -20,6 +22,8 @@ const initialState = {
     loading: null,
     success: null,
     errors: [],
+    countries: [],
+    cities: [],
     rejected: null,
 };
 
@@ -29,6 +33,13 @@ const userSlice = createSlice({
     reducers: {
         clearSuccess(state) {
             state.success = initialState.success;
+        },
+        clearCities(state) {
+            state.cities = [];
+        },
+        clearGeo(state) {
+            state.cities = [];
+            state.countries = [];
         },
     },
     extraReducers: {
@@ -122,8 +133,42 @@ const userSlice = createSlice({
                 state.token = null;
             }
         },
+
+        // getCountries
+        [getCountries.pending](state) {
+            state.loading = true;
+        },
+
+        [getCountries.fulfilled](state, action) {
+            state.loading = false;
+            state.countries = action.payload.countries;
+        },
+
+        [getCountries.rejected](state) {
+            state.loading = false;
+        },
+
+        // getCities
+        [getCities.pending](state) {
+            state.loading = true;
+        },
+
+        [getCities.fulfilled](state, action) {
+            state.loading = false;
+
+            const {cities} = action.payload;
+            cities.sort((a, b) =>
+                a.alternate_names.localeCompare(b.alternate_names),
+            );
+
+            state.cities = cities;
+        },
+
+        [getCities.rejected](state) {
+            state.loading = false;
+        },
     },
 });
 
-export const {clearSuccess} = userSlice.actions;
+export const {clearSuccess, clearCities, clearGeo} = userSlice.actions;
 export default userSlice.reducer;

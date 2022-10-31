@@ -9,7 +9,7 @@ import {useNavigate} from 'react-router-dom';
 import lodash_merge from 'lodash/merge';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearAPIErrors} from '../../../store/slices/authentication/APIErrorsSlice';
-import {clearSuccess} from '../../../store/slices/authentication/userSlice';
+import {clearSuccess, clearGeo} from '../../../store/slices/authentication/userSlice';
 import {userRegister} from '../../../store/actions/userActions';
 
 import Page404 from '../../pages/Page404';
@@ -38,6 +38,7 @@ export default function Register() {
 
             dispatch(clearAPIErrors());
             dispatch(clearSuccess());
+            dispatch(clearGeo())
 
             navigate('/login/', {
                 state: {
