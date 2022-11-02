@@ -43,7 +43,7 @@ def run_images_validators(images: Collection) -> None:
     if len(images) > 10:
         raise serializers.ValidationError(detail={
             'max_file_length': _('Недопустимое кол-во файлов, максимальное кол-во файлов: 10')
-            })
+            }, code='max_file_length')
         
     images_validator(images)
     
@@ -58,5 +58,5 @@ def images_validator(images: Iterable) -> None:
         if image.size / 1024 / 1024 > 8:
             raise serializers.ValidationError(detail={
                 'file_too_large': _('Файл, который вы загрузили, слишком большой.')
-                })
+                }, code='file_too_large')
         img_validator(image)

@@ -28,10 +28,10 @@ class PostViewSet(IsAuthorPermissionsMixin, PartialViewSet):
         if query_params.get('is_popular') and query_params.get('is_interesting'):
             # sorting by these two fields at the same time may cause not very obvious results
             
-            return Response({
+            raise ValidationError(detail={
                 'error': _('Сортировка по полям "интересно" и "популярно" \
                     может вызвать не слишком очевидные результаты.')
-            }, status=400)
+            }, code='invalid_filters')
 
         return super().list(request, *args, **kwargs)
     
@@ -97,12 +97,12 @@ class CommentDescendantsAPIView(ListAPIView):
         
         return descendants
             
-    
     def set_instance(self, comment_id: int) -> None:
         self.instance = get_object_or_404(Comment, id=comment_id)
         
         if self.instance.level != 0:
-            raise ValidationError(detail={'id': 'Указанный комментарий является ответом, это недопустимо.'}, code='error_not_root_comment')
+            raise ValidationError(detail={'id': 'Указанный комментарий является ответом, это недопустимо.'},
+            code='error_not_root_comment')
     
     def list(self, *args, **kwargs):
         self.set_instance(kwargs.get('pk'))

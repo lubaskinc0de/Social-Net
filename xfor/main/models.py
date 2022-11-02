@@ -24,14 +24,14 @@ class Post(models.Model):
     profile = models.ForeignKey(Profile,null=True,on_delete=models.CASCADE,related_name='posts_profile',verbose_name='Профиль')
     title = models.CharField(max_length=150,verbose_name='Название', blank=True)
     content = models.TextField(verbose_name='Контент',blank=True)
-    created_at = models.DateTimeField(auto_now_add=True,verbose_name='Создано')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано', db_index=True)
     updated_at = models.DateTimeField(auto_now=True,verbose_name='Обновлено')
     viewers = models.ManyToManyField(User,related_name='posts',related_query_name='posts',verbose_name='Просмотры',blank=True)
     author = models.ForeignKey(User,verbose_name='Автор',on_delete=models.CASCADE)
     liked = models.ManyToManyField(User,verbose_name='Лайкнувшие',related_name='liked',related_query_name='liked',blank=True)
 
     def __str__(self) -> str:
-        return self.title or self.content[:10] or self.author.username
+        return self.title or self.content[:10] or 'Пост'
 
     def get_absolute_url(self) -> str:
         return reverse('post', kwargs={'pk': self.pk})
