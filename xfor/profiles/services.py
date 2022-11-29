@@ -1,3 +1,6 @@
+"""Services for the profiles app"""
+
+
 from authentication.models import Profile
 
 

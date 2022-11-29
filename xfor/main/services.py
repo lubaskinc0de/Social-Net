@@ -1,3 +1,6 @@
+"""Services for the main app"""
+
+
 from typing import Collection, TypeVar
 
 from django.contrib.auth.models import User

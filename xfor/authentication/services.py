@@ -1,3 +1,6 @@
+"""Services for the authentication app"""
+
+
 from datetime import datetime
 
 from djoser.compat import get_user_email
@@ -71,6 +74,10 @@ def create_authtoken(
 
 
 def setup_user_profile(attrs: dict, user: User) -> Profile:
+    """
+    Helper function for the 'register_user' service
+    Set attrs to the user.profile if attr not None
+    """
     for key in attrs:
         if not attrs.get(key) is None:
             setattr(user.profile, key, attrs.get(key))

@@ -1,3 +1,6 @@
+"""Services for the geo-api app"""
+
+
 from .models import City, Country
 from django.db import connection
 
