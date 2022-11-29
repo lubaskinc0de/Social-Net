@@ -1,21 +1,22 @@
-import React, {useEffect} from 'react';
-import {useParams, NavLink} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {userActivate} from '../../../store/actions/userActions';
+import React, { useEffect } from 'react';
+import { useParams, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { userActivate } from '../../../store/actions/userActions';
 import Container from '@mui/material/Container';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import ErrorIcon from '@mui/icons-material/Error';
 import DownloadingIcon from '@mui/icons-material/Downloading';
+import './activation.css';
 
 export default function Activation() {
-    const {uid, token} = useParams();
+    const { uid, token } = useParams();
     const dispatch = useDispatch();
-    const {success, rejected, errors} = useSelector((state) => state.user);
+    const { success, rejected, errors } = useSelector((state) => state.user);
 
     useEffect(() => {
-        dispatch(userActivate({uid, token}));
+        dispatch(userActivate({ uid, token }));
     }, [dispatch, token, uid]);
 
     const getIcon = () => {
@@ -23,7 +24,8 @@ export default function Activation() {
             return (
                 <CheckCircleIcon
                     fontSize='large'
-                    color='success'></CheckCircleIcon>
+                    color='success'
+                ></CheckCircleIcon>
             );
         } else if (rejected) {
             return <ErrorIcon fontSize='large' color='error'></ErrorIcon>;
@@ -59,13 +61,15 @@ export default function Activation() {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}
-            maxWidth='ld'>
+            maxWidth='ld'
+        >
             <Grid
                 justifyContent='center'
                 alignItems='center'
                 container
                 spacing={0}
-                direction='column'>
+                direction='column'
+            >
                 <Grid item xs={6}>
                     {getIcon()}
                 </Grid>

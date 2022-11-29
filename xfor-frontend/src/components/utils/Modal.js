@@ -31,7 +31,8 @@ export default function Modal(props) {
                 timeout: 500,
             }}
             open={props.open}
-            onClose={props.handleClose}>
+            onClose={props.handleClose}
+        >
             <Fade in={props.open}>
                 <Container
                     sx={{
@@ -40,7 +41,8 @@ export default function Modal(props) {
                         alignItems: 'center',
                     }}
                     component='main'
-                    maxWidth='xl'>
+                    maxWidth='xl'
+                >
                     <Box sx={boxStyle}>{props.children}</Box>
                 </Container>
             </Fade>

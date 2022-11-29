@@ -15,22 +15,61 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Post',
+            name="Post",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('photo', models.ImageField(blank=True, upload_to='photos/posts/%Y/%m/%d/', verbose_name='Фото')),
-                ('title', models.CharField(max_length=150, verbose_name='Название')),
-                ('content', models.TextField(verbose_name='Контент')),
-                ('slug', models.SlugField(max_length=150, unique=True, verbose_name='URL')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Создано')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Обновлено')),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Автор')),
-                ('viewers', models.ManyToManyField(related_name='posts', related_query_name='posts', to=settings.AUTH_USER_MODEL, verbose_name='Просмотры')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "photo",
+                    models.ImageField(
+                        blank=True,
+                        upload_to="photos/posts/%Y/%m/%d/",
+                        verbose_name="Фото",
+                    ),
+                ),
+                ("title", models.CharField(max_length=150, verbose_name="Название")),
+                ("content", models.TextField(verbose_name="Контент")),
+                (
+                    "slug",
+                    models.SlugField(max_length=150, unique=True, verbose_name="URL"),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(auto_now_add=True, verbose_name="Создано"),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Обновлено"),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Автор",
+                    ),
+                ),
+                (
+                    "viewers",
+                    models.ManyToManyField(
+                        related_name="posts",
+                        related_query_name="posts",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Просмотры",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Пост',
-                'verbose_name_plural': 'Посты',
-                'ordering': ['-created_at'],
+                "verbose_name": "Пост",
+                "verbose_name_plural": "Посты",
+                "ordering": ["-created_at"],
             },
         ),
     ]

@@ -1,18 +1,18 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import useLoad from '../../../hooks/useLoad';
 import Form from '../Form';
 import Button from '@mui/material/Button';
-import {useNavigate} from 'react-router-dom';
-import {useSelector} from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import FormFields from '../FormFields';
 
 export default function LoginForm(props) {
     const [showErrors, setShowErrors] = useState(false);
     const navigate = useNavigate();
     const isLoad = useLoad(200);
-    const {loading} = useSelector((state) => state.user);
+    const { loading } = useSelector((state) => state.user);
 
     const validationSchema = Yup.object({
         username: Yup.string()
@@ -55,11 +55,12 @@ export default function LoginForm(props) {
             size='large'
             fullWidth
             disabled={!isLoad}
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             onClick={(e) => {
                 navigate('/');
             }}
-            variant='contained'>
+            variant='contained'
+        >
             Регистрация
         </Button>
     );
@@ -82,8 +83,10 @@ export default function LoginForm(props) {
                     handleBlur={formik.handleBlur}
                     touched={formik.touched}
                     errors={formik.errors}
-                    values={formik.values}></FormFields>
+                    values={formik.values}
+                ></FormFields>
             }
-            title={props.title}></Form>
+            title={props.title}
+        ></Form>
     );
 }

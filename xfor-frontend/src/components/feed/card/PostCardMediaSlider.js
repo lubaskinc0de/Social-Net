@@ -1,8 +1,8 @@
 import React from 'react';
-import {Swiper, SwiperSlide} from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/lazy';
-import {Lazy} from 'swiper';
+import { Lazy } from 'swiper';
 import CardMedia from '@mui/material/CardMedia';
 
 export default function PostCardMediaSlider(props) {
@@ -12,7 +12,8 @@ export default function PostCardMediaSlider(props) {
             modules={[Lazy]}
             slidesPerView={1}
             autoHeight
-            lazy>
+            lazy
+        >
             {props.images.map((img) => {
                 return (
                     <SwiperSlide key={img.photo}>

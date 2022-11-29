@@ -1,12 +1,12 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import PostCard from './card/PostCard';
-import {getTimeInfo} from '../../lib/feed';
-import {useSelector} from 'react-redux';
+import { getTimeInfo } from '../../lib/feed';
+import { useSelector } from 'react-redux';
 import FeedSkeleton from './FeedSkeleton';
 
 export default function FeedCards(props) {
-    const {posts, loading} = useSelector((state) => state.posts);
+    const { posts, loading } = useSelector((state) => state.posts);
 
     return loading && !posts.length ? (
         <FeedSkeleton></FeedSkeleton>
@@ -24,7 +24,8 @@ export default function FeedCards(props) {
                             flexDirection: 'column',
                             alignItems: 'center',
                             width: '100%',
-                        }}>
+                        }}
+                    >
                         <PostCard
                             id={el.id}
                             content={el.content}
@@ -37,7 +38,8 @@ export default function FeedCards(props) {
                             viewsCount={el.viewers_count}
                             likesCount={el.liked_count}
                             isLiked={el.is_user_liked_post}
-                            images={el.images}></PostCard>
+                            images={el.images}
+                        ></PostCard>
                     </Grid>
                 );
             })}

@@ -1,15 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Form from '../../Form';
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import FormFields from '../../FormFields';
 
 export default function RegisterFormStepFour(props) {
     const [showErrors, setShowErrors] = useState(false);
     const isFetching = useSelector((state) => state.user.loading);
-    const {avatar = ''} = props.values;
+    const { avatar = '' } = props.values;
 
     const validationSchema = Yup.object({
         avatar: Yup.array().nullable(),
@@ -55,7 +55,7 @@ export default function RegisterFormStepFour(props) {
             }}
             setShowErrors={setShowErrors}
             buttons={{
-                prevButton: {prevStep: props.prevStep},
+                prevButton: { prevStep: props.prevStep },
                 loading: isFetching,
             }}
             fields={
@@ -67,8 +67,10 @@ export default function RegisterFormStepFour(props) {
                     setFieldError={formik.setFieldError}
                     touched={formik.touched}
                     errors={formik.errors}
-                    values={formik.values}></FormFields>
+                    values={formik.values}
+                ></FormFields>
             }
-            title={props.title}></Form>
+            title={props.title}
+        ></Form>
     );
 }

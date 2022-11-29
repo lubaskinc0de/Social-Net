@@ -6,17 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0010_alter_image_photo_alter_post_liked'),
+        ("main", "0010_alter_image_photo_alter_post_liked"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='image',
-            name='post',
+            model_name="image",
+            name="post",
         ),
         migrations.AddField(
-            model_name='post',
-            name='images',
-            field=models.ManyToManyField(blank=True, related_name='posts_images', related_query_name='posts_images', to='main.image', verbose_name='Фото'),
+            model_name="post",
+            name="images",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="posts_images",
+                related_query_name="posts_images",
+                to="main.image",
+                verbose_name="Фото",
+            ),
         ),
     ]

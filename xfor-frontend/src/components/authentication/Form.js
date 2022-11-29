@@ -5,15 +5,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Buttons from './FormComponents/FormButtons';
-import {showComponent} from '../../lib/authentication';
+import { showComponent } from '../../lib/authentication';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import {useSelector, useDispatch} from 'react-redux';
-import {shiftAPIErrors} from '../../store/slices/authentication/APIErrorsSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { shiftAPIErrors } from '../../store/slices/authentication/APIErrorsSlice';
 
 export default function Form(props) {
     const APIErrors = useSelector((state) => state.APIErrors.APIErrors);
-    const message = props.message
+    const message = props.message;
     const dispatch = useDispatch();
 
     const handleClose = () => {
@@ -34,17 +34,19 @@ export default function Form(props) {
                 justifyContent: 'center',
             }}
             component='main'
-            maxWidth='xs'>
+            maxWidth='xs'
+        >
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     width: '100%',
-                }}>
+                }}
+            >
                 {showComponent(
                     <Typography variant='h5'>{props.title}</Typography>,
-                    !APIErrors.length && !message,
+                    !APIErrors.length && !message
                 )}
 
                 {showComponent(
@@ -53,7 +55,7 @@ export default function Form(props) {
                             {APIErrors[0]}
                         </Alert>
                     </Grid>,
-                    APIErrors.length && !message,
+                    APIErrors.length && !message
                 )}
 
                 {showComponent(
@@ -62,19 +64,21 @@ export default function Form(props) {
                             {message}
                         </Alert>
                     </Grid>,
-                    message,
+                    message
                 )}
 
                 <Box
                     component='form'
                     noValidate
                     onSubmit={props.handleSubmit}
-                    sx={{mt: 3, width: '100%'}}>
+                    sx={{ mt: 3, width: '100%' }}
+                >
                     <Stack spacing={2}>{props.fields}</Stack>
                     <Buttons
                         handleSubmit={props.handleSubmit}
                         setShowErrors={props.setShowErrors}
-                        {...props.buttons}></Buttons>
+                        {...props.buttons}
+                    ></Buttons>
                 </Box>
             </Box>
         </Container>

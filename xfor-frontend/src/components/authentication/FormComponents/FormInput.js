@@ -23,14 +23,14 @@ export default function FormInput(props) {
         fullWidth: true,
         error: showError(
             props.touched[props.element.name],
-            props.errors[props.element.name],
+            props.errors[props.element.name]
         ),
         helperText: showErrorText(
             props.touched[props.element.name],
             props.errors[props.element.name],
-            props.showErrors,
+            props.showErrors
         ),
-        FormHelperTextProps: {sx: {marginLeft: 0}},
+        FormHelperTextProps: { sx: { marginLeft: 0 } },
         onBlur: props.handleBlur,
         id: props.element.name,
         name: props.element.name,
@@ -56,7 +56,8 @@ export default function FormInput(props) {
             handleChange={props.handleChange}
             minDate={props.element.minDate}
             maxDate={props.element.maxDate}
-            textFieldProps={generalTextFieldProps}></DatePicker>
+            textFieldProps={generalTextFieldProps}
+        ></DatePicker>
     );
 
     const getSelect = () => (
@@ -71,7 +72,8 @@ export default function FormInput(props) {
             disabled={props.element.disabled}
             compareFunc={props.element.compareFunc}
             handleChange={props.handleChange}
-            value={props.value}></Select>
+            value={props.value}
+        ></Select>
     );
 
     const getAvatar = () => (
@@ -83,24 +85,23 @@ export default function FormInput(props) {
             helperText={showErrorText(
                 props.touched[props.element.name],
                 props.errors[props.element.name],
-                props.showErrors,
+                props.showErrors
             )}
             handleChange={props.handleChange}
             value={props.value}
             id={props.element.id}
-            label={props.element.label}></Avatar>
+            label={props.element.label}
+        ></Avatar>
     );
 
-    const inputTypes =  {
+    const inputTypes = {
         text: getTextInput(),
         password: getTextInput(),
         email: getTextInput(),
         date: getPicker(),
         select: getSelect(),
         avatar: getAvatar(),
-    }
+    };
 
-    return (
-        inputTypes[props.element.type]
-    );
+    return inputTypes[props.element.type];
 }

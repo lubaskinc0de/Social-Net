@@ -10,7 +10,8 @@ export default function PostCardViews(props) {
                 sx={{
                     lineHeight: 'normal',
                 }}
-                variant='body2'>
+                variant='body2'
+            >
                 {props.viewsCount}
             </Typography>
             <IconButton>

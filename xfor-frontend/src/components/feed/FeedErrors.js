@@ -1,7 +1,7 @@
 import React from 'react';
-import {showComponent} from '../../lib/authentication';
-import {shiftAPIErrors} from '../../store/slices/authentication/APIErrorsSlice';
-import {useSelector, useDispatch} from 'react-redux';
+import { showComponent } from '../../lib/authentication';
+import { shiftAPIErrors } from '../../store/slices/authentication/APIErrorsSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 
@@ -20,16 +20,18 @@ export default function FeedErrors() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-            }}>
+            }}
+        >
             <Alert
                 sx={{
                     maxWidth: 400,
                 }}
                 onClose={handleClose}
-                severity='error'>
+                severity='error'
+            >
                 {APIErrors[0]}
             </Alert>
         </Grid>,
-        APIErrors.length,
+        APIErrors.length
     );
 }

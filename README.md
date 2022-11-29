@@ -58,6 +58,7 @@ This is my little project, I'm working very hard on it and I'm sure it has a gre
 
 ## Features
 
+- 91% code coverage
 - Authentication with email confirmation
 - Flexibly customizable feed of posts
 - Viewing a single post

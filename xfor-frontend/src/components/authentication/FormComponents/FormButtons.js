@@ -20,7 +20,8 @@ export default function FormButtons(props) {
                     {...generalButtonProps}
                     loading
                     disabled={undefined}
-                    sx={{mt: 3, mb: 2}}>
+                    sx={{ mt: 3, mb: 2 }}
+                >
                     Загрузка..
                 </LoadingButton>
             );
@@ -34,7 +35,8 @@ export default function FormButtons(props) {
                     props.handleSubmit(e);
                     props.setShowErrors(true);
                 }}
-                sx={{mt: 3, mb: 2}}>
+                sx={{ mt: 3, mb: 2 }}
+            >
                 Готово
             </Button>
         );
@@ -49,8 +51,9 @@ export default function FormButtons(props) {
             <Button
                 {...generalButtonProps}
                 type='button'
-                sx={{mb: 2}}
-                onClick={props.prevButton.prevStep}>
+                sx={{ mb: 2 }}
+                onClick={props.prevButton.prevStep}
+            >
                 Назад
             </Button>
         );

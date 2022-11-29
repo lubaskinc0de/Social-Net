@@ -1,6 +1,6 @@
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-import {Routes, Route} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Page404 from './components/pages/Page404';
 
 export default function Router(props) {
@@ -10,7 +10,8 @@ export default function Router(props) {
                 <Route
                     key={element.path}
                     path={element.path}
-                    element={element.component}></Route>
+                    element={element.component}
+                ></Route>
             );
         }
         return (

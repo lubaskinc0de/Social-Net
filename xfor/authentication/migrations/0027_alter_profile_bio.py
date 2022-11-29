@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0026_remove_profile_is_verify_delete_token'),
+        ("authentication", "0026_remove_profile_is_verify_delete_token"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='bio',
-            field=models.CharField(blank=True, max_length=30, verbose_name='Статус'),
+            model_name="profile",
+            name="bio",
+            field=models.CharField(blank=True, max_length=30, verbose_name="Статус"),
         ),
     ]

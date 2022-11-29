@@ -1,8 +1,8 @@
 import React from 'react';
-import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
-import {MobileDatePicker} from '@mui/x-date-pickers/MobileDatePicker';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ruLocale from 'date-fns/locale/ru';
 import TextField from '@mui/material/TextField';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -35,7 +35,8 @@ export default function FormDatePicker(props) {
     return (
         <LocalizationProvider
             adapterLocale={ruLocale}
-            dateAdapter={AdapterDateFns}>
+            dateAdapter={AdapterDateFns}
+        >
             {getPicker()}
         </LocalizationProvider>
     );

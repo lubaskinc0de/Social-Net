@@ -10,30 +10,57 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('authentication', '0006_profile_followers_delete_subscriptions'),
+        ("authentication", "0006_profile_followers_delete_subscriptions"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='profile',
-            name='followers',
+            model_name="profile",
+            name="followers",
         ),
         migrations.CreateModel(
-            name='Contact',
+            name="Contact",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('user_from', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='from_set', to=settings.AUTH_USER_MODEL)),
-                ('user_to', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='to_set', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
+                (
+                    "user_from",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="from_set",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "user_to",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="to_set",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Подписка',
-                'verbose_name_plural': 'Подписки',
-                'ordering': ('-created_at',),
+                "verbose_name": "Подписка",
+                "verbose_name_plural": "Подписки",
+                "ordering": ("-created_at",),
             },
         ),
         migrations.AddConstraint(
-            model_name='contact',
-            constraint=models.CheckConstraint(check=models.Q(('user_from', django.db.models.expressions.F('user_to'))), name='check_self_follow'),
+            model_name="contact",
+            constraint=models.CheckConstraint(
+                check=models.Q(
+                    ("user_from", django.db.models.expressions.F("user_to"))
+                ),
+                name="check_self_follow",
+            ),
         ),
     ]

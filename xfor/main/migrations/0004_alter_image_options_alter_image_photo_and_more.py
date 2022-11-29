@@ -8,22 +8,34 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('main', '0003_rename_photo_post_photos'),
+        ("main", "0003_rename_photo_post_photos"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='image',
-            options={'ordering': ['-created_at'], 'verbose_name': 'Фотографии', 'verbose_name_plural': 'Фото'},
+            name="image",
+            options={
+                "ordering": ["-created_at"],
+                "verbose_name": "Фотографии",
+                "verbose_name_plural": "Фото",
+            },
         ),
         migrations.AlterField(
-            model_name='image',
-            name='photo',
-            field=models.ImageField(upload_to='photos/posts/%Y/%m/%d/', verbose_name='Фото'),
+            model_name="image",
+            name="photo",
+            field=models.ImageField(
+                upload_to="photos/posts/%Y/%m/%d/", verbose_name="Фото"
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='viewers',
-            field=models.ManyToManyField(blank=True, related_name='posts', related_query_name='posts', to=settings.AUTH_USER_MODEL, verbose_name='Просмотры'),
+            model_name="post",
+            name="viewers",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="posts",
+                related_query_name="posts",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Просмотры",
+            ),
         ),
     ]

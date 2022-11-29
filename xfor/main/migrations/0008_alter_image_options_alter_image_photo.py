@@ -7,17 +7,26 @@ import main.helpers.helpers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0007_post_liked'),
+        ("main", "0007_post_liked"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='image',
-            options={'ordering': ['created_at'], 'verbose_name': 'Фотографии', 'verbose_name_plural': 'Фото'},
+            name="image",
+            options={
+                "ordering": ["created_at"],
+                "verbose_name": "Фотографии",
+                "verbose_name_plural": "Фото",
+            },
         ),
         migrations.AlterField(
-            model_name='image',
-            name='photo',
-            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRenameDate('photos/posts/%Y/%m/%d/'), verbose_name='Фото'),
+            model_name="image",
+            name="photo",
+            field=models.ImageField(
+                upload_to=main.helpers.helpers.PathAndRenameDate(
+                    "photos/posts/%Y/%m/%d/"
+                ),
+                verbose_name="Фото",
+            ),
         ),
     ]

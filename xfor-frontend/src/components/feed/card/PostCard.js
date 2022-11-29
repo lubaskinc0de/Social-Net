@@ -5,20 +5,20 @@ import CardActions from './PostCardActions';
 import Typography from '@mui/material/Typography';
 import CardMedia from './PostCardMedia';
 import CardHeader from './PostCardHeader';
-import {useDispatch, useSelector} from 'react-redux';
-import {postLike} from '../../../store/actions/postsActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { postLike } from '../../../store/actions/postsActions';
 import PostCardSkeleton from './PostCardSkeleton';
 
 export default function PostCard(props) {
     const dispatch = useDispatch();
-    const {likePendingPosts} = useSelector((state) => state.posts);
+    const { likePendingPosts } = useSelector((state) => state.posts);
 
     const handleLikeClick = (e) => {
         dispatch(postLike(props.id));
     };
 
     return (
-        <Card sx={{maxWidth: 345, width: '100%'}}>
+        <Card sx={{ maxWidth: 345, width: '100%' }}>
             {props.loading ? (
                 <PostCardSkeleton></PostCardSkeleton>
             ) : (
@@ -27,7 +27,8 @@ export default function PostCard(props) {
                         avatarAlt={props.avatarAlt}
                         avatarSrc={props.avatarSrc}
                         title={props.title}
-                        subheader={props.subheader}></CardHeader>
+                        subheader={props.subheader}
+                    ></CardHeader>
                     <CardMedia images={props.images}></CardMedia>
                     <CardContent>
                         <Typography variant='body2'>{props.content}</Typography>
@@ -39,7 +40,8 @@ export default function PostCard(props) {
                         likeDisabled={likePendingPosts.hasOwnProperty(props.id)}
                         likesCount={props.likesCount}
                         isLiked={props.isLiked}
-                        viewsCount={props.viewsCount}></CardActions>
+                        viewsCount={props.viewsCount}
+                    ></CardActions>
                 </>
             )}
         </Card>

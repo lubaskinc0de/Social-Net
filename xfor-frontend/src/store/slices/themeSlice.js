@@ -1,7 +1,7 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {setTheme as setThemeLocalStorage, getTheme} from '../../lib/';
+import { createSlice } from '@reduxjs/toolkit';
+import { setToLocalStorage, getFromLocalStorage } from '../../lib/';
 
-const theme = getTheme()
+const theme = getFromLocalStorage('selectedTheme');
 
 const themeSlice = createSlice({
     name: 'themeSlice',
@@ -10,11 +10,11 @@ const themeSlice = createSlice({
     },
     reducers: {
         setTheme(state, action) {
-            setThemeLocalStorage(action.payload.theme)
+            setToLocalStorage('selectedTheme', action.payload.theme);
             state.theme = action.payload.theme;
         },
     },
 });
 
-export const {setTheme} = themeSlice.actions
-export default themeSlice.reducer
+export const { setTheme } = themeSlice.actions;
+export default themeSlice.reducer;

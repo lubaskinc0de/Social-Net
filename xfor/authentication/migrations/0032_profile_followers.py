@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0031_alter_profile_avatar'),
+        ("authentication", "0031_alter_profile_avatar"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='followers',
-            field=models.ManyToManyField(related_name='following', through='authentication.Contact', to='authentication.profile'),
+            model_name="profile",
+            name="followers",
+            field=models.ManyToManyField(
+                related_name="following",
+                through="authentication.Contact",
+                to="authentication.profile",
+            ),
         ),
     ]

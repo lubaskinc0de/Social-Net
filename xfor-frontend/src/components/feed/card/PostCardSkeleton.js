@@ -8,7 +8,7 @@ export default function PostCardSkeleton(props) {
         <>
             <CardHeader loading></CardHeader>
             <Skeleton
-                sx={{height: 300}}
+                sx={{ height: 300 }}
                 animation='wave'
                 variant='rectangular'
             />
@@ -16,7 +16,7 @@ export default function PostCardSkeleton(props) {
                 <Skeleton
                     animation='wave'
                     height={10}
-                    style={{marginBottom: 6}}
+                    style={{ marginBottom: 6 }}
                 />
                 <Skeleton animation='wave' height={10} width='80%' />
             </CardContent>
