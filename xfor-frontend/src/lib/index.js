@@ -20,7 +20,7 @@ export function parseAPIAxiosErrors(err, recursionDepth = 10) {
                         .flat(recursionDepth)
                         .reduce((arr, el) => {
                             return getErrorsArray(arr, el);
-                        }, []),
+                        }, [])
                 );
             }
 
@@ -41,10 +41,14 @@ export function parseAPIAxiosErrors(err, recursionDepth = 10) {
     return ['Ошибка! Программист что то натворил, мы уже разбираемся с этим.'];
 }
 
-export const getTheme = () => {
-    return localStorage.getItem('selectedTheme')
-}
+export const getFromLocalStorage = (key) => {
+    return localStorage.getItem(key);
+};
 
-export const setTheme = (theme) => {
-    localStorage.setItem('selectedTheme', theme)
-}
+export const setToLocalStorage = (key, value) => {
+    return localStorage.setItem(key, value);
+};
+
+export const removeFromLocalStorage = (key) => {
+    return localStorage.removeItem(key);
+};

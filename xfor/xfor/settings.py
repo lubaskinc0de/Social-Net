@@ -28,117 +28,117 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Initialise environment variables
 env = environ.Env(
     DEBUG=(bool, True),
-    CACHE_BACKEND=(str, 'django.core.cache.backends.filebased.FileBasedCache'),
-    CACHE_LOCATION=(str, os.path.join(BASE_DIR, 'cache')),
-    SQL_ENGINE=(str, 'django.db.backends.sqlite3'),
-    SQL_DATABASE=(str, 'db.sqlite3'),
-    SQL_USER=(str, 'user'),
-    SQL_PASSWORD=(str, 'password'),
-    SQL_HOST=(str, 'localhost'),
-    SQL_PORT=(str, '5432'),
+    CACHE_BACKEND=(str, "django.core.cache.backends.filebased.FileBasedCache"),
+    CACHE_LOCATION=(str, os.path.join(BASE_DIR, "cache")),
+    SQL_ENGINE=(str, "django.db.backends.sqlite3"),
+    SQL_DATABASE=(str, "db.sqlite3"),
+    SQL_USER=(str, "user"),
+    SQL_PASSWORD=(str, "password"),
+    SQL_HOST=(str, "localhost"),
+    SQL_PORT=(str, "5432"),
 )
 
 environ.Env.read_env()
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = []
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django_light',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_cleanup',
-    'debug_toolbar',
-    'django_filters',
-    'mptt',
-    'rest_framework',
-    'knox',
-    'cities_light',
-    'main.apps.MainConfig',
-    'authentication.apps.AuthenticationConfig',
-    'api.apps.ApiConfig',
-    'geo_api.apps.GeoApiConfig',
-    'profiles.apps.ProfilesConfig',
-    'corsheaders',
-    'drf_spectacular',
+    "django_light",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django_cleanup",
+    "debug_toolbar",
+    "django_filters",
+    "mptt",
+    "rest_framework",
+    "knox",
+    "cities_light",
+    "main.apps.MainConfig",
+    "authentication.apps.AuthenticationConfig",
+    "api.apps.ApiConfig",
+    "geo_api.apps.GeoApiConfig",
+    "profiles.apps.ProfilesConfig",
+    "corsheaders",
+    "drf_spectacular",
 ]
 
 INTERNAL_IPS = [
-    '127.0.0.1',
+    "127.0.0.1",
 ]
 
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda _: DEBUG,
+    "SHOW_TOOLBAR_CALLBACK": lambda _: DEBUG,
 }
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'xfor.middlewares.TimezoneMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "xfor.middlewares.TimezoneMiddleware",
 ]
 
-ROOT_URLCONF = 'xfor.urls'
+ROOT_URLCONF = "xfor.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'xfor.wsgi.application'
+WSGI_APPLICATION = "xfor.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+
 def get_database_name() -> str:
-    if env('SQL_DATABASE') == 'postgresql':
-        return env('POSTGRES_DB')
-    return 'db.sqlite3'
+    if env("SQL_DATABASE") == "postgresql":
+        return env("POSTGRES_DB")
+    return "db.sqlite3"
+
 
 DATABASES = {
     "default": {
-        "ENGINE": env('SQL_ENGINE'),
+        "ENGINE": env("SQL_ENGINE"),
         "NAME": get_database_name(),
-        "USER": env('SQL_USER'),
-        "PASSWORD": env('SQL_PASSWORD'),
-        "HOST": env('SQL_HOST'),
-        "PORT": env('SQL_PORT'),
+        "USER": env("SQL_USER"),
+        "PASSWORD": env("SQL_PASSWORD"),
+        "HOST": env("SQL_HOST"),
+        "PORT": env("SQL_PORT"),
     }
 }
 
 # Migrations
 
 MIGRATION_MODULES = {
-    'cities_light': None,
+    "cities_light": None,
 }
 
 # Password validation
@@ -146,16 +146,16 @@ MIGRATION_MODULES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -163,9 +163,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = "ru"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -174,96 +174,89 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'xfor/static')
-]
+STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "xfor/static")]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
-TESTS_MEDIA_ROOT = os.path.join(BASE_DIR, 'tests_media')
+TESTS_MEDIA_ROOT = os.path.join(BASE_DIR, "tests_media")
 
-if 'test' in sys.argv:
+if "test" in sys.argv:
     MEDIA_ROOT = TESTS_MEDIA_ROOT
-    MEDIA_URL = '/tests-media/'
+    MEDIA_URL = "/tests-media/"
 
 # Email
 
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 # Activation email
 
-AUTHENTICATION_SITENAME = 'KWIK'
-USER_ACTIVATION_URL = env('USER_ACTIVATION_URL') + '{}/{}'
+AUTHENTICATION_SITENAME = "KWIK"
+USER_ACTIVATION_URL = env("USER_ACTIVATION_URL") + "{}/{}"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # REST API
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer', 
-        'rest_framework.renderers.BrowsableAPIRenderer', 
-        ],
-
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated'
-        ],
-
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'knox.auth.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        ),
-
-    'DEFAULT_PAGINATION_CLASS': 'main.pagination.PageParamAPIPagination',
-    'PAGE_SIZE': 3,
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "knox.auth.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PAGINATION_CLASS": "main.pagination.PageParamAPIPagination",
+    "PAGE_SIZE": 3,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 # CORS
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    "http://localhost:3000",
 ]
 
 # Knox tokens
 
 REST_KNOX = {
-    'TOKEN_TTL': timedelta(hours=48),
-    'AUTO_REFRESH': True,
-    'USER_SERIALIZER': 'authentication.serializers.LoginPayloadSerializer',
+    "TOKEN_TTL": timedelta(hours=48),
+    "AUTO_REFRESH": True,
+    "USER_SERIALIZER": "authentication.serializers.LoginPayloadSerializer",
 }
 
 # Cities light
 
-CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru']
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ["ru"]
 CITIES_LIGHT_INDEX_SEARCH_NAMES = True
-CITIES_LIGHT_APP_NAME = 'geo_api'
+CITIES_LIGHT_APP_NAME = "geo_api"
 
 # Caching
 
 CACHES = {
-    'default': {
-        'BACKEND': env('CACHE_BACKEND'),
-        'LOCATION': env('CACHE_LOCATION'),
+    "default": {
+        "BACKEND": env("CACHE_BACKEND"),
+        "LOCATION": env("CACHE_LOCATION"),
     }
 }
 
 # API Docs
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Kwik API',
-    'DESCRIPTION': 'Kwik API documentation',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "Kwik API",
+    "DESCRIPTION": "Kwik API documentation",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }

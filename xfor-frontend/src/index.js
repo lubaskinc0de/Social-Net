@@ -8,9 +8,9 @@ import ReactDOM from 'react-dom/client';
 import Router from './router';
 import './index.css';
 import useSelectedTheme from './hooks/useSelectedTheme';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import {Provider as ReduxProvider} from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
 import AnonymousProtectedRoute from './components/routing/AnonymousProtectedRoute';
 import AuthenticationProtectedRoute from './components/routing/AuthenticationProtectedRoute';
 import reduxStore from './store';
@@ -69,7 +69,7 @@ export default function App() {
                         : {}),
                 },
             }),
-        [themeMode],
+        [themeMode]
     );
 
     return (
@@ -84,5 +84,5 @@ export default function App() {
 root.render(
     <ReduxProvider store={reduxStore}>
         <App />
-    </ReduxProvider>,
+    </ReduxProvider>
 );

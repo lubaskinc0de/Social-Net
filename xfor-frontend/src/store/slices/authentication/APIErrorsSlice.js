@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const APIErrorsSlice = createSlice({
     name: 'APIErrorsSlice',
@@ -7,16 +7,17 @@ const APIErrorsSlice = createSlice({
     },
     reducers: {
         setAPIErrors(state, action) {
-            state.APIErrors = action.payload.APIErrors
+            state.APIErrors = action.payload.APIErrors;
         },
         shiftAPIErrors(state) {
-            state.APIErrors.shift()
+            state.APIErrors.shift();
         },
         clearAPIErrors(state) {
-            state.APIErrors = []
-        }
-    }
-})
+            state.APIErrors = [];
+        },
+    },
+});
 
-export const {setAPIErrors, shiftAPIErrors, clearAPIErrors} = APIErrorsSlice.actions
-export default APIErrorsSlice.reducer
+export const { setAPIErrors, shiftAPIErrors, clearAPIErrors } =
+    APIErrorsSlice.actions;
+export default APIErrorsSlice.reducer;

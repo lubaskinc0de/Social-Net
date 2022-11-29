@@ -7,13 +7,18 @@ import main.helpers.helpers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0021_alter_comment_options_alter_image_photo'),
+        ("main", "0021_alter_comment_options_alter_image_photo"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='image',
-            name='photo',
-            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRenameDate('photos/posts/2022/5/22/'), verbose_name='Фото'),
+            model_name="image",
+            name="photo",
+            field=models.ImageField(
+                upload_to=main.helpers.helpers.PathAndRenameDate(
+                    "photos/posts/2022/5/22/"
+                ),
+                verbose_name="Фото",
+            ),
         ),
     ]

@@ -10,25 +10,61 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('authentication', '0004_profile_followers'),
+        ("authentication", "0004_profile_followers"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='profile',
-            name='followers',
+            model_name="profile",
+            name="followers",
         ),
         migrations.CreateModel(
-            name='Subscriptions',
+            name="Subscriptions",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('from_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='supporter', to=settings.AUTH_USER_MODEL, verbose_name='Подписчик')),
-                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sub', to='authentication.profile')),
-                ('to_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='leader', to=settings.AUTH_USER_MODEL, verbose_name='Тот на кого подписаны')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "from_user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="supporter",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Подписчик",
+                    ),
+                ),
+                (
+                    "profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sub",
+                        to="authentication.profile",
+                    ),
+                ),
+                (
+                    "to_user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="leader",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Тот на кого подписаны",
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='subscriptions',
-            constraint=models.CheckConstraint(check=models.Q(('from_user', django.db.models.expressions.F('to_user'))), name='true_subscriber'),
+            model_name="subscriptions",
+            constraint=models.CheckConstraint(
+                check=models.Q(
+                    ("from_user", django.db.models.expressions.F("to_user"))
+                ),
+                name="true_subscriber",
+            ),
         ),
     ]

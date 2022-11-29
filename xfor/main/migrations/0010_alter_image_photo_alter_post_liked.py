@@ -9,18 +9,28 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('main', '0009_post_profile_alter_image_photo_alter_post_liked'),
+        ("main", "0009_post_profile_alter_image_photo_alter_post_liked"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='image',
-            name='photo',
-            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRenameDate('photos/posts/2022/4/23/'), verbose_name='Фото'),
+            model_name="image",
+            name="photo",
+            field=models.ImageField(
+                upload_to=main.helpers.helpers.PathAndRenameDate(
+                    "photos/posts/2022/4/23/"
+                ),
+                verbose_name="Фото",
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='liked',
-            field=models.ManyToManyField(related_name='liked', related_query_name='liked', to=settings.AUTH_USER_MODEL, verbose_name='Лайкнувшие'),
+            model_name="post",
+            name="liked",
+            field=models.ManyToManyField(
+                related_name="liked",
+                related_query_name="liked",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Лайкнувшие",
+            ),
         ),
     ]

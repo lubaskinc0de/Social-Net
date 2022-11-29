@@ -10,7 +10,8 @@ export default function KwikIcon(props) {
             y='0px'
             width='100%'
             viewBox='0 0 661 657'
-            enableBackground='new 0 0 661 657'>
+            enableBackground='new 0 0 661 657'
+        >
             <path
                 fill='transparent'
                 opacity='1.000000'
@@ -677,7 +678,8 @@ z'
             y='0px'
             width='100%'
             viewBox='0 0 661 657'
-            enableBackground='new 0 0 661 657'>
+            enableBackground='new 0 0 661 657'
+        >
             <path
                 fill='transparent'
                 opacity='1.000000'

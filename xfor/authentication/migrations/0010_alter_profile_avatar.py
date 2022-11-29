@@ -7,13 +7,18 @@ import main.helpers.helpers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0009_remove_contact_check_self_follow_and_more'),
+        ("authentication", "0009_remove_contact_check_self_follow_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='avatar',
-            field=models.ImageField(blank=True, default='photos/%Y/%m/%d/no_avatar.png', upload_to=main.helpers.helpers.PathAndRenameDate('photos/'), verbose_name='Аватарка'),
+            model_name="profile",
+            name="avatar",
+            field=models.ImageField(
+                blank=True,
+                default="photos/%Y/%m/%d/no_avatar.png",
+                upload_to=main.helpers.helpers.PathAndRenameDate("photos/"),
+                verbose_name="Аватарка",
+            ),
         ),
     ]

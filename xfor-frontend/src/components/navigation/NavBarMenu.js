@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -11,31 +11,34 @@ export default function NavBarMenu(props) {
     const [anchorElNav, setAnchorElNav] = useState(null);
 
     const getPages = () => {
-        const getPage = (page) => {
-            if (props.isMobile) {
-                return <Typography textAlign='center'>{page}</Typography>;
-            }
-            return page;
-        };
-
         return props.pages.map((page) => {
             if (props.isMobile) {
                 return (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                        <Typography textAlign='center'>{page}</Typography>
+                    <MenuItem
+                        key={page.title}
+                        onClick={() => {
+                            handleCloseNavMenu();
+                            if (page.handleClick) {
+                                page.handleClick();
+                            }
+                        }}
+                    >
+                        <Typography textAlign='center'>{page.title}</Typography>
                     </MenuItem>
                 );
             }
 
             return (
                 <Button
-                    key={page}
+                    key={page.title}
+                    onClick={page.handleClick}
                     sx={{
                         my: 2,
                         color: 'white',
                         display: 'block',
-                    }}>
-                    {getPage(page)}
+                    }}
+                >
+                    {page.title}
                 </Button>
             );
         });
@@ -52,12 +55,13 @@ export default function NavBarMenu(props) {
     const getMenu = () => {
         if (props.isMobile) {
             return (
-                <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
+                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                     <IconButton
                         onClick={handleOpenNavMenu}
                         size='large'
                         aria-haspopup='true'
-                        color='inherit'>
+                        color='inherit'
+                    >
                         <MenuIcon />
                     </IconButton>
                     <Menu
@@ -74,8 +78,9 @@ export default function NavBarMenu(props) {
                         open={!!anchorElNav}
                         onClose={handleCloseNavMenu}
                         sx={{
-                            display: {xs: 'block', md: 'none'},
-                        }}>
+                            display: { xs: 'block', md: 'none' },
+                        }}
+                    >
                         {getPages()}
                     </Menu>
                 </Box>
@@ -83,7 +88,7 @@ export default function NavBarMenu(props) {
         }
 
         return (
-            <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                 {getPages()}
             </Box>
         );

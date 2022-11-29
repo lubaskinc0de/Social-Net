@@ -7,17 +7,26 @@ import main.helpers.helpers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0021_alter_token_user'),
+        ("authentication", "0021_alter_token_user"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='profile',
-            options={'ordering': ['-created_at'], 'verbose_name': 'Профиль', 'verbose_name_plural': 'Профили'},
+            name="profile",
+            options={
+                "ordering": ["-created_at"],
+                "verbose_name": "Профиль",
+                "verbose_name_plural": "Профили",
+            },
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='avatar',
-            field=models.ImageField(blank=True, default='default/default.png', upload_to=main.helpers.helpers.PathAndRenameDate('photos/'), verbose_name='Аватарка'),
+            model_name="profile",
+            name="avatar",
+            field=models.ImageField(
+                blank=True,
+                default="default/default.png",
+                upload_to=main.helpers.helpers.PathAndRenameDate("photos/"),
+                verbose_name="Аватарка",
+            ),
         ),
     ]

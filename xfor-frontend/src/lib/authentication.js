@@ -14,22 +14,4 @@ function showComponent(component, show) {
     return component;
 }
 
-function getToken() {
-    return localStorage.getItem('userToken');
-}
-
-function setToken(token) {
-    localStorage.setItem('userToken', token);
-}
-
-function removeToken() {
-    localStorage.removeItem('userToken');
-}
-
-export {
-    handleEnter,
-    showComponent,
-    getToken,
-    setToken,
-    removeToken,
-};
+export { handleEnter, showComponent };

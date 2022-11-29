@@ -1,21 +1,20 @@
-import React, {useEffect, useCallback} from 'react';
+import React, { useEffect, useCallback } from 'react';
 import NavBar from '../navigation/NavBar';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import FeedCards from './FeedCards';
 import FeedInfiniteScroll from './FeedInfiniteScroll';
 import FeedErrors from './FeedErrors';
-import {useDispatch, useSelector} from 'react-redux';
-import {getPostsWrapper} from '../../store/actions/postsActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPostsWrapper } from '../../store/actions/postsActions';
 
 export default function Feed() {
-    const pages = ['Профиль', 'О нас']; // заглушка
-
     const dispatch = useDispatch();
-    const {rejected} = useSelector((state) => state.posts);
+    const { rejected, postsFilters, posts } = useSelector(
+        (state) => state.posts
+    );
 
     const fetchPosts = useCallback(() => {
-        console.log('called');
         dispatch(getPostsWrapper());
     }, [dispatch]);
 
@@ -23,9 +22,13 @@ export default function Feed() {
         document.title = 'Лента || KWIK';
     }, []);
 
+    useEffect(() => {
+        fetchPosts();
+    }, [fetchPosts, postsFilters]);
+
     return (
         <>
-            <NavBar pages={pages}></NavBar>
+            <NavBar></NavBar>
             <Container
                 sx={{
                     display: 'flex',
@@ -33,7 +36,8 @@ export default function Feed() {
                     alignItems: 'center',
                 }}
                 component='main'
-                maxWidth='xl'>
+                maxWidth='xl'
+            >
                 <Grid
                     sx={{
                         display: 'flex',
@@ -45,12 +49,14 @@ export default function Feed() {
                     }}
                     direction='column'
                     container
-                    spacing={2}>
+                    spacing={2}
+                >
                     <FeedErrors></FeedErrors>
                     <FeedCards></FeedCards>
-                    {rejected ? null : (
+                    {rejected || !posts.length ? null : (
                         <FeedInfiniteScroll
-                            onIntersecting={fetchPosts}></FeedInfiniteScroll>
+                            onIntersecting={fetchPosts}
+                        ></FeedInfiniteScroll>
                     )}
                 </Grid>
             </Container>

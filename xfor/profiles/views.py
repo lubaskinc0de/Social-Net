@@ -1,14 +1,17 @@
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from .serializers import ProfileSerializer
-from authentication.models import Profile
+from .services import get_profiles
+
 
 class ProfileDetailAPIView(RetrieveAPIView):
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.select_related('user').prefetch_related('followers')
+    queryset = get_profiles()
+
 
 class ProfileAPIView(ListAPIView):
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.select_related('user').prefetch_related('followers')
+    queryset = get_profiles()
+
 
 class ProfileDetailsAPIView(RetrieveAPIView):
     serializer_class = ProfileSerializer

@@ -9,25 +9,39 @@ import main.helpers.helpers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0009_remove_contact_check_self_follow_and_more'),
+        ("authentication", "0009_remove_contact_check_self_follow_and_more"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('main', '0008_alter_image_options_alter_image_photo'),
+        ("main", "0008_alter_image_options_alter_image_photo"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='post',
-            name='profile',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='posts_profile', to='authentication.profile'),
+            model_name="post",
+            name="profile",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="posts_profile",
+                to="authentication.profile",
+            ),
         ),
         migrations.AlterField(
-            model_name='image',
-            name='photo',
-            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRenameDate('photos/posts/2022/4/21/'), verbose_name='Фото'),
+            model_name="image",
+            name="photo",
+            field=models.ImageField(
+                upload_to=main.helpers.helpers.PathAndRenameDate(
+                    "photos/posts/2022/4/21/"
+                ),
+                verbose_name="Фото",
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='liked',
-            field=models.ManyToManyField(related_name='posts_likes', to=settings.AUTH_USER_MODEL, verbose_name='Лайкнувшие'),
+            model_name="post",
+            name="liked",
+            field=models.ManyToManyField(
+                related_name="posts_likes",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Лайкнувшие",
+            ),
         ),
     ]

@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Form from '../../Form';
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import useLoad from '../../../../hooks/useLoad';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import Button from '@mui/material/Button';
 import FormFields from '../../FormFields';
@@ -76,11 +76,12 @@ export default function RegisterFormStepOne(props) {
             size='large'
             fullWidth
             disabled={!isLoad}
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
             onClick={(e) => {
                 navigate('/login/');
             }}
-            variant='contained'>
+            variant='contained'
+        >
             Войти
         </Button>
     );
@@ -100,8 +101,10 @@ export default function RegisterFormStepOne(props) {
                     handleBlur={formik.handleBlur}
                     touched={formik.touched}
                     errors={formik.errors}
-                    values={formik.values}></FormFields>
+                    values={formik.values}
+                ></FormFields>
             }
-            title={props.title}></Form>
+            title={props.title}
+        ></Form>
     );
 }

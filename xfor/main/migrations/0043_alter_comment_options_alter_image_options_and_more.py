@@ -6,20 +6,32 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0042_alter_image_photo'),
+        ("main", "0042_alter_image_photo"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='comment',
-            options={'ordering': ('-created_at',), 'verbose_name': 'комментарий', 'verbose_name_plural': 'Комментарии'},
+            name="comment",
+            options={
+                "ordering": ("-created_at",),
+                "verbose_name": "комментарий",
+                "verbose_name_plural": "Комментарии",
+            },
         ),
         migrations.AlterModelOptions(
-            name='image',
-            options={'ordering': ('created_at',), 'verbose_name': 'фото', 'verbose_name_plural': 'Фотографии'},
+            name="image",
+            options={
+                "ordering": ("created_at",),
+                "verbose_name": "фото",
+                "verbose_name_plural": "Фотографии",
+            },
         ),
         migrations.AlterModelOptions(
-            name='post',
-            options={'ordering': ('-created_at',), 'verbose_name': 'пост', 'verbose_name_plural': 'Посты'},
+            name="post",
+            options={
+                "ordering": ("-created_at",),
+                "verbose_name": "пост",
+                "verbose_name_plural": "Посты",
+            },
         ),
     ]

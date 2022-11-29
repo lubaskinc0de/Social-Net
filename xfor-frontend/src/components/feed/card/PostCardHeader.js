@@ -17,7 +17,13 @@ export default function PostCardHeader(props) {
                 />
             );
         }
-        return <Avatar loading='lazy' alt={props.avatarAlt} src={props.avatarSrc}></Avatar>;
+        return (
+            <Avatar
+                loading='lazy'
+                alt={props.avatarAlt}
+                src={props.avatarSrc}
+            ></Avatar>
+        );
     };
     return (
         <CardHeader
@@ -33,7 +39,7 @@ export default function PostCardHeader(props) {
                         animation='wave'
                         height={10}
                         width='80%'
-                        style={{marginBottom: 6}}
+                        style={{ marginBottom: 6 }}
                     />
                 ) : (
                     props.title

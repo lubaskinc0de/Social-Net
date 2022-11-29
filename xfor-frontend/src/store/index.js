@@ -1,4 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import APIErrorsSlice from './slices/authentication/APIErrorsSlice';
 import userSlice from './slices/authentication/userSlice';
 import postsSlice from './slices/feed/postsSlice';

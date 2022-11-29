@@ -6,24 +6,40 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('geo_api', '0001_initial'),
+        ("geo_api", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='city',
-            options={'ordering': ['name'], 'verbose_name': 'город', 'verbose_name_plural': 'Города'},
+            name="city",
+            options={
+                "ordering": ["name"],
+                "verbose_name": "город",
+                "verbose_name_plural": "Города",
+            },
         ),
         migrations.AlterModelOptions(
-            name='country',
-            options={'ordering': ['name'], 'verbose_name': 'стран(а-у)', 'verbose_name_plural': 'Страны'},
+            name="country",
+            options={
+                "ordering": ["name"],
+                "verbose_name": "стран(а-у)",
+                "verbose_name_plural": "Страны",
+            },
         ),
         migrations.AlterModelOptions(
-            name='region',
-            options={'ordering': ['name'], 'verbose_name': 'регион', 'verbose_name_plural': 'Регионы'},
+            name="region",
+            options={
+                "ordering": ["name"],
+                "verbose_name": "регион",
+                "verbose_name_plural": "Регионы",
+            },
         ),
         migrations.AlterModelOptions(
-            name='subregion',
-            options={'ordering': ['name'], 'verbose_name': 'субрегион', 'verbose_name_plural': 'Субрегионы'},
+            name="subregion",
+            options={
+                "ordering": ["name"],
+                "verbose_name": "субрегион",
+                "verbose_name_plural": "Субрегионы",
+            },
         ),
     ]
