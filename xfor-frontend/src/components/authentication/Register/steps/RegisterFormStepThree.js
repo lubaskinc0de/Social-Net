@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from '../../Form';
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Box from '@mui/material/Box';
-import {createFilterOptions} from '@mui/material/Autocomplete';
+import { createFilterOptions } from '@mui/material/Autocomplete';
 import moment from 'moment';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import FormFields from '../../FormFields';
-import {getCountries, getCities} from '../../../../store/actions/userActions';
-import {clearCities} from '../../../../store/slices/authentication/userSlice';
+import { getCountries, getCities } from '../../../../store/actions/userActions';
+import { clearCities } from '../../../../store/slices/authentication/userSlice';
 
 export default function RegisterFormStepThree(props) {
     const dispatch = useDispatch();
-    const {cities, countries, loading} = useSelector((state) => state.user);
+    const { cities, countries, loading } = useSelector((state) => state.user);
     const [showErrors, setShowErrors] = useState(false);
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export default function RegisterFormStepThree(props) {
 
                     const yearsOld = moment().diff(
                         moment(birthday, 'YYYYMMDD'),
-                        'years',
+                        'years'
                     );
 
                     if (yearsOld < 14) {
@@ -95,15 +95,15 @@ export default function RegisterFormStepThree(props) {
         } else {
             flushCities();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, formik.values.country]);
 
     useEffect(() => {
         if (loading && formik.values.country) {
-            flushCities()
+            flushCities();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading, formik.values.country])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, formik.values.country]);
 
     const fields = [
         {
@@ -165,8 +165,9 @@ export default function RegisterFormStepThree(props) {
                 return (
                     <Box
                         component='li'
-                        sx={{'& > img': {mr: 2, flexShrink: 0}}}
-                        {...props}>
+                        sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                        {...props}
+                    >
                         {getImage(flagSrc, flagSrcSet)}
                         {option.alternate_names}
                         {option.phone ? ` (+${option.phone})` : undefined}
@@ -183,7 +184,7 @@ export default function RegisterFormStepThree(props) {
 
             get value() {
                 return countries.find(
-                    ({id}) => formik.values[this.name] === id,
+                    ({ id }) => formik.values[this.name] === id
                 );
             },
         },
@@ -258,8 +259,9 @@ export default function RegisterFormStepThree(props) {
                 return (
                     <Box
                         component='li'
-                        sx={{'& > img': {mr: 2, flexShrink: 0}}}
-                        {...props}>
+                        sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                        {...props}
+                    >
                         {getImage(flagSrc, flagSrcSet)}
                         {`${option.alternate_names} ${getRegionName()}`}
                     </Box>
@@ -274,7 +276,7 @@ export default function RegisterFormStepThree(props) {
             },
 
             get value() {
-                return cities.find(({id}) => formik.values[this.name] === id);
+                return cities.find(({ id }) => formik.values[this.name] === id);
             },
         },
     ];
@@ -283,7 +285,7 @@ export default function RegisterFormStepThree(props) {
         <Form
             handleSubmit={formik.handleSubmit}
             setShowErrors={setShowErrors}
-            buttons={{prevButton: {prevStep: props.prevStep}}}
+            buttons={{ prevButton: { prevStep: props.prevStep } }}
             fields={
                 <FormFields
                     fields={fields}
@@ -293,8 +295,10 @@ export default function RegisterFormStepThree(props) {
                     handleBlur={formik.handleBlur}
                     touched={formik.touched}
                     errors={formik.errors}
-                    values={formik.values}></FormFields>
+                    values={formik.values}
+                ></FormFields>
             }
-            title={props.title}></Form>
+            title={props.title}
+        ></Form>
     );
 }

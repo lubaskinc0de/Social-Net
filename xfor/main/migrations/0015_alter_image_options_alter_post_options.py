@@ -6,16 +6,24 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0014_alter_image_photo'),
+        ("main", "0014_alter_image_photo"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='image',
-            options={'ordering': ('created_at',), 'verbose_name': 'Фотографии', 'verbose_name_plural': 'Фото'},
+            name="image",
+            options={
+                "ordering": ("created_at",),
+                "verbose_name": "Фотографии",
+                "verbose_name_plural": "Фото",
+            },
         ),
         migrations.AlterModelOptions(
-            name='post',
-            options={'ordering': ('-created_at',), 'verbose_name': 'Пост', 'verbose_name_plural': 'Посты'},
+            name="post",
+            options={
+                "ordering": ("-created_at",),
+                "verbose_name": "Пост",
+                "verbose_name_plural": "Посты",
+            },
         ),
     ]

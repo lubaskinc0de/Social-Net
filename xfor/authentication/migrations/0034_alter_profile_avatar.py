@@ -7,13 +7,18 @@ import main.helpers.helpers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0033_alter_contact_user_from_alter_contact_user_to'),
+        ("authentication", "0033_alter_contact_user_from_alter_contact_user_to"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='avatar',
-            field=models.ImageField(blank=True, default='default/default.png', upload_to=main.helpers.helpers.PathAndRenameDate('photos/2022/8/11/'), verbose_name='Аватарка'),
+            model_name="profile",
+            name="avatar",
+            field=models.ImageField(
+                blank=True,
+                default="default/default.png",
+                upload_to=main.helpers.helpers.PathAndRenameDate("photos/2022/8/11/"),
+                verbose_name="Аватарка",
+            ),
         ),
     ]

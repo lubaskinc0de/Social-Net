@@ -1,4 +1,5 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+
 import {
     userRegister,
     userLogin,
@@ -8,9 +9,15 @@ import {
     getCountries,
     getCities,
 } from '../../actions/userActions';
-import {getToken, setToken, removeToken} from '../../../lib/authentication';
 
-const userToken = getToken();
+import {
+    setToLocalStorage,
+    getFromLocalStorage,
+    removeFromLocalStorage,
+} from '../../../lib';
+
+const userToken = getFromLocalStorage('userToken');
+
 const initialState = {
     userInfo: {
         profile_id: null,
@@ -61,16 +68,14 @@ const userSlice = createSlice({
         // userLogin
 
         [userLogin.pending](state) {
-            state.success = false;
             state.loading = true;
         },
 
         [userLogin.fulfilled](state, action) {
-            state.success = true;
             state.loading = false;
             state.token = action.payload.token;
             state.userInfo = action.payload.userInfo;
-            setToken(action.payload.token);
+            setToLocalStorage('userToken', action.payload.token);
         },
 
         [userLogin.rejected](state) {
@@ -86,7 +91,7 @@ const userSlice = createSlice({
         [userLogout.fulfilled](state) {
             state.loading = false;
 
-            removeToken();
+            removeFromLocalStorage('userToken');
 
             state.userInfo = initialState.userInfo;
             state.token = null;
@@ -125,11 +130,11 @@ const userSlice = createSlice({
         },
 
         [getUserDetails.rejected](state, action) {
-            const errorCode = action.payload.status_code;
+            const { errorCode } = action.payload;
             state.loading = false;
 
             if (errorCode === 401 && state.token) {
-                removeToken();
+                removeFromLocalStorage('userToken');
                 state.token = null;
             }
         },
@@ -156,9 +161,9 @@ const userSlice = createSlice({
         [getCities.fulfilled](state, action) {
             state.loading = false;
 
-            const {cities} = action.payload;
+            const { cities } = action.payload;
             cities.sort((a, b) =>
-                a.alternate_names.localeCompare(b.alternate_names),
+                a.alternate_names.localeCompare(b.alternate_names)
             );
 
             state.cities = cities;
@@ -170,5 +175,5 @@ const userSlice = createSlice({
     },
 });
 
-export const {clearSuccess, clearCities, clearGeo} = userSlice.actions;
+export const { clearSuccess, clearCities, clearGeo } = userSlice.actions;
 export default userSlice.reducer;

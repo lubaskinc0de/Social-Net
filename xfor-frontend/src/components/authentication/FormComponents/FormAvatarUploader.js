@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Typography from '@mui/material/Typography';
-import {showComponent} from '../../../lib/authentication';
+import { showComponent } from '../../../lib/authentication';
 
 export default function FormAvatarUploader(props) {
     const [avatarPreview, setAvatarPreview] = useState('default');
@@ -35,13 +35,13 @@ export default function FormAvatarUploader(props) {
                 props.handleChange('', false);
                 props.setError(
                     props.name,
-                    'Файл, который вы загрузили, поврежден или не является изображением.',
+                    'Файл, который вы загрузили, поврежден или не является изображением.'
                 );
-                setAvatarPreview('default')
+                setAvatarPreview('default');
             }
         } else {
             props.handleChange('');
-            setAvatarPreview('default')
+            setAvatarPreview('default');
         }
     };
 
@@ -57,26 +57,30 @@ export default function FormAvatarUploader(props) {
                     }}
                     align='center'
                     variant='caption'
-                    display='block'>
+                    display='block'
+                >
                     {props.helperText}
                 </Typography>,
-                props.helperText,
+                props.helperText
             )}
             <Box p={2}>
                 <Stack
                     justifyContent={'center'}
                     alignItems={'center'}
-                    spacing={2}>
+                    spacing={2}
+                >
                     <Avatar
                         src={avatarPreview}
                         sx={{
                             width: props.width,
                             height: props.height,
-                        }}></Avatar>
+                        }}
+                    ></Avatar>
                     <Button
                         component='label'
                         startIcon={<CloudUploadIcon></CloudUploadIcon>}
-                        variant='contained'>
+                        variant='contained'
+                    >
                         Загрузить фото профиля
                         <input
                             accept='image/*'

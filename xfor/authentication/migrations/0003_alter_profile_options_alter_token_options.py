@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0002_token_is_active_token_token_type'),
+        ("authentication", "0002_token_is_active_token_token_type"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='profile',
-            options={'verbose_name': 'Профиль', 'verbose_name_plural': 'Профили'},
+            name="profile",
+            options={"verbose_name": "Профиль", "verbose_name_plural": "Профили"},
         ),
         migrations.AlterModelOptions(
-            name='token',
-            options={'verbose_name': 'Токен', 'verbose_name_plural': 'Токены'},
+            name="token",
+            options={"verbose_name": "Токен", "verbose_name_plural": "Токены"},
         ),
     ]

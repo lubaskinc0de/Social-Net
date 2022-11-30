@@ -1,34 +1,39 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../api/authentication';
-import {parseAPIAxiosErrors} from '../../lib';
-import {setAPIErrors} from '../slices/authentication/APIErrorsSlice';
+import { parseAPIAxiosErrors } from '../../lib';
+import {
+    setAPIErrors,
+    clearAPIErrors,
+} from '../slices/authentication/APIErrorsSlice';
 
 export const userRegister = createAsyncThunk(
     'user/register',
-    async (userData, {dispatch, rejectWithValue}) => {
+    async (userData, { dispatch, rejectWithValue }) => {
         try {
             await API.register(userData);
+            dispatch(clearAPIErrors());
         } catch (err) {
             const APIErrors = parseAPIAxiosErrors(err);
 
             dispatch(
                 setAPIErrors({
                     APIErrors,
-                }),
+                })
             );
 
             return rejectWithValue({
                 APIErrors,
             });
         }
-    },
+    }
 );
 
 export const userLogin = createAsyncThunk(
     'user/login',
-    async ({username, password}, {dispatch, rejectWithValue}) => {
+    async ({ username, password }, { dispatch, rejectWithValue }) => {
         try {
-            const response = await API.login({username, password});
+            const response = await API.login({ username, password });
+            dispatch(clearAPIErrors());
             return {
                 token: response.data.token,
                 userInfo: response.data.user,
@@ -39,21 +44,21 @@ export const userLogin = createAsyncThunk(
             dispatch(
                 setAPIErrors({
                     APIErrors,
-                }),
+                })
             );
 
             return rejectWithValue({
                 APIErrors,
             });
         }
-    },
+    }
 );
 
 export const userLogout = createAsyncThunk(
     'user/logout',
-    async (_, {dispatch, rejectWithValue, getState}) => {
+    async (_, { dispatch, rejectWithValue, getState }) => {
         try {
-            const {user} = getState();
+            const { user } = getState();
 
             const config = {
                 headers: {
@@ -68,21 +73,21 @@ export const userLogout = createAsyncThunk(
             dispatch(
                 setAPIErrors({
                     APIErrors,
-                }),
+                })
             );
 
             return rejectWithValue({
                 APIErrors,
             });
         }
-    },
+    }
 );
 
 export const userActivate = createAsyncThunk(
     'user/activate',
-    async (data, {rejectWithValue}) => {
+    async (data, { rejectWithValue }) => {
         try {
-            const {uid, token} = data;
+            const { uid, token } = data;
             await API.activate(uid, token);
         } catch (err) {
             const APIErrors = parseAPIAxiosErrors(err);
@@ -91,14 +96,14 @@ export const userActivate = createAsyncThunk(
                 APIErrors,
             });
         }
-    },
+    }
 );
 
 export const getUserDetails = createAsyncThunk(
     'user/getUserDetails',
-    async (_, {dispatch, rejectWithValue, getState}) => {
+    async (_, { dispatch, rejectWithValue, getState }) => {
         try {
-            const {user} = getState();
+            const { user } = getState();
 
             const config = {
                 headers: {
@@ -108,8 +113,8 @@ export const getUserDetails = createAsyncThunk(
 
             const response = await API.getUserDetails(config);
 
-            const {first_name, last_name} = response.data.user;
-            const {avatar, id} = response.data;
+            const { first_name, last_name } = response.data.user;
+            const { avatar, id } = response.data;
 
             return {
                 profile_id: id,
@@ -125,19 +130,19 @@ export const getUserDetails = createAsyncThunk(
             dispatch(
                 setAPIErrors({
                     APIErrors,
-                }),
+                })
             );
 
             return rejectWithValue({
-                status_code: err.response.status,
+                errorCode: err.response.status,
             });
         }
-    },
+    }
 );
 
 export const getCountries = createAsyncThunk(
     'user/getCountries',
-    async (_, {dispatch, rejectWithValue, getState}) => {
+    async (_, { dispatch, rejectWithValue, getState }) => {
         try {
             const response = await API.getCountries();
             const countries = response.data;
@@ -151,19 +156,19 @@ export const getCountries = createAsyncThunk(
             dispatch(
                 setAPIErrors({
                     APIErrors,
-                }),
+                })
             );
 
             return rejectWithValue({
                 APIErrors,
             });
         }
-    },
+    }
 );
 
 export const getCities = createAsyncThunk(
     'user/getCities',
-    async (country_id, {dispatch, rejectWithValue, getState}) => {
+    async (country_id, { dispatch, rejectWithValue, getState }) => {
         try {
             const response = await API.getCities(country_id);
             const cities = response.data;
@@ -177,12 +182,12 @@ export const getCities = createAsyncThunk(
             dispatch(
                 setAPIErrors({
                     APIErrors,
-                }),
+                })
             );
 
             return rejectWithValue({
                 APIErrors,
             });
         }
-    },
+    }
 );

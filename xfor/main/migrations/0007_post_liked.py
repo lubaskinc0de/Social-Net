@@ -8,13 +8,17 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('main', '0006_remove_post_slug'),
+        ("main", "0006_remove_post_slug"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='post',
-            name='liked',
-            field=models.ManyToManyField(related_name='post_likes', to=settings.AUTH_USER_MODEL, verbose_name='Лайкнувшие'),
+            model_name="post",
+            name="liked",
+            field=models.ManyToManyField(
+                related_name="post_likes",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Лайкнувшие",
+            ),
         ),
     ]

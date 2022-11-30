@@ -6,15 +6,15 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0025_alter_profile_avatar'),
+        ("authentication", "0025_alter_profile_avatar"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='profile',
-            name='is_verify',
+            model_name="profile",
+            name="is_verify",
         ),
         migrations.DeleteModel(
-            name='Token',
+            name="Token",
         ),
     ]

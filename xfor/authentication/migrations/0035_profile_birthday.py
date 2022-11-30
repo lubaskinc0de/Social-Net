@@ -8,14 +8,17 @@ from django.utils.timezone import utc
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0034_alter_profile_avatar'),
+        ("authentication", "0034_alter_profile_avatar"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='birthday',
-            field=models.DateField(default=datetime.datetime(2022, 8, 11, 18, 18, 4, 585775, tzinfo=utc), verbose_name='День рождения'),
+            model_name="profile",
+            name="birthday",
+            field=models.DateField(
+                default=datetime.datetime(2022, 8, 11, 18, 18, 4, 585775, tzinfo=utc),
+                verbose_name="День рождения",
+            ),
             preserve_default=False,
         ),
     ]

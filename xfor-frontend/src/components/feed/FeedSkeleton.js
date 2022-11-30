@@ -13,7 +13,8 @@ export default function FeedSkeleton() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     width: '100%',
-                }}>
+                }}
+            >
                 <PostCard loading></PostCard>
             </Grid>
         );

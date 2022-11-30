@@ -6,9 +6,9 @@ import KwikIcon from '../icons/KwikIcon';
 export default function NavBarIcon(props) {
     const getDisplay = () => {
         if (props.isMobile) {
-            return {xs: 'flex', md: 'none'};
+            return { xs: 'flex', md: 'none' };
         }
-        return {xs: 'none', md: 'flex'};
+        return { xs: 'none', md: 'flex' };
     };
     return (
         <>
@@ -17,7 +17,8 @@ export default function NavBarIcon(props) {
                 sx={{
                     mr: 1,
                     display: getDisplay(),
-                }}>
+                }}
+            >
                 <KwikIcon color={props.iconColor}></KwikIcon>
             </SvgIcon>
             <Typography
@@ -34,7 +35,8 @@ export default function NavBarIcon(props) {
                     color: 'inherit',
                     textDecoration: 'none',
                     flexGrow: props.isMobile ? 1 : undefined,
-                }}>
+                }}
+            >
                 {props.title}
             </Typography>
         </>

@@ -14,7 +14,6 @@ services:
             - CACHE_BACKEND=django.core.cache.backends.redis.RedisCache
             - SQL_ENGINE=django.db.backends.postgresql
             - SQL_DATABASE=postgresql
-            - DATABASE=postgres
         depends_on:
             - backend_redis
             - backend_database

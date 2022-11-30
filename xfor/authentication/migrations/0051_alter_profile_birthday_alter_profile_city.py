@@ -7,19 +7,24 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('geo_api', '0002_alter_city_options_alter_country_options_and_more'),
-        ('authentication', '0050_alter_profile_birthday'),
+        ("geo_api", "0002_alter_city_options_alter_country_options_and_more"),
+        ("authentication", "0050_alter_profile_birthday"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='birthday',
-            field=models.DateField(null=True, verbose_name='День рождения'),
+            model_name="profile",
+            name="birthday",
+            field=models.DateField(null=True, verbose_name="День рождения"),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='city',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='profile', to='geo_api.city'),
+            model_name="profile",
+            name="city",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="profile",
+                to="geo_api.city",
+            ),
         ),
     ]

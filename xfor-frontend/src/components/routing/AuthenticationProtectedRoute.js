@@ -1,20 +1,20 @@
-import {Outlet} from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 import React, { useEffect } from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AnonymousProtectedRoute = () => {
     const [token] = useUser();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!token) {
-            navigate('/login/')
+            navigate('/login/');
         }
-    }, [navigate, token])
+    }, [navigate, token]);
 
     if (!token) {
-        return <></>
+        return <></>;
     }
 
     // returns child route elements

@@ -3,15 +3,15 @@ import Toolbar from '@mui/material/Toolbar';
 import NavBarIcon from './NavBarIcon';
 import NavBarMenu from './NavBarMenu';
 import NavBarUserIcon from './NavBarUserIcon';
-import NavBarThemeSwitcher from './NavBarThemeSwitcher';
-import {useSelector} from 'react-redux';
+import NavBarSettingsToggler from './NavBarSettingsToggler';
+import { useSelector } from 'react-redux';
 import useSelectedTheme from '../../hooks/useSelectedTheme';
 
 export default function NavBarOptions(props) {
     const pages = props.pages;
 
-    const {first_name, avatar} = useSelector((state) => state.user.userInfo);
-    const {loading} = useSelector((state) => state.user);
+    const { first_name, avatar } = useSelector((state) => state.user.userInfo);
+    const { loading } = useSelector((state) => state.user);
 
     const theme = useSelectedTheme();
 
@@ -30,8 +30,12 @@ export default function NavBarOptions(props) {
             <NavBarMenu {...navBarMenuProps} isMobile={true}></NavBarMenu>
             <NavBarIcon {...iconProps} isMobile={true}></NavBarIcon>
             <NavBarMenu {...navBarMenuProps} isMobile={false}></NavBarMenu>
-            <NavBarThemeSwitcher></NavBarThemeSwitcher>
-            <NavBarUserIcon loading={loading} src={avatar} alt={first_name}></NavBarUserIcon>
+            <NavBarSettingsToggler></NavBarSettingsToggler>
+            <NavBarUserIcon
+                loading={loading}
+                src={avatar}
+                alt={first_name}
+            ></NavBarUserIcon>
         </Toolbar>
     );
 }

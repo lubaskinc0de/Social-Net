@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
-export default function FeedInfiniteScroll({onIntersecting}) {
+export default function FeedInfiniteScroll({ onIntersecting }) {
     const loader = useRef(null);
 
     const handleObserver = useCallback(
@@ -10,7 +10,7 @@ export default function FeedInfiniteScroll({onIntersecting}) {
                 onIntersecting();
             }
         },
-        [onIntersecting],
+        [onIntersecting]
     );
 
     useEffect(() => {

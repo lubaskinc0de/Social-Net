@@ -6,36 +6,36 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0038_country_region_subregion_city'),
+        ("authentication", "0038_country_region_subregion_city"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='region',
+            name="region",
             unique_together=None,
         ),
         migrations.RemoveField(
-            model_name='region',
-            name='country',
+            model_name="region",
+            name="country",
         ),
         migrations.RemoveField(
-            model_name='subregion',
-            name='country',
+            model_name="subregion",
+            name="country",
         ),
         migrations.RemoveField(
-            model_name='subregion',
-            name='region',
+            model_name="subregion",
+            name="region",
         ),
         migrations.DeleteModel(
-            name='City',
+            name="City",
         ),
         migrations.DeleteModel(
-            name='Country',
+            name="Country",
         ),
         migrations.DeleteModel(
-            name='Region',
+            name="Region",
         ),
         migrations.DeleteModel(
-            name='SubRegion',
+            name="SubRegion",
         ),
     ]

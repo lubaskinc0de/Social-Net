@@ -5,13 +5,21 @@ import Container from '@mui/material/Container';
 import NavBarOptions from './NavBarOptions';
 
 export default function NavBar(props) {
+    const pages = [
+        {
+            title: 'Лента',
+        },
+    ];
+
     return (
-        <Box sx={{flexGrow: 1}}>
-            <AppBar position='fixed'>
-                <Container maxWidth='xl'>
-                    <NavBarOptions pages={props.pages}></NavBarOptions>
-                </Container>
-            </AppBar>
-        </Box>
+        <>
+            <Box sx={{ flexGrow: 1 }}>
+                <AppBar position='fixed'>
+                    <Container maxWidth='xl'>
+                        <NavBarOptions pages={pages}></NavBarOptions>
+                    </Container>
+                </AppBar>
+            </Box>
+        </>
     );
 }

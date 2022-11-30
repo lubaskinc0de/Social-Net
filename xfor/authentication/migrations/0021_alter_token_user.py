@@ -9,13 +9,19 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('authentication', '0020_alter_profile_avatar'),
+        ("authentication", "0020_alter_profile_avatar"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='token',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='token', related_query_name='token', to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
+            model_name="token",
+            name="user",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="token",
+                related_query_name="token",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Пользователь",
+            ),
         ),
     ]

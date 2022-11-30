@@ -6,15 +6,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: 'Roboto', sans-serif
+    font-family: 'Roboto', sans-serif;
 }
 
 .invalid-tooltip {
-    font-size: .85em;
+    font-size: 0.85em;
 }
 
 .invalid-feedback {
-    font-size: .85em;
+    font-size: 0.85em;
 }
 
 .register-form .alert {
@@ -29,46 +29,46 @@
     border-radius: 50%;
     width: 2534px;
     height: 2534px;
-    background: #F7FAFF;
+    background: #f7faff;
     box-shadow: 0 4px 70px 6px rgba(217, 229, 255, 0.25);
     animation-name: fadeCircle;
-    animation-duration: .7s;
+    animation-duration: 0.7s;
     animation-timing-function: ease-in-out;
-    animation-delay: .5s;
+    animation-delay: 0.5s;
     animation-iteration-count: 1;
-    animation-fill-mode: forwards
+    animation-fill-mode: forwards;
 }
 
 .circle--login {
     width: 1950px;
     height: 1950px;
-    animation-name: fadeCircleLogin
+    animation-name: fadeCircleLogin;
 }
 
 @keyframes fadeCircleLogin {
     0% {
         width: 2250px;
-        height: 2250px
+        height: 2250px;
     }
 
     25% {
         width: 1750px;
-        height: 1750px
+        height: 1750px;
     }
 
     50% {
         width: 1250px;
-        height: 1250px
+        height: 1250px;
     }
 
     75% {
         width: 750px;
-        height: 750px
+        height: 750px;
     }
 
     100% {
         width: 450px;
-        height: 450px
+        height: 450px;
     }
 }
 
@@ -77,49 +77,49 @@
 @keyframes fadeCircle {
     0% {
         width: 2534px;
-        height: 2534px
+        height: 2534px;
     }
 
     25% {
         width: 2000px;
-        height: 2000px
+        height: 2000px;
     }
 
     50% {
         width: 1500px;
-        height: 1500px
+        height: 1500px;
     }
 
     75% {
         width: 1000px;
-        height: 1000px
+        height: 1000px;
     }
 
     100% {
         width: 534px;
-        height: 534px
+        height: 534px;
     }
 }
 
 @keyframes fadeForm {
     0% {
-        opacity: 0
+        opacity: 0;
     }
 
     25% {
-        opacity: .25
+        opacity: 0.25;
     }
 
     50% {
-        opacity: .5
+        opacity: 0.5;
     }
 
     75% {
-        opacity: .75
+        opacity: 0.75;
     }
 
     100% {
-        opacity: 1
+        opacity: 1;
     }
 }
 
@@ -144,7 +144,7 @@
     line-height: 16px;
     height: 45px;
     width: 100%;
-    border: 2px solid #E9F2FF;
+    border: 2px solid #e9f2ff;
     border-radius: 5px;
     padding-left: 25px;
     border-color: #7ab1ff81;
@@ -155,7 +155,7 @@
 
 .register-form__input:focus {
     outline: 0;
-    border: 2px solid #3c89fcad
+    border: 2px solid #3c89fcad;
 }
 
 .register-form__input--valid {
@@ -164,7 +164,7 @@
     background-repeat: no-repeat;
     padding-right: calc(1.5em + 0.75rem);
     background-position: right calc(0.375em + 3px) center;
-    background-size: calc(0.75em + 6px) calc(0.75em + 6px)
+    background-size: calc(0.75em + 6px) calc(0.75em + 6px);
 }
 
 .register-form__input--not-valid {
@@ -187,7 +187,7 @@
     z-index: 2;
     width: 100%;
     animation-name: fadeForm;
-    animation-duration: .7s;
+    animation-duration: 0.7s;
     animation-timing-function: ease-in-out;
     animation-delay: 1.4s;
     animation-iteration-count: 1;
@@ -230,11 +230,11 @@
     border: 0;
     width: 100%;
     cursor: pointer;
-    transition: background .2s linear
+    transition: background 0.2s linear;
 }
 
 .register-form__btn:hover {
-    background: #00dd0b
+    background: #00dd0b;
 }
 
 .register-form__btn:focus {
@@ -246,24 +246,23 @@
     text-align: center;
     cursor: pointer;
     text-decoration: none;
-    color: #fff
+    color: #fff;
 }
 
 .register-form__btn--sign:hover {
     background: #1957a8;
-    color: #fff
+    color: #fff;
 }
 
 .register-form__divider {
     text-align: center;
     margin-top: 5px;
-    margin-bottom: 5px
+    margin-bottom: 5px;
 }
 
 .register-form .alert ~ .register-form__title {
     display: none;
 }
-
 
 @media (max-width: 991px) {
     .register-form-container {
@@ -274,7 +273,7 @@
 
     .invalid-feedback {
         display: block;
-        font-size: .84em;
+        font-size: 0.84em;
     }
 
     .register-form__col {
@@ -290,7 +289,7 @@
     .register-main {
         background-color: #fff;
     }
-    
+
     .circle {
         display: none;
     }

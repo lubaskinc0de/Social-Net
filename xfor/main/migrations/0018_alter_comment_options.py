@@ -6,12 +6,15 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0017_alter_image_created_at_alter_image_post_comment'),
+        ("main", "0017_alter_image_created_at_alter_image_post_comment"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='comment',
-            options={'verbose_name': 'Комментарий', 'verbose_name_plural': 'Комментарии'},
+            name="comment",
+            options={
+                "verbose_name": "Комментарий",
+                "verbose_name_plural": "Комментарии",
+            },
         ),
     ]

@@ -1,5 +1,5 @@
 import React from 'react';
-import {handleEnter} from '../../lib/authentication';
+import { handleEnter } from '../../lib/authentication';
 import Input from './FormComponents/FormInput';
 
 export default function FormFields(props) {
@@ -30,7 +30,8 @@ export default function FormFields(props) {
                 touched={props.touched}
                 errors={props.errors}
                 setValue={props.setValue}
-                value={getValue(element)}></Input>
+                value={getValue(element)}
+            ></Input>
         );
     });
 }

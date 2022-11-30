@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Modal from '../../utils/Modal';
 import Slider from './PostCardMediaSlider';
 import CardMedia from '@mui/material/CardMedia';
@@ -20,13 +20,15 @@ export default function PostCardMedia(props) {
         <>
             <Slider
                 handleModalOpen={handleModalOpen}
-                images={props.images}></Slider>
+                images={props.images}
+            ></Slider>
             <Modal
                 sx={{
                     p: 1,
                 }}
                 open={modalOpen}
-                handleClose={handleModalClose}>
+                handleClose={handleModalClose}
+            >
                 <CardMedia
                     component='img'
                     sx={{

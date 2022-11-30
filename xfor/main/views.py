@@ -1,160 +1,125 @@
-from django.db.models import Count, Exists, OuterRef
-from django.http import Http404
-from django.shortcuts import get_object_or_404
+from typing import Type
+
 from django.utils.translation import gettext as _
+from django.shortcuts import get_object_or_404
 
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.views import Response
-from rest_framework.serializers import SerializerMetaclass
+from rest_framework.serializers import Serializer
+from rest_framework.decorators import action
+from rest_framework.viewsets import ModelViewSet
 
+from .services import (
+    get_posts,
+    get_post_comments,
+    get_comment_descendants,
+    get_comments,
+)
 from .filters import PostFilter, filters
-from .mixins import CacheTreeQuerysetMixin, IsAuthorPermissionsMixin
-from .models import Comment, Post
-from .helpers.generics import (PartialViewSet, RetrievePartialDestroyAPIView)
-from .serializers import (CommentSerializer, CommentUpdateSerializer,
-                          PostSerializer)
 
-class PostViewSet(IsAuthorPermissionsMixin, PartialViewSet):
-    '''Post viewset'''
+from .mixins import CacheTreeQuerysetMixin, IsAuthorPermissionsMixin
+from .models import Comment
+
+from .helpers.viewsets import CreateRetrieveUpdateDestroyViewSet
+
+from .serializers import CommentSerializer, CommentUpdateSerializer, PostSerializer
+
+
+class PostViewSet(IsAuthorPermissionsMixin, CacheTreeQuerysetMixin, ModelViewSet):
+    """Post viewset"""
 
     serializer_class = PostSerializer
+    comments_serializer_class = CommentSerializer
+
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = PostFilter
-    
-    def list(self, request, *args, **kwargs):
-        query_params = request.GET
 
-        if query_params.get('is_popular') and query_params.get('is_interesting'):
-            # sorting by these two fields at the same time may cause not very obvious results
-            
-            raise ValidationError(detail={
-                'error': _('Сортировка по полям "интересно" и "популярно" \
-                    может вызвать не слишком очевидные результаты.')
-            }, code='invalid_filters')
+    depth = 2  # comments depth
+
+    def get_queryset(self):
+        return get_posts(self.request.user)
+
+    def get_serializer_class(self) -> Type[Serializer]:
+        if self.action == "get_comments":
+            return self.comments_serializer_class
+
+        return super().get_serializer_class()
+
+    def validate_query(self, query: dict) -> None:
+        """
+        Validates GET query, prohibits filtering posts by is_interesting and is_popular, since such sorting may cause not too obvious
+        results.
+        """
+
+        if query.get("is_popular") and query.get("is_interesting"):
+            raise ValidationError(
+                detail={
+                    "error": _(
+                        'Сортировка по полям "интересно" и "популярно" \
+                    может вызвать не слишком очевидные результаты.'
+                    )
+                },
+                code="invalid_filters",
+            )
+
+    def list(self, request, *args, **kwargs):
+        query = request.GET
+        self.validate_query(query)
 
         return super().list(request, *args, **kwargs)
-    
-    def get_queryset(self):
-        this_user = self.request.user
-        posts = Post.objects.annotate(
-            viewers_count= Count('viewers', distinct=True),
-            liked_count = Count('liked', distinct=True),
-            author_in_user_following=Exists(this_user.profile.following.filter(id=OuterRef('author__profile__id'))), # Thx to Nikolay Cherniy
-            is_user_liked_post=Exists(this_user.liked.filter(id=OuterRef('id'))))\
-            .select_related('author__profile')\
-            .prefetch_related('images')\
-            .order_by('-created_at')
-        return posts
-    
+
     def retrieve(self, request, *args, **kwargs) -> Response:
         instance = self.get_object()
         instance.add_views(request.user)
 
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)  
+        return Response(serializer.data)
 
-class CommentAPIView(ListAPIView, CacheTreeQuerysetMixin):
-    '''Post comments API View'''
+    @action(detail=True, methods=["get"])
+    def get_comments(self, request, pk: int = None):
+        comments = self.get_cached_queryset(get_post_comments(request.user, pk))
 
-    serializer_class = CommentSerializer
-    depth = 2
+        page = self.paginate_queryset(comments)
 
-    def get_queryset(self):
-        this_user = self.request.user
-        post_id = self.post_id
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-        comments = Comment.objects.filter(post_id=post_id, is_active=True).annotate(
-            is_user_liked_comment=Exists(this_user.liked_comments.filter(id=OuterRef('id')))\
-            ,like_cnt=Count('liked', distinct=True)).select_related('author','author__profile')\
-            .prefetch_related('images_comment')
-            
-        return self._get_cached_queryset(comments)
-    
-    def set_post_id(self, post_id: int) -> None:
-        try:
-            self.post_id = get_object_or_404(Post, id=post_id).id
-        except Http404 as err:
-            self.post_id = None
-            raise err
-    
-    def list(self, *args, **kwargs):
-        self.set_post_id(kwargs.get('pk'))
-        return super().list(*args, **kwargs)
-        
-class CommentDescendantsAPIView(ListAPIView):
-    '''Comment descendants API View'''
+        serializer = self.get_serializer(comments, many=True)
+        return Response(serializer.data)
 
-    serializer_class = CommentSerializer
 
-    def get_queryset(self):
-        this_user = self.request.user
-
-        descendants = self.instance.get_descendants().filter(is_active=True).annotate(
-            is_user_liked_comment=Exists(this_user.liked_comments.filter(id=OuterRef('id')))\
-            ,like_cnt=Count('liked', distinct=True)).select_related('author','author__profile')\
-            .prefetch_related('images_comment')
-        
-        return descendants
-            
-    def set_instance(self, comment_id: int) -> None:
-        self.instance = get_object_or_404(Comment, id=comment_id)
-        
-        if self.instance.level != 0:
-            raise ValidationError(detail={'id': 'Указанный комментарий является ответом, это недопустимо.'},
-            code='error_not_root_comment')
-    
-    def list(self, *args, **kwargs):
-        self.set_instance(kwargs.get('pk'))
-        return super().list(*args, **kwargs)
-
-class CommentDetailAPIView(IsAuthorPermissionsMixin, RetrievePartialDestroyAPIView):
-    '''Comment detail API View'''
-    
+class CommentViewSet(IsAuthorPermissionsMixin, CreateRetrieveUpdateDestroyViewSet):
     serializer_class = CommentSerializer
     update_serializer_class = CommentUpdateSerializer
 
     def get_queryset(self):
-        this_user = self.request.user
-        
-        comments = Comment.objects.filter(is_active=True).annotate(
-            is_user_liked_comment=Exists(this_user.liked_comments.filter(id=OuterRef('id')))\
-            ,like_cnt=Count('liked', distinct=True)).select_related('author','author__profile')\
-            .prefetch_related('images_comment')
-
-        return comments
+        return get_comments(self.request.user)
 
     def get_serializer_context(self) -> dict:
-        """
-        Extra context provided to the serializer class.
-        """
         return {
-            'request': self.request,
-            'format': self.format_kwarg,
-            'view': self,
-            'not_children': True,
+            "request": self.request,
+            "format": self.format_kwarg,
+            "view": self,
+            "show_replies": False,
         }
-    
-    def get_serializer_class(self) -> SerializerMetaclass:
-        """
-        Return the class to use for the serializer.
-        Defaults to using `self.serializer_class`.
 
-        You may want to override this if you need to provide different
-        serializations depending on the incoming request.
-
-        (Eg. admins get full serialization, others get basic serialization)
-        """
-        assert self.serializer_class is not None, (
-            "'%s' should either include a `serializer_class` attribute, "
-            "or override the `get_serializer_class()` method."
-            % self.__class__.__name__
-        )
-
-        if self.request.method == 'PATCH':
+    def get_serializer_class(self) -> Type[Serializer]:
+        if self.request.method == "PATCH":
             return self.update_serializer_class
 
-        return self.serializer_class
+        return super().get_serializer_class()
 
-class CommentCreateAPIView(CreateAPIView):
-    serializer_class = CommentSerializer
+    @action(detail=True, methods=["get"])
+    def get_descendants(self, request, pk: int = None):
+        parent: Comment = get_object_or_404(Comment, pk=pk)
+        descendants = get_comment_descendants(parent, request.user)
+
+        page = self.paginate_queryset(descendants)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(descendants, many=True)
+        return Response(serializer.data)

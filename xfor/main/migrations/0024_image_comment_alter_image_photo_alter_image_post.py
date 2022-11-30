@@ -8,23 +8,44 @@ import main.helpers.helpers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0023_alter_image_photo'),
+        ("main", "0023_alter_image_photo"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='image',
-            name='comment',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='images_comment', related_query_name='images_comment', to='main.comment', verbose_name='Комментарий'),
+            model_name="image",
+            name="comment",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="images_comment",
+                related_query_name="images_comment",
+                to="main.comment",
+                verbose_name="Комментарий",
+            ),
         ),
         migrations.AlterField(
-            model_name='image',
-            name='photo',
-            field=models.ImageField(upload_to=main.helpers.helpers.PathAndRenameDate('photos/posts/2022/6/6/'), verbose_name='Фото'),
+            model_name="image",
+            name="photo",
+            field=models.ImageField(
+                upload_to=main.helpers.helpers.PathAndRenameDate(
+                    "photos/posts/2022/6/6/"
+                ),
+                verbose_name="Фото",
+            ),
         ),
         migrations.AlterField(
-            model_name='image',
-            name='post',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='images', related_query_name='images', to='main.post', verbose_name='Пост'),
+            model_name="image",
+            name="post",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="images",
+                related_query_name="images",
+                to="main.post",
+                verbose_name="Пост",
+            ),
         ),
     ]

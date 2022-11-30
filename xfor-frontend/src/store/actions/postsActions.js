@@ -1,14 +1,17 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../api/feed';
-import {parseAPIAxiosErrors} from '../../lib';
-import {setAPIErrors} from '../slices/authentication/APIErrorsSlice';
+import { parseAPIAxiosErrors } from '../../lib';
+import { setAPIErrors } from '../slices/authentication/APIErrorsSlice';
 
 export const getPosts = createAsyncThunk(
     'posts/getPosts',
-    async (_, {rejectWithValue, dispatch, getState}) => {
+    async (_, { rejectWithValue, dispatch, getState }) => {
         try {
-            const {user, posts: postsState} = getState();
-            const {nextPage: page} = postsState;
+            const { user, posts: postsState } = getState();
+            const {
+                nextPage: page,
+                postsFilters: { priority, ordering },
+            } = postsState;
 
             if (!page) {
                 return {
@@ -23,7 +26,9 @@ export const getPosts = createAsyncThunk(
                 },
             };
 
-            const urlParameters = `page=${page}`;
+            const urlParameters = `page=${page}${
+                priority ? `&${priority}=on` : ''
+            }${ordering ? `&ordering=${ordering}` : ''}`;
 
             const response = await API.getPosts(urlParameters, config);
             const posts = response.data.results;
@@ -39,30 +44,32 @@ export const getPosts = createAsyncThunk(
             dispatch(
                 setAPIErrors({
                     APIErrors,
-                }),
+                })
             );
 
-            return rejectWithValue();
+            return rejectWithValue({
+                errorCode: err.response.status,
+            });
         }
-    },
+    }
 );
 
 export const getPostsWrapper = createAsyncThunk(
     'posts/getPostsWrapper',
-    async (arg, {dispatch, getState}) => {
-        const {loading} = getState().posts;
+    async (arg, { dispatch, getState }) => {
+        const { loading } = getState().posts;
 
         if (!loading) {
             dispatch(getPosts(arg));
         }
-    },
+    }
 );
 
 export const postLike = createAsyncThunk(
     'posts/likePost',
-    async (id, {rejectWithValue, dispatch, getState}) => {
+    async (id, { rejectWithValue, dispatch, getState }) => {
         try {
-            const {user} = getState();
+            const { user } = getState();
 
             const config = {
                 headers: {
@@ -70,7 +77,7 @@ export const postLike = createAsyncThunk(
                 },
             };
 
-            const response = await API.postLike({post: id}, config);
+            const response = await API.postLike({ post: id }, config);
             const action = response.data.action;
 
             return {
@@ -83,12 +90,12 @@ export const postLike = createAsyncThunk(
             dispatch(
                 setAPIErrors({
                     APIErrors,
-                }),
+                })
             );
 
             return rejectWithValue({
                 id,
             });
         }
-    },
+    }
 );

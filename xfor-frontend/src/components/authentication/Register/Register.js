@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import RegisterFormStepOne from './steps/RegisterFormStepOne';
 import RegisterFormStepTwo from './steps/RegisterFormStepTwo';
 import RegisterFormStepThree from './steps/RegisterFormStepThree';
 import RegisterFormStepFour from './steps/RegisterFormStepFour';
 
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import lodash_merge from 'lodash/merge';
-import {useDispatch, useSelector} from 'react-redux';
-import {clearAPIErrors} from '../../../store/slices/authentication/APIErrorsSlice';
-import {clearSuccess, clearGeo} from '../../../store/slices/authentication/userSlice';
-import {userRegister} from '../../../store/actions/userActions';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    clearSuccess,
+    clearGeo,
+} from '../../../store/slices/authentication/userSlice';
+import { userRegister } from '../../../store/actions/userActions';
 
 import Page404 from '../../pages/Page404';
 
@@ -18,7 +20,7 @@ export default function Register() {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
     const dispatch = useDispatch();
-    const {success} = useSelector((state) => state.user);
+    const { success } = useSelector((state) => state.user);
 
     const navigate = useNavigate();
     const lastStep = 4;
@@ -36,9 +38,8 @@ export default function Register() {
             const successMessage =
                 'Вы успешно прошли регистрацию! Для того что бы вы могли войти в свой аккаунт проверьте почту, вам пришло письмо с инструкциями для активации аккаунта.';
 
-            dispatch(clearAPIErrors());
             dispatch(clearSuccess());
-            dispatch(clearGeo())
+            dispatch(clearGeo());
 
             navigate('/login/', {
                 state: {
@@ -74,22 +75,26 @@ export default function Register() {
         1: (
             <RegisterFormStepOne
                 title='Создайте аккаунт в KWIK'
-                {...generalRegisterProps}></RegisterFormStepOne>
+                {...generalRegisterProps}
+            ></RegisterFormStepOne>
         ),
         2: (
             <RegisterFormStepTwo
                 title='Как к вам обращаться?'
-                {...generalRegisterProps}></RegisterFormStepTwo>
+                {...generalRegisterProps}
+            ></RegisterFormStepTwo>
         ),
         3: (
             <RegisterFormStepThree
                 title='Настройте профиль'
-                {...generalRegisterProps}></RegisterFormStepThree>
+                {...generalRegisterProps}
+            ></RegisterFormStepThree>
         ),
         4: (
             <RegisterFormStepFour
                 title='Выберите фото профиля'
-                {...generalRegisterProps}></RegisterFormStepFour>
+                {...generalRegisterProps}
+            ></RegisterFormStepFour>
         ),
     };
 

@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 
 export default function NavBarUserIcon(props) {
     return (
-        <Box sx={{flexGrow: 0}}>
+        <Box sx={{ flexGrow: 0 }}>
             {props.loading ? (
                 <Skeleton
                     animation='wave'

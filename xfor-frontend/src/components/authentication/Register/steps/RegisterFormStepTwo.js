@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Form from '../../Form';
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import FormFields from '../../FormFields';
 
@@ -15,7 +15,7 @@ export default function RegisterFormStepTwo(props) {
             .required('Укажите фамилию!'),
     });
 
-    const {first_name = '', last_name = ''} = props.values;
+    const { first_name = '', last_name = '' } = props.values;
 
     const formik = useFormik({
         initialValues: {
@@ -45,7 +45,7 @@ export default function RegisterFormStepTwo(props) {
         <Form
             handleSubmit={formik.handleSubmit}
             setShowErrors={setShowErrors}
-            buttons={{prevButton: {prevStep: props.prevStep}}}
+            buttons={{ prevButton: { prevStep: props.prevStep } }}
             fields={
                 <FormFields
                     fields={fields}
@@ -54,8 +54,10 @@ export default function RegisterFormStepTwo(props) {
                     handleBlur={formik.handleBlur}
                     touched={formik.touched}
                     errors={formik.errors}
-                    values={formik.values}></FormFields>
+                    values={formik.values}
+                ></FormFields>
             }
-            title={props.title}></Form>
+            title={props.title}
+        ></Form>
     );
 }
