@@ -1,6 +1,7 @@
 import React from 'react';
 import FormDialog from '../utils/FormDialog';
 import FormControl from '@mui/material/FormControl';
+import Stack from '@mui/material/Stack';
 
 import NavBarSettingsFeedFiltersDialogPriority from './NavBarSettingsFeedFiltersDialogPriority';
 import NavBarSettingsFeedFiltersDialogOrdering from './NavBarSettingsFeedFiltersDialogOrdering';
@@ -35,18 +36,24 @@ export default function NavBarSettingsFeedFiltersDialog(props) {
 
     return (
         <FormDialog open={props.open} handleClose={props.handleClose}>
-            <FormControl>
-                <NavBarSettingsFeedFiltersDialogPriority
-                    priority={priority}
-                    handleChange={handleChangePriority}
-                ></NavBarSettingsFeedFiltersDialogPriority>
-                <FormControl sx={{ mt: 1, minWidth: 120 }}>
-                    <NavBarSettingsFeedFiltersDialogOrdering
-                        handleChange={handleChangeOrdering}
-                        ordering={ordering || ''}
-                    ></NavBarSettingsFeedFiltersDialogOrdering>
-                </FormControl>
-            </FormControl>
+            <Stack spacing={1} sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                <div>
+                    <FormControl>
+                        <NavBarSettingsFeedFiltersDialogPriority
+                            priority={priority}
+                            handleChange={handleChangePriority}
+                        ></NavBarSettingsFeedFiltersDialogPriority>
+                    </FormControl>
+                </div>
+                <div>
+                    <FormControl fullWidth>
+                        <NavBarSettingsFeedFiltersDialogOrdering
+                            handleChange={handleChangeOrdering}
+                            ordering={ordering || ''}
+                        ></NavBarSettingsFeedFiltersDialogOrdering>
+                    </FormControl>
+                </div>
+            </Stack>
         </FormDialog>
     );
 }

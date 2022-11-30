@@ -1,7 +1,8 @@
 import React from 'react';
 import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 export default function NavBarSettingsFeedFiltersDialogOrdering({
     ordering,
@@ -9,15 +10,15 @@ export default function NavBarSettingsFeedFiltersDialogOrdering({
 }) {
     return (
         <>
-            <InputLabel htmlFor='ordering'>Упорядочить по</InputLabel>
+            <InputLabel id='orderingSelectLabel'>Упорядочить по</InputLabel>
             <Select
-                native
                 value={ordering}
+                labelId='orderingSelectLabel'
+                input={<OutlinedInput label='Упорядочить по' />}
                 onChange={handleChange}
-                input={<OutlinedInput label='Ordering' id='ordering' />}
             >
-                <option value='-created_at'>Сначала новые</option>
-                <option value='created_at'>Сначала старые</option>
+                <MenuItem value='-created_at'>Сначала новые</MenuItem>
+                <MenuItem value='created_at'>Сначала старые</MenuItem>
             </Select>
         </>
     );
