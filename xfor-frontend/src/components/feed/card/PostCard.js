@@ -1,8 +1,8 @@
 import React from 'react';
+
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import CardContent from './PostCardContent';
 import CardActions from './PostCardActions';
-import Typography from '@mui/material/Typography';
 import CardMedia from './PostCardMedia';
 import CardHeader from './PostCardHeader';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,9 +30,7 @@ export default function PostCard(props) {
                         subheader={props.subheader}
                     ></CardHeader>
                     <CardMedia images={props.images}></CardMedia>
-                    <CardContent>
-                        <Typography variant='body2'>{props.content}</Typography>
-                    </CardContent>
+                    <CardContent content={props.content}></CardContent>
                     <CardActions
                         handleLikeClick={handleLikeClick}
                         timesince={props.timesince}
