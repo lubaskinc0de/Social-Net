@@ -13,4 +13,8 @@ export default class API {
     static postLike(data, config) {
         return axios.put(this.postLikeEndpoint, data, config);
     }
+
+    static getPost(postId, config) {
+        return axios.get(`${this.postsEndpoint}${postId}/`, config)
+    }
 }

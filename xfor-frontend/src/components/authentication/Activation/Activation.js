@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
+
 import { useParams, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userActivate } from '../../../store/actions/userActions';
+
 import Container from '@mui/material/Container';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import ErrorIcon from '@mui/icons-material/Error';
 import DownloadingIcon from '@mui/icons-material/Downloading';
+
 import './activation.css';
 
 export default function Activation() {

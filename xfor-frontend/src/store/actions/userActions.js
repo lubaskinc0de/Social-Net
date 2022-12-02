@@ -133,9 +133,7 @@ export const getUserDetails = createAsyncThunk(
                 })
             );
 
-            return rejectWithValue({
-                errorCode: err.response.status,
-            });
+            return rejectWithValue();
         }
     }
 );

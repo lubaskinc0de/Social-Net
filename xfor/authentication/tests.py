@@ -684,3 +684,29 @@ class AuthenticationTestCase(APITestCase):
         response = self.logoutall()
 
         self.assertEqual(response.status_code, 401)
+
+    def test_check_token(self):
+        """Test check validity of authentication token"""
+
+        # Valid token
+
+        response = self.login()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("token" in response.data)
+
+        token: str = response.data.get("token")
+
+        url = reverse("check_token")
+
+        self.authenticate(token)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 204)
+
+        # Invalid
+
+        self.authenticate("abracadabra")
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 401)

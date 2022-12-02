@@ -48,6 +48,10 @@ const userSlice = createSlice({
             state.cities = [];
             state.countries = [];
         },
+        removeToken(state) {
+            removeFromLocalStorage('userToken');
+            state.token = null;
+        },
     },
     extraReducers: {
         // userRegister
@@ -129,14 +133,8 @@ const userSlice = createSlice({
             state.loading = false;
         },
 
-        [getUserDetails.rejected](state, action) {
-            const { errorCode } = action.payload;
+        [getUserDetails.rejected](state) {
             state.loading = false;
-
-            if (errorCode === 401 && state.token) {
-                removeFromLocalStorage('userToken');
-                state.token = null;
-            }
         },
 
         // getCountries
@@ -175,5 +173,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { clearSuccess, clearCities, clearGeo } = userSlice.actions;
+export const { clearSuccess, clearCities, clearGeo, removeToken } = userSlice.actions;
 export default userSlice.reducer;

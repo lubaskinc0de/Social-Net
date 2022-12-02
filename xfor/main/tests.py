@@ -64,6 +64,17 @@ class PostsTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 401)
 
+    def test_put_posts(self):
+        """Test PUT request to posts raises 405 HTTP error"""
+
+        url = reverse("feed")
+        self.get_posts()
+
+        self.authenticate(self.token)
+        response = self.client.put(url)
+
+        self.assertEqual(response.status_code, 405)
+
     def test_get_posts(self):
         """Test getting posts"""
 

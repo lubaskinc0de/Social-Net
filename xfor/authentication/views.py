@@ -5,6 +5,7 @@ from knox.views import LoginView, LogoutAllView, LogoutView
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
+from rest_framework.views import APIView
 
 from drf_spectacular.utils import extend_schema
 
@@ -89,3 +90,19 @@ class UserLogoutAllAPIView(LogoutAllView):
     @extend_schema(request=None, responses=None)
     def post(self, request, format=None):
         return super().post(request, format)
+
+
+class CheckTokenAPIView(APIView):
+    """
+    View to check is authentication token valid
+
+    * Requires token authentication.
+    """
+
+    @extend_schema(request=None, responses=None)
+    def get(self, request, format=None):
+        """
+        Return 204 response if token is valid.
+        """
+
+        return Response(status=204)

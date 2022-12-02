@@ -52,3 +52,17 @@ export const setToLocalStorage = (key, value) => {
 export const removeFromLocalStorage = (key) => {
     return localStorage.removeItem(key);
 };
+
+export const debounce = (f, ms) => {
+    let isCooldown = false;
+
+    return function (...args) {
+        if (isCooldown) return;
+
+        f.apply(this, args);
+
+        isCooldown = true;
+
+        setTimeout(() => (isCooldown = false), ms);
+    };
+};
