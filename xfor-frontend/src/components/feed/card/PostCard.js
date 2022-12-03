@@ -27,6 +27,7 @@ export default function PostCard(props) {
                         avatarAlt={props.avatarAlt}
                         avatarSrc={props.avatarSrc}
                         title={props.title}
+                        href={`/feed/${props.id}`}
                         subheader={props.subheader}
                     ></CardHeader>
                     <CardMedia images={props.images}></CardMedia>
