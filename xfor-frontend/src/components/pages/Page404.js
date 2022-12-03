@@ -22,7 +22,12 @@ export default function Page404() {
     });
 
     return (
-        <div className='page-404__container'>
+        <div
+            className='page-404__container'
+            style={{
+                color: '#fff',
+            }}
+        >
             <div className='page-404__content'>
                 <div className='page-404__browser-bar'>
                     <div className='page-404__browser-bar__icons'>

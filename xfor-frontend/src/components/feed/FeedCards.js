@@ -37,6 +37,7 @@ export default function FeedCards(props) {
                             time={time}
                             viewsCount={el.viewers_count}
                             likesCount={el.liked_count}
+                            commentsCount={el.comments_count}
                             isLiked={el.is_user_liked_post}
                             images={el.images}
                         ></PostCard>

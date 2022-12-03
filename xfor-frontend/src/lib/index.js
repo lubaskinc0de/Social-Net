@@ -66,3 +66,10 @@ export const debounce = (f, ms) => {
         setTimeout(() => (isCooldown = false), ms);
     };
 };
+
+export function showComponent(component, show) {
+    if (!show) {
+        return null;
+    }
+    return component;
+}

@@ -23,6 +23,8 @@ class ImageSerializer(serializers.ModelSerializer):
 class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     viewers_count = serializers.IntegerField(read_only=True)
     liked_count = serializers.IntegerField(read_only=True)
+    comments_count = serializers.IntegerField(read_only=True)
+
     author_in_user_following = serializers.BooleanField(read_only=True)
     is_user_liked_post = serializers.BooleanField(read_only=True)
     author = CurrentAuthorField(default=serializers.CurrentUserDefault())
@@ -84,6 +86,7 @@ class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer)
             "author",
             "viewers_count",
             "liked_count",
+            "comments_count",
             "author_in_user_following",
             "is_user_liked_post",
             "images",

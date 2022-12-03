@@ -1,4 +1,4 @@
-function handleEnter(event) {
+export function handleEnter(event) {
     if (event.keyCode === 13) {
         const form = event.target.form;
         const index = [].indexOf.call(form, event.target);
@@ -6,12 +6,3 @@ function handleEnter(event) {
         event.preventDefault();
     }
 }
-
-function showComponent(component, show) {
-    if (!show) {
-        return null;
-    }
-    return component;
-}
-
-export { handleEnter, showComponent };

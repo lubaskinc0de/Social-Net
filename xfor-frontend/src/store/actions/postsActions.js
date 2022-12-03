@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../api/feed';
 import { parseAPIAxiosErrors } from '../../lib';
-import { setAPIErrors } from '../slices/authentication/APIErrorsSlice';
+import { setAPIErrors } from '../slices/APIErrorsSlice';
 
 export const getPosts = createAsyncThunk(
     'posts/getPosts',
@@ -110,7 +110,7 @@ export const getPost = createAsyncThunk(
                 },
             };
 
-            const response = await API.getPost(postId, config)
+            const response = await API.getPost(postId, config);
             const post = response.data;
 
             return {
@@ -125,7 +125,9 @@ export const getPost = createAsyncThunk(
                 })
             );
 
-            return rejectWithValue();
+            return rejectWithValue({
+                status: err.response.status,
+            });
         }
     }
 );

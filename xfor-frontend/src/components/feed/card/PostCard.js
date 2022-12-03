@@ -17,6 +17,8 @@ export default function PostCard(props) {
         dispatch(postLike(props.id));
     };
 
+    const postUrl = `/feed/${props.id}`
+
     return (
         <Card sx={{ maxWidth: props.maxWidth || 345, width: '100%' }}>
             {props.loading ? (
@@ -27,7 +29,7 @@ export default function PostCard(props) {
                         avatarAlt={props.avatarAlt}
                         avatarSrc={props.avatarSrc}
                         title={props.title}
-                        href={`/feed/${props.id}`}
+                        href={postUrl}
                         subheader={props.subheader}
                     ></CardHeader>
                     <CardMedia images={props.images}></CardMedia>
@@ -38,6 +40,8 @@ export default function PostCard(props) {
                         time={props.time}
                         likeDisabled={likePendingPosts.hasOwnProperty(props.id)}
                         likesCount={props.likesCount}
+                        commentsCount={props.commentsCount}
+                        commentsHref={postUrl}
                         isLiked={props.isLiked}
                         viewsCount={props.viewsCount}
                     ></CardActions>

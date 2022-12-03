@@ -7,17 +7,23 @@ import PostSkeleton from './PostSkeleton';
 import FeedContainer from './FeedContainer';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { getPost } from '../../store/actions/postsActions';
-import { clearPost } from '../../store/slices/feed/postsSlice';
-import { getTimeInfo } from '../../lib/feed';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+
+import { getPost } from '../../store/actions/postsActions';
+import {
+    clearPost,
+    clearPostNotFound,
+} from '../../store/slices/feed/postsSlice';
+import { getTimeInfo } from '../../lib/feed';
 
 export default function Post() {
     const { postId } = useParams();
-    const { post } = useSelector((state) => state.posts);
+    const { post, postNotFound } = useSelector((state) => state.posts);
     const [timeInfo, setTimeInfo] = useState([]);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(getPost(postId));
@@ -29,9 +35,19 @@ export default function Post() {
         }
     }, [post]);
 
-    useEffect(() => () => {
-        dispatch(clearPost());
-    }, [dispatch]);
+    useEffect(() => {
+        if (postNotFound) {
+            navigate('/not-found/');
+        }
+    }, [postNotFound, navigate]);
+
+    useEffect(
+        () => () => {
+            dispatch(clearPost());
+            dispatch(clearPostNotFound());
+        },
+        [dispatch]
+    );
 
     return (
         <FeedContainer>
@@ -57,6 +73,7 @@ export default function Post() {
                         time={timeInfo[1]}
                         viewsCount={post.viewers_count}
                         likesCount={post.liked_count}
+                        commentsCount={post.comments_count}
                         isLiked={post.is_user_liked_post}
                         images={post.images}
                     ></PostCard>

@@ -18,6 +18,7 @@ def get_posts(user: User):
         Post.objects.annotate(
             viewers_count=Count("viewers", distinct=True),
             liked_count=Count("liked", distinct=True),
+            comments_count=Count("comments", distinct=True),
             author_in_user_following=Exists(
                 user.profile.following.filter(id=OuterRef("author__profile__id"))
             ),  # Thx to Nikolay Cherniy

@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Typography from '@mui/material/Typography';
-import { showComponent } from '../../../lib/authentication';
+import { showComponent } from '../../../lib';
 
 export default function FormAvatarUploader(props) {
     const [avatarPreview, setAvatarPreview] = useState('default');

@@ -14,6 +14,7 @@ const postsSlice = createSlice({
             ordering: null,
         },
         post: null,
+        postNotFound: null,
     },
 
     reducers: {
@@ -49,7 +50,11 @@ const postsSlice = createSlice({
 
         clearPost(state) {
             state.post = null;
-        }
+        },
+
+        clearPostNotFound(state) {
+            state.postNotFound = null;
+        },
     },
 
     extraReducers: {
@@ -92,7 +97,10 @@ const postsSlice = createSlice({
         [postLike.fulfilled](state, action) {
             const { action: actionType, postId } = action.payload;
 
-            const post = state.post && state.post.id === postId ? state.post : state.posts.find(({ id }) => postId === id);
+            const post =
+                state.post && state.post.id === postId
+                    ? state.post
+                    : state.posts.find(({ id }) => postId === id);
 
             const isAdd = actionType === 'add';
 
@@ -120,13 +128,19 @@ const postsSlice = createSlice({
             state.loading = false;
         },
 
-        [getPost.rejected](state) {
+        [getPost.rejected](state, action) {
+            const { status } = action.payload;
+
             state.loading = false;
+
+            if (status === 404) {
+                state.postNotFound = true;
+            }
         },
     },
 });
 
-export const { setPostsPriority, setPostsOrdering, clearRejected, clearPost } =
+export const { setPostsPriority, setPostsOrdering, clearRejected, clearPost, clearPostNotFound } =
     postsSlice.actions;
 
 export default postsSlice.reducer;
