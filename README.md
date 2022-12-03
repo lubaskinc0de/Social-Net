@@ -1,3 +1,7 @@
+<p align=center>
+<img src="https://user-images.githubusercontent.com/100635212/192161740-a11e5fbc-d6ad-4cdc-b49a-93528fd96aae.png" width="130">
+</p>
+
 ## Overview
 
 It will be a full-featured social network where you can:
@@ -11,10 +15,6 @@ It will be a full-featured social network where you can:
 - Have your own profile
 - Correspond with friends
 - And much more!
-
-<p align=center>
-<img src="https://user-images.githubusercontent.com/100635212/192161740-a11e5fbc-d6ad-4cdc-b49a-93528fd96aae.png" width="130">
-</p>
 
 ## Description
 
