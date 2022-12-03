@@ -8,6 +8,7 @@ export default function NavBar(props) {
     const pages = [
         {
             title: 'Лента',
+            href: '/feed/',
         },
     ];
 

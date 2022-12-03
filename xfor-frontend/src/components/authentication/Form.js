@@ -5,11 +5,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Buttons from './FormComponents/FormButtons';
-import { showComponent } from '../../lib/authentication';
+import { showComponent } from '../../lib';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { useSelector, useDispatch } from 'react-redux';
-import { shiftAPIErrors } from '../../store/slices/authentication/APIErrorsSlice';
+import { shiftAPIErrors } from '../../store/slices/APIErrorsSlice';
 
 export default function Form(props) {
     const APIErrors = useSelector((state) => state.APIErrors.APIErrors);

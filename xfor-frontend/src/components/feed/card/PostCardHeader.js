@@ -4,6 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import Skeleton from '@mui/material/Skeleton';
+import Link from '@mui/material/Link';
 
 export default function PostCardHeader(props) {
     const getAvatar = () => {
@@ -42,7 +43,9 @@ export default function PostCardHeader(props) {
                         style={{ marginBottom: 6 }}
                     />
                 ) : (
-                    props.title
+                    <Link underline='none' href={props.href} variant='body2'>
+                        {props.title}
+                    </Link>
                 )
             }
             subheader={

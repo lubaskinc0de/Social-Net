@@ -4,7 +4,7 @@ import { parseAPIAxiosErrors } from '../../lib';
 import {
     setAPIErrors,
     clearAPIErrors,
-} from '../slices/authentication/APIErrorsSlice';
+} from '../slices/APIErrorsSlice';
 
 export const userRegister = createAsyncThunk(
     'user/register',
@@ -133,9 +133,7 @@ export const getUserDetails = createAsyncThunk(
                 })
             );
 
-            return rejectWithValue({
-                errorCode: err.response.status,
-            });
+            return rejectWithValue();
         }
     }
 );

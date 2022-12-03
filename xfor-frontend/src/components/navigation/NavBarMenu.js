@@ -15,6 +15,7 @@ export default function NavBarMenu(props) {
             if (props.isMobile) {
                 return (
                     <MenuItem
+                        href={page.href}
                         key={page.title}
                         onClick={() => {
                             handleCloseNavMenu();
@@ -31,7 +32,7 @@ export default function NavBarMenu(props) {
             return (
                 <Button
                     key={page.title}
-                    onClick={page.handleClick}
+                    href={page.href}
                     sx={{
                         my: 2,
                         color: 'white',

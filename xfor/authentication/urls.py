@@ -5,6 +5,7 @@ from .views import (
     UserLoginAPIView,
     UserLogoutAPIView,
     UserLogoutAllAPIView,
+    CheckTokenAPIView,
 )
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
     path("login/", UserLoginAPIView.as_view(), name="login"),
     path("logout/", UserLogoutAPIView.as_view(), name="logout"),
     path("logoutall/", UserLogoutAllAPIView.as_view(), name="logout_all"),
+    path("check-token/", CheckTokenAPIView.as_view(), name="check_token"),
 ]

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getPosts, postLike } from '../../actions/postsActions';
+import { getPosts, postLike, getPost } from '../../actions/postsActions';
 
 const postsSlice = createSlice({
     name: 'postsSlice',
@@ -13,6 +13,8 @@ const postsSlice = createSlice({
             priority: null,
             ordering: null,
         },
+        post: null,
+        postNotFound: null,
     },
 
     reducers: {
@@ -40,6 +42,18 @@ const postsSlice = createSlice({
             }
 
             state.postsFilters.ordering = ordering;
+        },
+
+        clearRejected(state) {
+            state.rejected = null;
+        },
+
+        clearPost(state) {
+            state.post = null;
+        },
+
+        clearPostNotFound(state) {
+            state.postNotFound = null;
         },
     },
 
@@ -69,41 +83,64 @@ const postsSlice = createSlice({
             state.loading = false;
         },
 
-        [getPosts.rejected](state, action) {
-            const { errorCode } = action.payload;
-
+        [getPosts.rejected](state) {
             state.loading = false;
-
-            if (!(errorCode === 401)) {
-                state.rejected = true;
-            }
+            state.rejected = true;
         },
 
         // postLike
         [postLike.pending](state, action) {
-            const { arg: post_id } = action.meta;
-            state.likePendingPosts[post_id] = null;
+            const { arg: postId } = action.meta;
+            state.likePendingPosts[postId] = null;
         },
 
         [postLike.fulfilled](state, action) {
-            const { action: actionType, id: post_id } = action.payload;
-            const post = state.posts.find(({ id }) => post_id === id);
+            const { action: actionType, postId } = action.payload;
+
+            const post =
+                state.post && state.post.id === postId
+                    ? state.post
+                    : state.posts.find(({ id }) => postId === id);
 
             const isAdd = actionType === 'add';
 
-            delete state.likePendingPosts[post_id];
+            delete state.likePendingPosts[postId];
 
             post.is_user_liked_post = isAdd;
             post.liked_count += isAdd ? 1 : -1;
         },
 
         [postLike.rejected](state, action) {
-            const { id: post_id } = action.payload;
-            delete state.likePendingPosts[post_id];
+            const { id: postId } = action.payload;
+            delete state.likePendingPosts[postId];
+        },
+
+        // getPost
+
+        [getPost.pending](state) {
+            state.loading = true;
+        },
+
+        [getPost.fulfilled](state, action) {
+            const { post } = action.payload;
+
+            state.post = post;
+            state.loading = false;
+        },
+
+        [getPost.rejected](state, action) {
+            const { status } = action.payload;
+
+            state.loading = false;
+
+            if (status === 404) {
+                state.postNotFound = true;
+            }
         },
     },
 });
 
-export const { setPostsPriority, setPostsOrdering } = postsSlice.actions;
+export const { setPostsPriority, setPostsOrdering, clearRejected, clearPost, clearPostNotFound } =
+    postsSlice.actions;
 
 export default postsSlice.reducer;

@@ -1,23 +1,36 @@
 import Register from './components/authentication/Register/Register';
 import Login from './components/authentication/Login/Login';
 import Logout from './components/authentication/Logout/Logout';
-import Feed from './components/feed/Feed';
 import Activation from './components/authentication/Activation/Activation';
+
+import Feed from './components/feed/Feed';
+import Post from './components/feed/Post';
+
+import Page404 from './components/pages/Page404';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Router from './router';
+
 import './index.css';
+
 import useSelectedTheme from './hooks/useSelectedTheme';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Provider as ReduxProvider } from 'react-redux';
+
 import AnonymousProtectedRoute from './components/routing/AnonymousProtectedRoute';
 import AuthenticationProtectedRoute from './components/routing/AuthenticationProtectedRoute';
+
 import reduxStore from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const routes = [
+    {
+        path: '/not-found/',
+        component: <Page404></Page404>,
+    },
     {
         path: '/',
         component: <Register></Register>,
@@ -43,6 +56,13 @@ const routes = [
     {
         path: '/feed/',
         component: <Feed></Feed>,
+        protection: (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
+    },
+    {
+        path: '/feed/:postId/',
+        component: <Post></Post>,
         protection: (
             <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
         ),

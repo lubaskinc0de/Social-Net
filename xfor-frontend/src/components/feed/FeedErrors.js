@@ -1,6 +1,6 @@
 import React from 'react';
-import { showComponent } from '../../lib/authentication';
-import { shiftAPIErrors } from '../../store/slices/authentication/APIErrorsSlice';
+import { showComponent } from '../../lib';
+import { shiftAPIErrors } from '../../store/slices/APIErrorsSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';

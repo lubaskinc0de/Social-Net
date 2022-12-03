@@ -1,7 +1,20 @@
-
 <p align=center>
 <img src="https://user-images.githubusercontent.com/100635212/192161740-a11e5fbc-d6ad-4cdc-b49a-93528fd96aae.png" width="130">
 </p>
+
+## Overview
+
+It will be a full-featured social network where you can:
+
+- Post posts and like them
+- Post comments with infinite nesting and like them
+- Post photos to comments and posts!
+- Subtly filter the feed of posts so that you would come across only the most necessary content!
+- Full freedom of speech, you can write anything (if it does not contradict the law of a particular country)
+- Join communities
+- Have your own profile
+- Correspond with friends
+- And much more!
 
 ## Description
 

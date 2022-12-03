@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../api/feed';
 import { parseAPIAxiosErrors } from '../../lib';
-import { setAPIErrors } from '../slices/authentication/APIErrorsSlice';
+import { setAPIErrors } from '../slices/APIErrorsSlice';
 
 export const getPosts = createAsyncThunk(
     'posts/getPosts',
@@ -47,9 +47,7 @@ export const getPosts = createAsyncThunk(
                 })
             );
 
-            return rejectWithValue({
-                errorCode: err.response.status,
-            });
+            return rejectWithValue();
         }
     }
 );
@@ -67,7 +65,7 @@ export const getPostsWrapper = createAsyncThunk(
 
 export const postLike = createAsyncThunk(
     'posts/likePost',
-    async (id, { rejectWithValue, dispatch, getState }) => {
+    async (postId, { rejectWithValue, dispatch, getState }) => {
         try {
             const { user } = getState();
 
@@ -77,11 +75,11 @@ export const postLike = createAsyncThunk(
                 },
             };
 
-            const response = await API.postLike({ post: id }, config);
+            const response = await API.postLike({ post: postId }, config);
             const action = response.data.action;
 
             return {
-                id,
+                postId,
                 action,
             };
         } catch (err) {
@@ -94,7 +92,41 @@ export const postLike = createAsyncThunk(
             );
 
             return rejectWithValue({
-                id,
+                postId,
+            });
+        }
+    }
+);
+
+export const getPost = createAsyncThunk(
+    'posts/getPost',
+    async (postId, { rejectWithValue, dispatch, getState }) => {
+        try {
+            const { user } = getState();
+
+            const config = {
+                headers: {
+                    Authorization: `Token ${user.token}`,
+                },
+            };
+
+            const response = await API.getPost(postId, config);
+            const post = response.data;
+
+            return {
+                post,
+            };
+        } catch (err) {
+            const APIErrors = parseAPIAxiosErrors(err);
+
+            dispatch(
+                setAPIErrors({
+                    APIErrors,
+                })
+            );
+
+            return rejectWithValue({
+                status: err.response.status,
             });
         }
     }
