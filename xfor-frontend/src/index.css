@@ -27,3 +27,8 @@ p {
     display: flex;
     align-items: center;
 }
+
+.flex-between_box {
+    display: flex;
+    justify-content: space-between;
+}
