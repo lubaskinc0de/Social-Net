@@ -6,8 +6,9 @@ from rest_framework.settings import api_settings
 
 from knox.models import AuthToken
 from django.contrib.auth.models import User
-from .models import Post
 from django.db.models import Count, OuterRef, Exists
+
+from .models import Post, PostCategory
 
 from django.urls import reverse
 from geo_api.helpers import build_url
@@ -169,17 +170,26 @@ class PostsTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("results"), serializer_data)
 
-    def test_filter_posts_by_popular(self):
-        """Test filter posts by popular"""
+    def get_filtered_by_category_posts(
+        self, category: PostCategory, posts: list[Post], category_posts_limit: int = 2
+    ):
+        """Get filtered by category posts"""
 
-        url = build_url("feed", get={"is_popular": "on"})
+        for post in posts[0:category_posts_limit]:
+            post.category = category
+            post.save()
 
-        posts = self.get_posts()
-        posts[1].like(self.user)
+        posts = posts.filter(category=category)
 
-        posts = posts.annotate(liked_cnt=Count("liked")).order_by(
-            "-liked_cnt", "-created_at"
-        )
+        return posts
+
+    def test_filter_posts_by_category(self):
+        """Test filter posts by category"""
+
+        category = PostCategory.objects.create(title="Спорт")
+        url = build_url("feed", get={"category": category.id})
+
+        posts = self.get_filtered_by_category_posts(category, self.get_posts())
 
         self.authenticate(self.token)
         response = self.client.get(url)
@@ -190,6 +200,49 @@ class PostsTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("results"), serializer_data)
+
+    def get_filtered_by_popular_posts(self, user: User, posts: list[Post]):
+        """Get filtered by popular posts"""
+
+        posts[1].like(user)
+
+        posts = posts.annotate(liked_cnt=Count("liked")).order_by(
+            "-liked_cnt", "-created_at"
+        )
+
+        return posts
+
+    def test_filter_posts_by_popular(self):
+        """Test filter posts by popular"""
+
+        url = build_url("feed", get={"is_popular": "on"})
+
+        posts = self.get_filtered_by_popular_posts(self.user, self.get_posts())
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+    def get_filtered_by_interesting_posts(self, user: User, posts: list[Post]):
+        """Get filtered by interesting posts"""
+
+        post = posts[1]
+
+        post.author = user
+        post.save()
+
+        following = self.user.profile.following
+        posts = posts.annotate(
+            flag=Exists(following.filter(id=OuterRef("author__profile__id")))
+        ).order_by("-flag", "-created_at")
+
+        return posts
 
     def test_filter_posts_by_interesting(self):
         """Test filter posts by interesting"""
@@ -205,16 +258,7 @@ class PostsTestCase(APITestCase):
         user.profile.followers.add(self.user.profile)
         user.profile.save()
 
-        posts = self.get_posts()
-        post = posts[1]
-
-        post.author = user
-        post.save()
-
-        following = self.user.profile.following
-        posts = posts.annotate(
-            flag=Exists(following.filter(id=OuterRef("author__profile__id")))
-        ).order_by("-flag", "-created_at")
+        posts = self.get_filtered_by_interesting_posts(user, self.get_posts())
 
         self.authenticate(self.token)
         response = self.client.get(url)
@@ -225,6 +269,20 @@ class PostsTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("results"), serializer_data)
+
+    def get_filtered_by_popular_and_ordering_posts(
+        self, ordering: str, user: User, posts: list[Post]
+    ):
+        """Get filtered by popular posts with ORDER_BY=ordering"""
+
+        posts[2].like(user)
+        posts[1].like(user)
+
+        posts = posts.annotate(liked_cnt=Count("liked")).order_by(
+            "-liked_cnt", ordering
+        )
+
+        return posts
 
     def test_filter_posts_by_popular_and_created_at(self):
         """Test filter posts by popular and created at"""
@@ -239,13 +297,8 @@ class PostsTestCase(APITestCase):
             },
         )
 
-        posts_qs = self.get_posts()
-
-        posts_qs[2].like(self.user)
-        posts_qs[1].like(self.user)
-
-        posts = posts_qs.annotate(liked_cnt=Count("liked")).order_by(
-            "-liked_cnt", "-created_at"
+        posts = self.get_filtered_by_popular_and_ordering_posts(
+            "-created_at", self.user, self.get_posts()
         )
 
         self.authenticate(self.token)
@@ -258,7 +311,7 @@ class PostsTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("results"), serializer_data)
 
-        posts_qs.delete()
+        posts.delete()
 
         # created_at
 
@@ -270,13 +323,8 @@ class PostsTestCase(APITestCase):
             },
         )
 
-        posts = self.get_posts()
-
-        posts[2].like(self.user)
-        posts[1].like(self.user)
-
-        posts = posts.annotate(liked_cnt=Count("liked")).order_by(
-            "-liked_cnt", "created_at"
+        posts = self.get_filtered_by_popular_and_ordering_posts(
+            "created_at", self.user, self.get_posts()
         )
 
         self.authenticate(self.token)
@@ -288,6 +336,27 @@ class PostsTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("results"), serializer_data)
+
+    def get_filtered_by_interesting_and_ordering_posts(
+        self, ordering: str, user: User, posts: list[Post]
+    ):
+        """Get filtered by interesting posts with ORDER_BY=ordering"""
+
+        post = posts[1]
+        post_two = posts[2]
+
+        post.author = user
+        post.save()
+
+        post_two.author = user
+        post_two.save()
+
+        following = self.user.profile.following
+        posts = posts.annotate(
+            flag=Exists(following.filter(id=OuterRef("author__profile__id")))
+        ).order_by("-flag", ordering)
+
+        return posts
 
     def test_filter_posts_by_interesting_and_created_at(self):
         """Test filter posts by interesting and created at"""
@@ -311,21 +380,9 @@ class PostsTestCase(APITestCase):
         user.profile.followers.add(self.user.profile)
         user.profile.save()
 
-        posts_qs = self.get_posts()
-
-        post = posts_qs[1]
-        post_two = posts_qs[2]
-
-        post.author = user
-        post.save()
-
-        post_two.author = user
-        post_two.save()
-
-        following = self.user.profile.following
-        posts = posts_qs.annotate(
-            flag=Exists(following.filter(id=OuterRef("author__profile__id")))
-        ).order_by("-flag", "-created_at")
+        posts = self.get_filtered_by_interesting_and_ordering_posts(
+            "-created_at", user, self.get_posts()
+        )
 
         self.authenticate(self.token)
         response = self.client.get(url)
@@ -337,7 +394,7 @@ class PostsTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("results"), serializer_data)
 
-        posts_qs.delete()
+        posts.delete()
 
         # created_at
 
@@ -349,21 +406,261 @@ class PostsTestCase(APITestCase):
             },
         )
 
+        posts = self.get_filtered_by_interesting_and_ordering_posts(
+            "created_at", user, self.get_posts()
+        )
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+    def get_filtered_by_category_and_ordering_posts(
+        self, ordering: str, category: PostCategory
+    ):
+        """Get filtered by category posts with ORDER_BY=ordering"""
+
         posts = self.get_posts()
 
         post = posts[1]
         post_two = posts[2]
 
-        post.author = user
+        post.category = category
         post.save()
 
-        post_two.author = user
+        post_two.category = category
         post_two.save()
 
-        following = self.user.profile.following
-        posts = posts.annotate(
-            flag=Exists(following.filter(id=OuterRef("author__profile__id")))
-        ).order_by("-flag", "created_at")
+        posts = posts.filter(category=category).order_by(ordering)
+
+        return posts
+
+    def test_filter_posts_by_category_and_created_at(self):
+        """Test filter posts by category and created at"""
+
+        # -created_at
+
+        category = PostCategory.objects.create(title="Спорт")
+
+        url = build_url(
+            "feed",
+            get={"ordering": "-created_at", "category": category.id},
+        )
+
+        posts = self.get_filtered_by_category_and_ordering_posts(
+            "-created_at", category
+        )
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+        posts.delete()
+
+        # created_at
+
+        url = build_url(
+            "feed",
+            get={"ordering": "created_at", "category": category.id},
+        )
+
+        posts = self.get_filtered_by_category_and_ordering_posts("created_at", category)
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+    def test_filter_posts_by_category_and_popular(self):
+        """Test filter posts by category and popular"""
+
+        category = PostCategory.objects.create(title="Спорт")
+        url = build_url("feed", get={"category": category.id, "is_popular": "on"})
+
+        category_posts = self.get_filtered_by_category_posts(category, self.get_posts())
+
+        posts = self.get_filtered_by_popular_posts(self.user, category_posts)
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+    def test_filter_posts_by_category_and_interesting(self):
+        """Test filter posts by category and interesting"""
+
+        category = PostCategory.objects.create(title="Спорт")
+        url = build_url("feed", get={"category": category.id, "is_interesting": "on"})
+
+        user = User.objects.create_user(
+            "PostsTestCaseFilterInteresting",
+            "poststestcasefilterinteresting@gmail.com",
+            self.password,
+        )
+
+        user.profile.followers.add(self.user.profile)
+        user.profile.save()
+
+        category_posts = self.get_filtered_by_category_posts(category, self.get_posts())
+        posts = self.get_filtered_by_interesting_posts(user, category_posts)
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+    def test_filter_posts_by_category_and_popular_and_created_at(self):
+        """Test filter posts by category, popular and created at"""
+
+        # -created_at
+
+        category = PostCategory.objects.create(title="Спорт")
+        url = build_url(
+            "feed",
+            get={
+                "ordering": "-created_at",
+                "is_popular": "on",
+                "category": category.id,
+            },
+        )
+
+        category_posts = self.get_filtered_by_category_posts(
+            category, self.get_posts(), 3
+        )
+
+        posts = self.get_filtered_by_popular_and_ordering_posts(
+            "-created_at", self.user, category_posts
+        )
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+        posts.delete()
+
+        # created_at
+
+        url = build_url(
+            "feed",
+            get={
+                "ordering": "created_at",
+                "is_popular": "on",
+                "category": category.id,
+            },
+        )
+
+        category_posts = self.get_filtered_by_category_posts(
+            category, self.get_posts(), 3
+        )
+
+        posts = self.get_filtered_by_popular_and_ordering_posts(
+            "created_at", self.user, category_posts
+        )
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+    def test_filter_posts_by_category_and_interesting_and_created_at(self):
+        """Test filter posts by category, interesting and created at"""
+
+        # -created_at
+
+        category = PostCategory.objects.create(title="Спорт")
+        url = build_url(
+            "feed",
+            get={
+                "ordering": "-created_at",
+                "is_interesting": "on",
+                "category": category.id,
+            },
+        )
+
+        category_posts = self.get_filtered_by_category_posts(
+            category, self.get_posts(), 3
+        )
+
+        user = User.objects.create_user(
+            "PostsTestCaseFilterInterestingAndCreatedat",
+            "poststestcasefilterinterestingandcreatedat@gmail.com",
+            self.password,
+        )
+
+        user.profile.followers.add(self.user.profile)
+        user.profile.save()
+
+        posts = self.get_filtered_by_interesting_and_ordering_posts(
+            "-created_at", user, category_posts
+        )
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostSerializer(
+            instance=posts, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)
+
+        posts.delete()
+
+        # created_at
+
+        url = build_url(
+            "feed",
+            get={
+                "ordering": "created_at",
+                "is_interesting": "on",
+                "category": category.id,
+            },
+        )
+
+        category_posts = self.get_filtered_by_category_posts(
+            category, self.get_posts(), 3
+        )
+
+        posts = self.get_filtered_by_interesting_and_ordering_posts(
+            "created_at", user, category_posts
+        )
 
         self.authenticate(self.token)
         response = self.client.get(url)

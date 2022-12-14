@@ -22,9 +22,9 @@ def get_posts(user: User):
             author_in_user_following=Exists(
                 user.profile.following.filter(id=OuterRef("author__profile__id"))
             ),  # Thx to Nikolay Cherniy
-            is_user_liked_post=Exists(user.liked.filter(id=OuterRef("id"))),
+            is_user_liked_post=Exists(user.liked_posts.filter(id=OuterRef("id"))),
         )
-        .select_related("author__profile")
+        .select_related("author__profile", "category")
         .prefetch_related("images")
         .order_by("-created_at")
     )

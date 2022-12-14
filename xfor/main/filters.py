@@ -41,7 +41,7 @@ class PostFilter(filters.FilterSet):
 
     class Meta:
         model = Post
-        fields = []
+        fields = ['category']
 
     T = TypeVar("T")
 

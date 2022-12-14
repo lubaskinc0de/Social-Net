@@ -2,10 +2,10 @@ from typing import Collection, Iterable
 
 from rest_framework import serializers
 
-from .models import Image, Post, Comment
+from .models import Image, Post, Comment, PostCategory
 from mptt.models import MPTTModel
 
-from .fields import CurrentAuthorField, DateTimeTimezoneField
+from .fields import CurrentAuthorField, DateTimeTimezoneField, PostCategoryField
 
 from .helpers.helpers import validate_images
 from .mixins import ErrorMessagesSerializersMixin
@@ -19,6 +19,10 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = ["photo"]
 
+class PostCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostCategory
+        fields = ["title"]
 
 class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     viewers_count = serializers.IntegerField(read_only=True)
@@ -31,6 +35,7 @@ class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer)
     images = ImageSerializer(many=True, read_only=True)
     created_at = DateTimeTimezoneField(read_only=True)
     updated_at = DateTimeTimezoneField(read_only=True)
+    category = PostCategoryField(queryset=PostCategory.objects.all())
 
     default_error_messages = {
         "empty_post": _("Пустой пост"),
@@ -90,6 +95,7 @@ class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer)
             "author_in_user_following",
             "is_user_liked_post",
             "images",
+            "category",
         ]
 
 

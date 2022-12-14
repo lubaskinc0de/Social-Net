@@ -7,6 +7,8 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Image(models.Model):
+    """The image model representing the picture is used for the Post and Comment models"""
+
     post = models.ForeignKey(
         "Post",
         related_name="images",
@@ -40,33 +42,60 @@ class Image(models.Model):
         ordering = ("created_at",)
 
 
+class PostCategory(models.Model):
+    """Model representing the category of the post"""
+
+    title = models.CharField(max_length=50, verbose_name="Название категории")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создана")
+
+    def __str__(self) -> str:
+        return self.title
+
+    class Meta:
+        verbose_name = "категори(я-ю) поста"
+        verbose_name_plural = "Категории постов"
+        ordering = ("-created_at",)
+
+
 class Post(models.Model):
+    """The model representing the post"""
+
     profile = models.ForeignKey(
         Profile,
         null=True,
         on_delete=models.CASCADE,
-        related_name="posts_profile",
-        verbose_name="Профиль",
-    )
-    title = models.CharField(max_length=150, verbose_name="Название", blank=True)
-    content = models.TextField(verbose_name="Контент", blank=True)
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name="Создано", db_index=True
-    )
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлено")
-    viewers = models.ManyToManyField(
-        User,
         related_name="posts",
         related_query_name="posts",
+        verbose_name="Профиль",
+    )
+    title = models.CharField(max_length=150, verbose_name="Название поста", blank=True)
+    content = models.TextField(verbose_name="Текст поста", blank=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name="Создан", db_index=True
+    )
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлён")
+    viewers = models.ManyToManyField(
+        User,
+        related_name="viewed_posts",
+        related_query_name="viewed_posts",
         verbose_name="Просмотры",
         blank=True,
     )
     author = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        PostCategory,
+        verbose_name="Категория",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="posts",
+        related_query_name="posts",
+    )
     liked = models.ManyToManyField(
         User,
         verbose_name="Лайкнувшие",
-        related_name="liked",
-        related_query_name="liked",
+        related_name="liked_posts",
+        related_query_name="liked_posts",
         blank=True,
     )
 
@@ -100,6 +129,8 @@ class Post(models.Model):
 
 
 class Comment(MPTTModel):
+    """MPTT-Model representing the comment"""
+
     post = models.ForeignKey(
         Post,
         related_name="comments",

@@ -44,11 +44,14 @@ class CurrentAuthorField(serializers.Field):
 
     def to_representation(self, value: User) -> dict:
         """To JSON"""
+
         return AuthorSerializer(
             instance=value, context={"request": self.context.get("request")}
         ).data
 
     def to_internal_value(self, data: T) -> T:
+        """From JSON"""
+
         return data
 
 
@@ -61,3 +64,21 @@ class DateTimeTimezoneField(serializers.DateTimeField):
         if request:
             return request.timezone
         return super().default_timezone()
+
+
+@extend_schema_field(
+    {
+        "type": "string",
+        "format": "string",
+    }
+)
+class PostCategoryField(serializers.PrimaryKeyRelatedField):
+    """Read-write field for PostCategory, provides __str__ of PostCategory object as output, accepts category pk as input"""
+
+    def use_pk_only_optimization(self):
+        return False
+
+    def to_representation(self, value):
+        """To JSON"""
+
+        return str(value)
