@@ -1,3 +1,9 @@
+/**
+ * Parse AxiosError nested object to the flat list of errors
+ * @param {import('axios').AxiosError} err
+ * @param {Number} recursionDepth
+ * @returns {[String]}
+ */
 export function parseAPIAxiosErrors(err, recursionDepth = 10) {
     if (err.response && err.response.status === 0) {
         return ['Cервер недоступен, повторите попытку позже.'];
