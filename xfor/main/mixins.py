@@ -1,13 +1,14 @@
 from mptt.utils import get_cached_trees
+
 from rest_framework.settings import api_settings
-from .permissions import IsAuthorOrReadOnly
 from rest_framework import serializers
+
+from .permissions import IsAuthorOrReadOnly
 
 
 class CacheTreeQuerysetMixin:
     """
-    A mixin that caches the list of records obtained via mptt.get_cached_trees
-    into the _cached_queryset attribute.
+    A mixin that caches the TreeQueryset via the mppt.get_cached_trees into the _cached_queryset attribute.
 
     Otherwise two identical queries will be executed
 
@@ -18,6 +19,7 @@ class CacheTreeQuerysetMixin:
     depth: int = None
 
     def get_cached_queryset(self, queryset) -> list:
+        """Get cached queryset from cache or set get_cached_trees(queryset) to the cache and return it"""
 
         if self.depth:
             queryset = queryset.filter(level__lte=self.depth)

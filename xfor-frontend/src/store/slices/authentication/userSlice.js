@@ -38,16 +38,35 @@ const userSlice = createSlice({
     name: 'userSlice',
     initialState,
     reducers: {
+        /**
+         * Set success state to the null
+         * @param {Object} state
+         */
         clearSuccess(state) {
             state.success = initialState.success;
         },
+
+        /**
+         * Set cities state to the []
+         * @param {Object} state
+         */
         clearCities(state) {
             state.cities = [];
         },
+
+        /**
+         * Set cities and countries states to the []
+         * @param {Object} state
+         */
         clearGeo(state) {
             state.cities = [];
             state.countries = [];
         },
+
+        /**
+         * Remove token from ls and set token state to the null
+         * @param {Object} state
+         */
         removeToken(state) {
             removeFromLocalStorage('userToken');
             state.token = null;
@@ -173,5 +192,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { clearSuccess, clearCities, clearGeo, removeToken } = userSlice.actions;
+export const { clearSuccess, clearCities, clearGeo, removeToken } =
+    userSlice.actions;
 export default userSlice.reducer;

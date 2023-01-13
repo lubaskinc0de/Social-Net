@@ -15,9 +15,15 @@ const postsSlice = createSlice({
         },
         post: null,
         postNotFound: null,
+        categories: [],
     },
 
     reducers: {
+        /**
+         * Set postsFilters.priority
+         * @param {Object} state
+         * @param {Object} action
+         */
         setPostsPriority(state, action) {
             const { priority } = action.payload;
 
@@ -31,6 +37,11 @@ const postsSlice = createSlice({
             state.postsFilters.priority = priority;
         },
 
+        /**
+         * Set postsFilters.ordering
+         * @param {Object} state
+         * @param {Object} action
+         */
         setPostsOrdering(state, action) {
             const { ordering } = action.payload;
 
@@ -44,14 +55,26 @@ const postsSlice = createSlice({
             state.postsFilters.ordering = ordering;
         },
 
+        /**
+         * Set rejected state to the null
+         * @param {Object} state
+         */
         clearRejected(state) {
             state.rejected = null;
         },
 
+        /**
+         * Set post state to the null
+         * @param {Object} state
+         */
         clearPost(state) {
             state.post = null;
         },
 
+        /**
+         * Set postNotFound state to the null
+         * @param {Object} state
+         */
         clearPostNotFound(state) {
             state.postNotFound = null;
         },
@@ -140,7 +163,12 @@ const postsSlice = createSlice({
     },
 });
 
-export const { setPostsPriority, setPostsOrdering, clearRejected, clearPost, clearPostNotFound } =
-    postsSlice.actions;
+export const {
+    setPostsPriority,
+    setPostsOrdering,
+    clearRejected,
+    clearPost,
+    clearPostNotFound,
+} = postsSlice.actions;
 
 export default postsSlice.reducer;

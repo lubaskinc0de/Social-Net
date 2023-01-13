@@ -13,7 +13,7 @@ from .models import Post, PostCategory
 from django.urls import reverse
 from geo_api.helpers import build_url
 
-from .serializers import PostSerializer
+from .serializers import PostSerializer, PostCategorySerializer
 from .services import get_posts as get_posts_queryset
 
 
@@ -91,6 +91,20 @@ class PostsTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("results"), serializer_data)
+    
+    def test_get_categories(self):
+        """Test getting post categories"""
+
+        url = reverse("post_categories")
+        categories = PostCategory.objects.all()
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = PostCategorySerializer(instance=categories, many=True).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, serializer_data)
 
     def test_get_posts_by_page(self):
         """Test getting posts"""

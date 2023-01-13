@@ -7,6 +7,7 @@ const baseUrl = process.env.REACT_APP_BACKEND_URL;
  */
 export default class API {
     static postsEndpoint = baseUrl + '/feed/';
+    static categoriesEndpoint = baseUrl + '/feed/categories/';
     static postLikeEndpoint = baseUrl + '/api/add-like/';
 
     /**
@@ -17,6 +18,10 @@ export default class API {
      */
     static getPosts(urlParameters, config) {
         return axios.get(`${this.postsEndpoint}?${urlParameters}`, config);
+    }
+
+    static getCategories(config) {
+        return axios.get(this.categoriesEndpoint, config);
     }
 
     /**

@@ -33,6 +33,15 @@ urlpatterns = [
             }
         ),
     ),
+    path(
+        "categories/",
+        PostViewSet.as_view(
+            {
+                "get": "get_categories",
+            }
+        ),
+        name='post_categories'
+    ),
     # Comments
     path(
         "comments/",

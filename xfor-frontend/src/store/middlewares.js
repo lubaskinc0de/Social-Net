@@ -1,6 +1,10 @@
 import { isAsyncThunkAction } from '@reduxjs/toolkit';
 import { checkToken } from './utils';
 
+/**
+ * Middleware which call checkToken function before call all pending actions
+ * @returns
+ */
 export const logoutMiddleware =
     ({ dispatch, getState }) =>
     (next) =>
