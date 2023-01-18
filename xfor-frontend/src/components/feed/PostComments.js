@@ -25,11 +25,26 @@ export default function PostComments({ title }) {
                     mb: 2,
                 }}
             >
-                <Paper sx={{
-                    p: 1,
-                }} elevation={1}>
+                <Paper
+                    sx={{
+                        p: 1,
+                    }}
+                    elevation={1}
+                >
                     {[1, 2, 3].map((el) => (
-                        <PostComment key={el}></PostComment>
+                        <PostComment
+                            key={el}
+                            username='LUBASKIN10'
+                            text={
+                                <>
+                                    Lorem ipsum dolor sit amet
+                                </>
+                            }
+                            timesince='8 дней назад'
+                            likesCount={8}
+                            avatarAlt='lubaskin10'
+                            avatarSrc='blabla'
+                        ></PostComment>
                     ))}
                 </Paper>
             </List>
