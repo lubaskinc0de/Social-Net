@@ -14,6 +14,7 @@ from .services import (
     get_post_comments,
     get_comment_descendants,
     get_comments,
+    get_post_categories,
 )
 from .filters import PostFilter, filters
 
@@ -22,7 +23,12 @@ from .models import Comment
 
 from .helpers.viewsets import CreateRetrieveUpdateDestroyViewSet
 
-from .serializers import CommentSerializer, CommentUpdateSerializer, PostSerializer
+from .serializers import (
+    CommentSerializer,
+    CommentUpdateSerializer,
+    PostSerializer,
+    PostCategorySerializer,
+)
 
 
 class PostViewSet(IsAuthorPermissionsMixin, CacheTreeQuerysetMixin, ModelViewSet):
@@ -30,6 +36,7 @@ class PostViewSet(IsAuthorPermissionsMixin, CacheTreeQuerysetMixin, ModelViewSet
 
     serializer_class = PostSerializer
     comments_serializer_class = CommentSerializer
+    categories_serializer_class = PostCategorySerializer
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = PostFilter
@@ -40,8 +47,13 @@ class PostViewSet(IsAuthorPermissionsMixin, CacheTreeQuerysetMixin, ModelViewSet
         return get_posts(self.request.user)
 
     def get_serializer_class(self) -> Type[Serializer]:
-        if self.action == "get_comments":
-            return self.comments_serializer_class
+        actions_serializers = {
+            "get_comments": self.comments_serializer_class,
+            "get_categories": self.categories_serializer_class,
+        }
+
+        if self.action in actions_serializers:
+            return actions_serializers.get(self.action)
 
         return super().get_serializer_class()
 
@@ -77,6 +89,8 @@ class PostViewSet(IsAuthorPermissionsMixin, CacheTreeQuerysetMixin, ModelViewSet
 
     @action(detail=True, methods=["get"])
     def get_comments(self, request, pk: int = None):
+        """Get post comments"""
+
         comments = self.get_cached_queryset(get_post_comments(request.user, pk))
 
         page = self.paginate_queryset(comments)
@@ -86,6 +100,15 @@ class PostViewSet(IsAuthorPermissionsMixin, CacheTreeQuerysetMixin, ModelViewSet
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(comments, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def get_categories(self, request):
+        """Get categories"""
+
+        categories = get_post_categories()
+
+        serializer = self.get_serializer(categories, many=True)
         return Response(serializer.data)
 
 
@@ -112,6 +135,8 @@ class CommentViewSet(IsAuthorPermissionsMixin, CreateRetrieveUpdateDestroyViewSe
 
     @action(detail=True, methods=["get"])
     def get_descendants(self, request, pk: int = None):
+        """Get all comment descendants in a flat-view"""
+
         parent: Comment = get_object_or_404(Comment, pk=pk)
         descendants = get_comment_descendants(parent, request.user)
 

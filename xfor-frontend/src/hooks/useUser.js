@@ -2,6 +2,10 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails as authenticate } from '../store/actions/userActions';
 
+/**
+ * Get user token and info
+ * @returns {[String, Object]}
+ */
 export default function useUser() {
     const dispatch = useDispatch();
     const { userInfo, token } = useSelector((state) => state.user);

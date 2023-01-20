@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.views import Response
-from rest_framework.serializers import Serializer
+
 from .mixins import LikeMixin
 
 
@@ -21,4 +21,6 @@ class LikeGenericAPIView(LikeMixin, APIView):
         """
         The HTTP Put method, since we update the value of the like field of the object.
         """
-        return self.like(request)
+        
+        action_data = self.like(request.data, request.user)
+        return Response(data=action_data, status=200)

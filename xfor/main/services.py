@@ -6,12 +6,12 @@ from typing import Collection, TypeVar
 from django.contrib.auth.models import User
 from django.db.models import Count, Exists, OuterRef
 
-from .models import Post, Comment, Image
+from .models import Post, Comment, Image, PostCategory
 
 T = TypeVar("T")
 
 
-def get_posts(user: User):
+def get_posts(user: User) -> list[Post]:
     """Get posts queryset"""
 
     posts = (
@@ -22,15 +22,21 @@ def get_posts(user: User):
             author_in_user_following=Exists(
                 user.profile.following.filter(id=OuterRef("author__profile__id"))
             ),  # Thx to Nikolay Cherniy
-            is_user_liked_post=Exists(user.liked.filter(id=OuterRef("id"))),
+            is_user_liked_post=Exists(user.liked_posts.filter(id=OuterRef("id"))),
         )
-        .select_related("author__profile")
+        .select_related("author__profile", "category")
         .prefetch_related("images")
         .order_by("-created_at")
     )
 
     return posts
 
+def get_post_categories() -> list[PostCategory]:
+    """Get post categories"""
+
+    categories = PostCategory.objects.all()
+
+    return categories
 
 def get_comments_queryset(queryset: T, user: User) -> T:
     """Annotate and JOIN the comments queryset"""
@@ -45,21 +51,21 @@ def get_comments_queryset(queryset: T, user: User) -> T:
     )
 
 
-def get_comments(user: User):
+def get_comments(user: User) -> list[Comment]:
     """Get all comments"""
 
     comments = get_comments_queryset(Comment.objects.all(), user)
     return comments
 
 
-def get_post_comments(user: User, post_id: int):
+def get_post_comments(user: User, post_id: int) -> list[Comment]:
     """Get comments of post"""
 
     comments = get_comments_queryset(Comment.objects.filter(post_id=post_id), user)
     return comments
 
 
-def get_comment_descendants(comment: Comment, user: User):
+def get_comment_descendants(comment: Comment, user: User) -> list[Comment]:
     """Get descendants of comment"""
 
     descendants = get_comments_queryset(comment.get_descendants(), user)

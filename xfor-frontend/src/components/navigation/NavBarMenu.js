@@ -7,21 +7,21 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 
+import { useNavigate } from 'react-router-dom';
+
 export default function NavBarMenu(props) {
     const [anchorElNav, setAnchorElNav] = useState(null);
+    const navigate = useNavigate();
 
     const getPages = () => {
         return props.pages.map((page) => {
             if (props.isMobile) {
                 return (
                     <MenuItem
-                        href={page.href}
                         key={page.title}
                         onClick={() => {
                             handleCloseNavMenu();
-                            if (page.handleClick) {
-                                page.handleClick();
-                            }
+                            navigate(page.href);
                         }}
                     >
                         <Typography textAlign='center'>{page.title}</Typography>
@@ -32,7 +32,9 @@ export default function NavBarMenu(props) {
             return (
                 <Button
                     key={page.title}
-                    href={page.href}
+                    onClick={() => {
+                        navigate(page.href);
+                    }}
                     sx={{
                         my: 2,
                         color: 'white',

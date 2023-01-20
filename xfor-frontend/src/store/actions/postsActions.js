@@ -10,7 +10,7 @@ export const getPosts = createAsyncThunk(
             const { user, posts: postsState } = getState();
             const {
                 nextPage: page,
-                postsFilters: { priority, ordering },
+                postsFilters: { priority, ordering, category },
             } = postsState;
 
             if (!page) {
@@ -26,9 +26,19 @@ export const getPosts = createAsyncThunk(
                 },
             };
 
-            const urlParameters = `page=${page}${
-                priority ? `&${priority}=on` : ''
-            }${ordering ? `&ordering=${ordering}` : ''}`;
+            const urlEncode = (name, value, condition) => {
+                return `${condition ? `&${name}=${value}` : ''}`;
+            };
+
+            const urlParameters = `page=${page}${urlEncode(
+                priority,
+                'on',
+                priority
+            )}${urlEncode('ordering', ordering, ordering)}${urlEncode(
+                'category',
+                category,
+                category
+            )}`;
 
             const response = await API.getPosts(urlParameters, config);
             const posts = response.data.results;
@@ -37,6 +47,38 @@ export const getPosts = createAsyncThunk(
             return {
                 posts,
                 nextPage,
+            };
+        } catch (err) {
+            const APIErrors = parseAPIAxiosErrors(err);
+
+            dispatch(
+                setAPIErrors({
+                    APIErrors,
+                })
+            );
+
+            return rejectWithValue();
+        }
+    }
+);
+
+export const getCategories = createAsyncThunk(
+    'posts/getCategories',
+    async (_, { rejectWithValue, dispatch, getState }) => {
+        try {
+            const { user } = getState();
+
+            const config = {
+                headers: {
+                    Authorization: `Token ${user.token}`,
+                },
+            };
+
+            const response = await API.getCategories(config);
+            const categories = response.data;
+
+            return {
+                categories,
             };
         } catch (err) {
             const APIErrors = parseAPIAxiosErrors(err);

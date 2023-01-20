@@ -4,6 +4,10 @@
 
 ## Overview
 
+## Trailer
+
+[![Watch the video](https://img.youtube.com/vi/gKS1L48YKxI/maxresdefault.jpg)](https://www.youtube.com/watch?v=gKS1L48YKxI)
+
 It will be a full-featured social network where you can:
 
 - Post posts and like them

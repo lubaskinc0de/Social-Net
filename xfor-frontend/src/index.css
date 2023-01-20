@@ -28,7 +28,7 @@ p {
     align-items: center;
 }
 
-.flex-between_box {
+.flex-between__box {
     display: flex;
     justify-content: space-between;
 }

@@ -9,17 +9,26 @@ from mptt.admin import MPTTModelAdmin
 
 from django.utils.safestring import mark_safe, SafeString
 
-from .models import Post, Image, Comment
-from .types import AdminModelForm
+from .models import Post, Image, Comment, PostCategory
+from .admin_types import AdminModelForm
+
+
+class PostCategoryAdmin(admin.ModelAdmin):
+    """PostCategory model admin"""
+
+    list_display = ["id", "__str__", "created_at"]
+    list_display_links = ["id", "__str__"]
+    search_fields = ["id", "title"]
 
 
 class PostAdmin(admin.ModelAdmin):
-    """Post admin"""
+    """Post model admin"""
 
     list_display = [
         "id",
         "__str__",
         "author",
+        "category",
         "liked_count",
         "viewers_count",
         "created_at",
@@ -28,14 +37,16 @@ class PostAdmin(admin.ModelAdmin):
     ]
     list_display_links = ["id", "__str__"]
     list_select_related = ["author", "profile"]
+    list_filter = ["category"]
     search_fields = ["id", "title", "author__username"]
     empty_value_display = "-"
-    autocomplete_fields = ["author", "profile"]
+    autocomplete_fields = ["author", "profile", "category"]
     fields = [
         "id",
         "profile",
         "title",
         "content",
+        "category",
         "viewers_count",
         "liked_count",
         "author",
@@ -75,11 +86,11 @@ class PostAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.prefetch_related("liked", "viewers", "images")
+        return qs.select_related("category", "author").prefetch_related("liked", "viewers", "images")
 
 
 class CommentAdmin(MPTTModelAdmin):
-    """Comment mptt admin"""
+    """Comment model mptt-admin"""
 
     list_display = [
         "id",
@@ -157,7 +168,7 @@ class CommentAdmin(MPTTModelAdmin):
 
 
 class ImageAdmin(admin.ModelAdmin):
-    """Image admin"""
+    """Image model admin"""
 
     list_display = ["id", "post", "comment", "author", "get_image", "created_at"]
     list_display_links = ["id", "post", "comment", "get_image"]
@@ -197,7 +208,12 @@ class ImageAdmin(admin.ModelAdmin):
             messages.error(request, err.message)
 
 
-to_register = [(Post, PostAdmin), (Image, ImageAdmin), (Comment, CommentAdmin)]
+to_register = [
+    (Post, PostAdmin),
+    (Image, ImageAdmin),
+    (Comment, CommentAdmin),
+    (PostCategory, PostCategoryAdmin),
+]
 
 for model, model_admin in to_register:
     admin.site.register(model, model_admin)

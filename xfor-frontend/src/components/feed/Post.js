@@ -12,10 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 import { getPost } from '../../store/actions/postsActions';
-import {
-    clearPost,
-    clearPostNotFound,
-} from '../../store/slices/feed/postsSlice';
 import { getTimeInfo } from '../../lib/feed';
 
 export default function Post() {
@@ -41,14 +37,6 @@ export default function Post() {
             navigate('/not-found/');
         }
     }, [postNotFound, navigate]);
-
-    useEffect(
-        () => () => {
-            dispatch(clearPost());
-            dispatch(clearPostNotFound());
-        },
-        [dispatch]
-    );
 
     return (
         <>

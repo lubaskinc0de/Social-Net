@@ -3,6 +3,8 @@ from rest_framework.response import Response
 
 
 class PageParamAPIPagination(PageNumberPagination):
+    """?page query param API pagination without unused data like count of records"""
+
     page_size_query_param = "size"
     max_page_size = None
 

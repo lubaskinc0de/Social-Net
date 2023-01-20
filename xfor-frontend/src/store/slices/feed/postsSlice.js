@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getPosts, postLike, getPost } from '../../actions/postsActions';
+import {
+    getPosts,
+    postLike,
+    getPost,
+    getCategories,
+} from '../../actions/postsActions';
 
 const postsSlice = createSlice({
     name: 'postsSlice',
@@ -12,12 +17,19 @@ const postsSlice = createSlice({
         postsFilters: {
             priority: null,
             ordering: null,
+            category: null,
         },
         post: null,
         postNotFound: null,
+        categories: [],
     },
 
     reducers: {
+        /**
+         * Set postsFilters.priority
+         * @param {Object} state
+         * @param {Object} action
+         */
         setPostsPriority(state, action) {
             const { priority } = action.payload;
 
@@ -31,6 +43,11 @@ const postsSlice = createSlice({
             state.postsFilters.priority = priority;
         },
 
+        /**
+         * Set postsFilters.ordering
+         * @param {Object} state
+         * @param {Object} action
+         */
         setPostsOrdering(state, action) {
             const { ordering } = action.payload;
 
@@ -44,22 +61,29 @@ const postsSlice = createSlice({
             state.postsFilters.ordering = ordering;
         },
 
-        clearRejected(state) {
-            state.rejected = null;
-        },
+        /**
+         * Set postsFilters.category
+         * @param {Object} state
+         * @param {Object} action
+         */
+        setPostsCategory(state, action) {
+            const { category } = action.payload;
 
-        clearPost(state) {
-            state.post = null;
-        },
+            if (state.postsFilters.category !== category) {
+                // refresh
 
-        clearPostNotFound(state) {
-            state.postNotFound = null;
+                state.posts = [];
+                state.nextPage = 1;
+            }
+
+            state.postsFilters.category = category;
         },
     },
 
     extraReducers: {
         // getPosts
         [getPosts.pending](state) {
+            state.post = null;
             state.loading = true;
             state.rejected = false;
         },
@@ -88,6 +112,12 @@ const postsSlice = createSlice({
             state.rejected = true;
         },
 
+        [getCategories.fulfilled](state, action) {
+            const { categories } = action.payload;
+
+            state.categories = categories;
+        },
+
         // postLike
         [postLike.pending](state, action) {
             const { arg: postId } = action.meta;
@@ -97,10 +127,11 @@ const postsSlice = createSlice({
         [postLike.fulfilled](state, action) {
             const { action: actionType, postId } = action.payload;
 
+            const postInPosts = state.posts.find(({ id }) => postId === id);
             const post =
                 state.post && state.post.id === postId
                     ? state.post
-                    : state.posts.find(({ id }) => postId === id);
+                    : postInPosts;
 
             const isAdd = actionType === 'add';
 
@@ -118,6 +149,8 @@ const postsSlice = createSlice({
         // getPost
 
         [getPost.pending](state) {
+            state.post = null;
+            state.postNotFound = null;
             state.loading = true;
         },
 
@@ -140,7 +173,6 @@ const postsSlice = createSlice({
     },
 });
 
-export const { setPostsPriority, setPostsOrdering, clearRejected, clearPost, clearPostNotFound } =
-    postsSlice.actions;
+export const { setPostsPriority, setPostsOrdering, setPostsCategory } = postsSlice.actions;
 
 export default postsSlice.reducer;

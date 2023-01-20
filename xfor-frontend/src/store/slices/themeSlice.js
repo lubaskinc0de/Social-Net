@@ -9,6 +9,11 @@ const themeSlice = createSlice({
         theme,
     },
     reducers: {
+        /**
+         * Set theme to the ls and state
+         * @param {Object} state
+         * @param {Object} action
+         */
         setTheme(state, action) {
             setToLocalStorage('selectedTheme', action.payload.theme);
             state.theme = action.payload.theme;
