@@ -4,10 +4,22 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 
-export default function NavBarSettingsFeedFiltersDialogPriority({
-    priority,
-    handleChange,
-}) {
+import { setPostsPriority } from '../../store/slices/feed/postsSlice';
+
+import { useSelector, useDispatch } from 'react-redux';
+
+export default function NavBarSettingsFeedFiltersDialogPriority() {
+    const { priority } = useSelector((state) => state.posts.postsFilters);
+    const dispatch = useDispatch();
+
+    const handleChangePriority = (event) => {
+        dispatch(
+            setPostsPriority({
+                priority: event.target.value,
+            })
+        );
+    };
+
     return (
         <>
             <FormLabel
@@ -23,7 +35,7 @@ export default function NavBarSettingsFeedFiltersDialogPriority({
                 aria-labelledby='feed_filters_label'
                 name='posts_priority'
                 value={priority}
-                onChange={handleChange}
+                onChange={handleChangePriority}
             >
                 <FormControlLabel
                     value='is_interesting'

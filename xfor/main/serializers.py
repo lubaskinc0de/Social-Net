@@ -22,7 +22,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class PostCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PostCategory
-        fields = ["title"]
+        fields = ["id", "title"]
 
 class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     viewers_count = serializers.IntegerField(read_only=True)

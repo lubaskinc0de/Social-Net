@@ -54,7 +54,7 @@ class PostCategory(models.Model):
     class Meta:
         verbose_name = "категори(я-ю) поста"
         verbose_name_plural = "Категории постов"
-        ordering = ("-created_at",)
+        ordering = ("title", "-created_at")
 
 
 class Post(models.Model):

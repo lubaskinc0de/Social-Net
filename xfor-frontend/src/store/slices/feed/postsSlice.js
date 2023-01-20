@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getPosts, postLike, getPost } from '../../actions/postsActions';
+import {
+    getPosts,
+    postLike,
+    getPost,
+    getCategories,
+} from '../../actions/postsActions';
 
 const postsSlice = createSlice({
     name: 'postsSlice',
@@ -12,6 +17,7 @@ const postsSlice = createSlice({
         postsFilters: {
             priority: null,
             ordering: null,
+            category: null,
         },
         post: null,
         postNotFound: null,
@@ -54,6 +60,24 @@ const postsSlice = createSlice({
 
             state.postsFilters.ordering = ordering;
         },
+
+        /**
+         * Set postsFilters.category
+         * @param {Object} state
+         * @param {Object} action
+         */
+        setPostsCategory(state, action) {
+            const { category } = action.payload;
+
+            if (state.postsFilters.category !== category) {
+                // refresh
+
+                state.posts = [];
+                state.nextPage = 1;
+            }
+
+            state.postsFilters.category = category;
+        },
     },
 
     extraReducers: {
@@ -88,6 +112,12 @@ const postsSlice = createSlice({
             state.rejected = true;
         },
 
+        [getCategories.fulfilled](state, action) {
+            const { categories } = action.payload;
+
+            state.categories = categories;
+        },
+
         // postLike
         [postLike.pending](state, action) {
             const { arg: postId } = action.meta;
@@ -101,7 +131,7 @@ const postsSlice = createSlice({
             const post =
                 state.post && state.post.id === postId
                     ? state.post
-                    : postInPosts
+                    : postInPosts;
 
             const isAdd = actionType === 'add';
 
@@ -143,9 +173,6 @@ const postsSlice = createSlice({
     },
 });
 
-export const {
-    setPostsPriority,
-    setPostsOrdering,
-} = postsSlice.actions;
+export const { setPostsPriority, setPostsOrdering, setPostsCategory } = postsSlice.actions;
 
 export default postsSlice.reducer;

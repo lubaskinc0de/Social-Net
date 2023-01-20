@@ -20,6 +20,11 @@ export default class API {
         return axios.get(`${this.postsEndpoint}?${urlParameters}`, config);
     }
 
+    /**
+     * Get categories
+     * @param {Object} config 
+     * @returns {Promise<import('axios').AxiosResponse}
+     */
     static getCategories(config) {
         return axios.get(this.categoriesEndpoint, config);
     }
