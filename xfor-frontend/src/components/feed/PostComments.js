@@ -3,10 +3,16 @@ import React from 'react';
 import List from '@mui/material/List';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 
 import PostComment from './PostComment';
 
-export default function PostComments({ title }) {
+import { getTimeInfo } from '../../lib/feed';
+import { useSelector } from 'react-redux';
+
+export default function PostComments() {
+    const { postComments } = useSelector((state) => state.comments);
+
     return (
         <Container
             sx={{
@@ -14,40 +20,61 @@ export default function PostComments({ title }) {
                 flexDirection: 'column',
                 alignItems: 'center',
             }}
-            component='main'
             maxWidth='xl'
         >
-            <List
+            <Paper
                 sx={{
                     width: '100%',
                     maxWidth: 500,
-                    bgcolor: 'background.default',
-                    mb: 2,
+                    p: 1,
                 }}
             >
-                <Paper
+                <List
                     sx={{
-                        p: 1,
+                        width: '100%',
                     }}
-                    elevation={1}
+                    className='comments'
                 >
-                    {[1, 2, 3].map((el) => (
-                        <PostComment
-                            key={el}
-                            username='LUBASKIN10'
-                            text={
-                                <>
-                                    Lorem ipsum dolor sit amet
-                                </>
-                            }
-                            timesince='8 дней назад'
-                            likesCount={8}
-                            avatarAlt='lubaskin10'
-                            avatarSrc='blabla'
-                        ></PostComment>
-                    ))}
-                </Paper>
-            </List>
+                    {postComments
+                        ? postComments.map((el) => {
+                              const getGeneralCommentProps = (comment) => {
+                                  return {
+                                      id: comment.id,
+                                      username: `${comment.author.first_name} ${comment.author.last_name}`,
+                                      text: comment.body,
+                                      timesince: getTimeInfo(
+                                          comment.created_at
+                                      ).join(' в '),
+                                      likesCount: comment.like_cnt,
+                                      avatarAlt: comment.author.first_name,
+                                      avatarSrc: comment.author.avatar,
+                                      isLiked: comment.is_user_liked_comment,
+                                  };
+                              };
+
+                              return (
+                                  <li key={el.id}>
+                                      <PostComment
+                                          {...getGeneralCommentProps(el)}
+                                      ></PostComment>
+                                      {el.replies.length ? (
+                                          <Box sx={{ pl: 7 }}>
+                                              {el.replies.map((reply) => (
+                                                  <PostComment
+                                                      key={reply.id}
+                                                      {...getGeneralCommentProps(
+                                                          reply
+                                                      )}
+                                                  ></PostComment>
+                                              ))}
+                                          </Box>
+                                      ) : null}
+                                  </li>
+                              );
+                          })
+                        : null}
+                </List>
+            </Paper>
         </Container>
     );
 }

@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 import { getPost } from '../../store/actions/postsActions';
+import { getComments } from '../../store/actions/commentsActions';
 import { getTimeInfo } from '../../lib/feed';
 
 export default function Post() {
@@ -29,8 +30,9 @@ export default function Post() {
     useEffect(() => {
         if (post) {
             setTimeInfo(getTimeInfo(post.created_at));
+            dispatch(getComments(post.id))
         }
-    }, [post]);
+    }, [post, dispatch]);
 
     useEffect(() => {
         if (postNotFound) {

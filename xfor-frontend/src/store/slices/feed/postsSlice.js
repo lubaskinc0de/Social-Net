@@ -151,6 +151,7 @@ const postsSlice = createSlice({
         [getPost.pending](state) {
             state.post = null;
             state.postNotFound = null;
+            state.postComments = null;
             state.loading = true;
         },
 
@@ -173,6 +174,7 @@ const postsSlice = createSlice({
     },
 });
 
-export const { setPostsPriority, setPostsOrdering, setPostsCategory } = postsSlice.actions;
+export const { setPostsPriority, setPostsOrdering, setPostsCategory } =
+    postsSlice.actions;
 
 export default postsSlice.reducer;

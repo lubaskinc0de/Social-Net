@@ -6,17 +6,31 @@ import ListItem from '@mui/material/ListItem';
 import PostCommentText from './PostCommentText';
 import PostCommentAvatar from './PostCommentAvatar';
 
+import PostCommentActions from './PostCommentActions';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { commentLike } from '../../store/actions/commentsActions';
+
 export default function PostComment({
+    id,
     username,
     text,
     timesince,
     likesCount,
     avatarAlt,
     avatarSrc,
+    isLiked,
 }) {
+    const dispatch = useDispatch();
+    const { likePendingComments } = useSelector((state) => state.comments);
+
+    const handleLikeClick = () => {
+        dispatch(commentLike(id));
+    };
+
     return (
         <>
-            <ListItem alignItems='flex-start' sx={{ pb: 0 }}>
+            <ListItem component='div' alignItems='flex-start' sx={{ pb: 0 }}>
                 <PostCommentAvatar
                     alt={avatarAlt}
                     src={avatarSrc}
@@ -26,9 +40,20 @@ export default function PostComment({
                     text={text}
                     timesince={timesince}
                     likesCount={likesCount}
+                    actions={
+                        <PostCommentActions
+                            timesince={timesince}
+                            likesCount={likesCount}
+                            handleLikeClick={handleLikeClick}
+                            isLikeDisabled={likePendingComments.hasOwnProperty(
+                                id
+                            )}
+                            isLiked={isLiked}
+                        ></PostCommentActions>
+                    }
                 ></PostCommentText>
             </ListItem>
-            <Divider sx={{ mr: 2 }} variant='inset' component='li' />
+            <Divider sx={{ mr: 2 }} variant='inset' className='comment__divider' />
         </>
     );
 }

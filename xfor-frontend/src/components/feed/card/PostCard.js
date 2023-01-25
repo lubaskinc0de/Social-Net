@@ -13,7 +13,7 @@ export default function PostCard(props) {
     const dispatch = useDispatch();
     const { likePendingPosts } = useSelector((state) => state.posts);
 
-    const handleLikeClick = (e) => {
+    const handleLikeClick = () => {
         dispatch(postLike(props.id));
     };
 
