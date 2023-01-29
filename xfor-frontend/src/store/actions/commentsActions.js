@@ -5,7 +5,7 @@ import { setAPIErrors } from '../slices/APIErrorsSlice';
 import API from '../../api/feed';
 
 export const commentLike = createAsyncThunk(
-    'posts/likeComment',
+    'comments/likeComment',
     async (commentId, { rejectWithValue, dispatch, getState }) => {
         try {
             const { user } = getState();
@@ -16,7 +16,10 @@ export const commentLike = createAsyncThunk(
                 },
             };
 
-            const response = await API.commentLike({ comment: commentId }, config);
+            const response = await API.commentLike(
+                { comment: commentId },
+                config
+            );
             const action = response.data.action;
 
             return {
@@ -40,10 +43,10 @@ export const commentLike = createAsyncThunk(
 );
 
 export const getComments = createAsyncThunk(
-    'posts/getComments',
+    'comments/getComments',
     async (postId, { rejectWithValue, dispatch, getState }) => {
         try {
-            const { user } = getState();
+            const { user, comments: commentsState } = getState();
 
             const config = {
                 headers: {
@@ -51,11 +54,29 @@ export const getComments = createAsyncThunk(
                 },
             };
 
-            const response = await API.getComments(postId, config);
+            const { nextPage: page } = commentsState;
+
+            if (!page) {
+                return {
+                    comments: [],
+                    nextPage: null,
+                };
+            }
+
+            const urlParameters = `page=${page}`;
+
+            const response = await API.getComments(
+                postId,
+                urlParameters,
+                config
+            );
+
             const comments = response.data.results;
+            const nextPage = response.data.next;
 
             return {
                 comments,
+                nextPage,
             };
         } catch (err) {
             const APIErrors = parseAPIAxiosErrors(err);
@@ -67,6 +88,17 @@ export const getComments = createAsyncThunk(
             );
 
             return rejectWithValue();
+        }
+    }
+);
+
+export const getCommentsWrapper = createAsyncThunk(
+    'comments/getCommentsWrapper',
+    async (arg, { dispatch, getState }) => {
+        const { commentsLoading } = getState().comments;
+
+        if (!commentsLoading) {
+            dispatch(getComments(arg));
         }
     }
 );

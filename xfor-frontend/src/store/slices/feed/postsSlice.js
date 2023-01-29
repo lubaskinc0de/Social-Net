@@ -6,6 +6,8 @@ import {
     getCategories,
 } from '../../actions/postsActions';
 
+import { parsePageFromNextPage } from '../../../lib/feed';
+
 const postsSlice = createSlice({
     name: 'postsSlice',
     initialState: {
@@ -91,14 +93,7 @@ const postsSlice = createSlice({
         [getPosts.fulfilled](state, action) {
             const { posts, nextPage } = action.payload;
 
-            const page = nextPage
-                ? parseInt(
-                      nextPage
-                          .split('?')
-                          .find((el) => el.includes('page'))
-                          .split('=')[1]
-                  )
-                : null;
+            const page = nextPage ? parsePageFromNextPage(nextPage) : null;
 
             if (posts.length) {
                 state.posts = state.posts.concat(posts);

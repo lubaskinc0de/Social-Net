@@ -11,6 +11,10 @@ import PostCommentActions from './PostCommentActions';
 import { useSelector, useDispatch } from 'react-redux';
 import { commentLike } from '../../store/actions/commentsActions';
 
+import Box from '@mui/material/Box';
+
+import { getTimeInfo } from '../../lib/feed';
+
 export default function PostComment({
     id,
     username,
@@ -20,6 +24,8 @@ export default function PostComment({
     avatarAlt,
     avatarSrc,
     isLiked,
+    replies,
+    loading,
 }) {
     const dispatch = useDispatch();
     const { likePendingComments } = useSelector((state) => state.comments);
@@ -30,7 +36,7 @@ export default function PostComment({
 
     return (
         <>
-            <ListItem component='div' alignItems='flex-start' sx={{ pb: 0 }}>
+            <ListItem component='div' alignItems='flex-start' sx={{pb: 0}}>
                 <PostCommentAvatar
                     alt={avatarAlt}
                     src={avatarSrc}
@@ -53,7 +59,31 @@ export default function PostComment({
                     }
                 ></PostCommentText>
             </ListItem>
-            <Divider sx={{ mr: 2 }} variant='inset' className='comment__divider' />
+            <Divider
+                sx={{ mr: 2 }}
+                variant='inset'
+                className='comment__divider'
+            />
+            {replies.length ? (
+                <Box sx={{ pl: 7 }} className='comment__replies'>
+                    {replies.map((reply) => (
+                        <PostComment
+                            key={reply.id}
+                            id={reply.id}
+                            username={`${reply.author.first_name} ${reply.author.last_name}`}
+                            text={reply.body}
+                            timesince={getTimeInfo(reply.created_at).join(
+                                ' в '
+                            )}
+                            likesCount={reply.like_cnt}
+                            avatarAlt={reply.author.first_name}
+                            avatarSrc={reply.author.avatar}
+                            isLiked={reply.is_user_liked_comment}
+                            replies={[]}
+                        ></PostComment>
+                    ))}
+                </Box>
+            ) : null}
         </>
     );
 }

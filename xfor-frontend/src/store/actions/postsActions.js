@@ -28,15 +28,19 @@ export const getPosts = createAsyncThunk(
                 },
             };
 
-            const urlParameters = `page=${page}${urlParamEncode(
-                priority,
-                'on',
-                priority
-            )}${urlParamEncode('ordering', ordering, ordering)}${urlParamEncode(
+            const priorityParam = urlParamEncode(priority, 'on', priority);
+            const orderingParam = urlParamEncode(
+                'ordering',
+                ordering,
+                ordering
+            );
+            const categoryParam = urlParamEncode(
                 'category',
                 category,
                 category
-            )}`;
+            );
+
+            const urlParameters = `page=${page}${priorityParam}${orderingParam}${categoryParam}`;
 
             const response = await API.getPosts(urlParameters, config);
             const posts = response.data.results;

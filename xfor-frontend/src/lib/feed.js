@@ -30,7 +30,7 @@ export const urlParamEncode = (name, value, condition) => {
  * Find comment by id in root comments and their replies. Return null if not comment finded.
  * @param {Array} comments
  * @param {Number} commentId
- * @returns
+ * @returns {Object}
  */
 export const findComment = (comments, commentId) => {
     const rootComment = comments.find(({ id }) => commentId === id);
@@ -46,4 +46,18 @@ export const findComment = (comments, commentId) => {
     }
 
     return null;
+};
+
+/**
+ * Parse number of nextpage from link to the nextpage
+ * @param {String} nextPageLink
+ * @returns {Number}
+ */
+export const parsePageFromNextPage = (nextPageLink) => {
+    return parseInt(
+        nextPageLink
+            .split('?')
+            .find((el) => el.includes('page'))
+            .split('=')[1]
+    );
 };

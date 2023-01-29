@@ -35,8 +35,8 @@ export default class API {
      * @param {Object} config
      * @returns {Promise<import('axios').AxiosResponse}
      */
-    static getComments(postId, config) {
-        return axios.get(`${this.postsEndpoint}${postId}/comments/`, config);
+    static getComments(postId, urlParameters, config) {
+        return axios.get(`${this.postsEndpoint}${postId}/comments?${urlParameters}`, config);
     }
 
     /**

@@ -32,7 +32,3 @@ p {
     display: flex;
     justify-content: space-between;
 }
-
-.comments > li > .comment__divider:last-child {
-    display: none;
-}

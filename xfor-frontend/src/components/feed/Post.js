@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import Grid from '@mui/material/Grid';
 import PostCard from './card/PostCard';
@@ -6,22 +6,29 @@ import PostSkeleton from './PostSkeleton';
 import PostComments from './PostComments';
 
 import FeedContainer from './FeedContainer';
+import FeedInfiniteScroll from './FeedInfiniteScroll';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 import { getPost } from '../../store/actions/postsActions';
-import { getComments } from '../../store/actions/commentsActions';
+import { getCommentsWrapper } from '../../store/actions/commentsActions';
 import { getTimeInfo } from '../../lib/feed';
 
 export default function Post() {
     const { postId } = useParams();
     const { post, postNotFound } = useSelector((state) => state.posts);
+    const { postComments } = useSelector((state) => state.comments);
+    
     const [timeInfo, setTimeInfo] = useState([]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const fetchComments = useCallback(() => {
+        dispatch(getCommentsWrapper(post.id));
+    }, [dispatch, post]);
 
     useEffect(() => {
         dispatch(getPost(postId));
@@ -30,16 +37,16 @@ export default function Post() {
     useEffect(() => {
         if (post) {
             setTimeInfo(getTimeInfo(post.created_at));
-            dispatch(getComments(post.id))
+            fetchComments();
         }
-    }, [post, dispatch]);
+    }, [post, dispatch, fetchComments]);
 
     useEffect(() => {
         if (postNotFound) {
             navigate('/not-found/');
         }
     }, [postNotFound, navigate]);
-
+    
     return (
         <>
             <FeedContainer>
@@ -75,6 +82,11 @@ export default function Post() {
                 )}
             </FeedContainer>
             <PostComments title='Комментарии'></PostComments>
+            {!postComments.length ? null : (
+                <FeedInfiniteScroll
+                    onIntersecting={fetchComments}
+                ></FeedInfiniteScroll>
+            )}
         </>
     );
 }
