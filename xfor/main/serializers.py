@@ -102,6 +102,7 @@ class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer)
 class CommentSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     is_user_liked_comment = serializers.BooleanField(read_only=True)
     like_cnt = serializers.IntegerField(read_only=True)
+    replies_cnt = serializers.IntegerField(read_only=True)
     images = ImageSerializer(many=True, read_only=True, source="images_comment")
     author = CurrentAuthorField(default=serializers.CurrentUserDefault())
     replies = serializers.SerializerMethodField(read_only=True)
@@ -206,6 +207,7 @@ class CommentSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializ
             "like_cnt",
             "images",
             "author",
+            "replies_cnt",
         ]
         extra_kwargs = {"body": {"required": False}}
 

@@ -56,6 +56,7 @@ export default function PostComments() {
                                       avatarSrc: comment.author.avatar,
                                       isLiked: comment.is_user_liked_comment,
                                       replies: comment.replies,
+                                      repliesCnt: comment.replies_cnt - comment.replies.length,
                                   };
                               };
 

@@ -10,6 +10,7 @@ export default class API {
     static categoriesEndpoint = baseUrl + '/feed/categories/';
     static postLikeEndpoint = baseUrl + '/api/add-like/';
     static commentLikeEndpoint = baseUrl + '/api/add-like-comment/';
+    static commentEndpoint = baseUrl + '/feed/comment';
 
     /**
      * Get posts with GET-params
@@ -67,5 +68,9 @@ export default class API {
      */
     static getPost(postId, config) {
         return axios.get(`${this.postsEndpoint}${postId}/`, config);
+    }
+
+    static getCommentDescendants(commentId, config) {
+        return axios.get(`${this.commentEndpoint}/${commentId}/descendants/`, config);
     }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
+import Button from '@mui/material/Button';
 
 import PostCommentText from './PostCommentText';
 import PostCommentAvatar from './PostCommentAvatar';
@@ -9,7 +10,7 @@ import PostCommentAvatar from './PostCommentAvatar';
 import PostCommentActions from './PostCommentActions';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { commentLike } from '../../store/actions/commentsActions';
+import { commentLike, getCommentDescendants } from '../../store/actions/commentsActions';
 
 import Box from '@mui/material/Box';
 
@@ -25,18 +26,24 @@ export default function PostComment({
     avatarSrc,
     isLiked,
     replies,
-    loading,
+    repliesCnt,
 }) {
     const dispatch = useDispatch();
-    const { likePendingComments } = useSelector((state) => state.comments);
+    const { likePendingComments, descendantsPage } = useSelector(
+        (state) => state.comments
+    );
 
     const handleLikeClick = () => {
         dispatch(commentLike(id));
     };
 
+    const getDescendants = () => {
+        dispatch(getCommentDescendants(id))
+    }
+
     return (
         <>
-            <ListItem component='div' alignItems='flex-start' sx={{pb: 0}}>
+            <ListItem component='div' alignItems='flex-start' sx={{ pb: 0 }}>
                 <PostCommentAvatar
                     alt={avatarAlt}
                     src={avatarSrc}
@@ -82,6 +89,13 @@ export default function PostComment({
                             replies={[]}
                         ></PostComment>
                     ))}
+                    {repliesCnt && !descendantsPage.hasOwnProperty(id) ? (
+                        <Box display='flex' justifyContent='center'>
+                            <Button onClick={getDescendants} sx={{ mt: 2 }} size='small'>
+                                Показать еще {repliesCnt} ответ(ов)
+                            </Button>
+                        </Box>
+                    ) : null}
                 </Box>
             ) : null}
         </>

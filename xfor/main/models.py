@@ -167,6 +167,10 @@ class Comment(MPTTModel):
     def __str__(self) -> str:
         return f"Комментарий {self.pk}"
 
+    @property
+    def replies_cnt(self):
+        return self.get_descendant_count()
+
     def like(self, user: User) -> None:
         """Like/dislike comment, returns True if like false otherwise"""
 

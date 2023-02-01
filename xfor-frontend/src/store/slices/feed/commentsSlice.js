@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { commentLike, getComments } from '../../actions/commentsActions';
+import {
+    commentLike,
+    getComments,
+    getCommentDescendants,
+} from '../../actions/commentsActions';
 
 import { findComment, parsePageFromNextPage } from '../../../lib/feed';
 
@@ -10,6 +14,7 @@ const commentsSlice = createSlice({
         postComments: [],
         nextPage: 1,
         commentsLoading: null,
+        descendantsPage: {},
     },
     extraReducers: {
         // commentsLike
@@ -56,6 +61,25 @@ const commentsSlice = createSlice({
 
         [getComments.rejected](state) {
             state.commentsLoading = false;
+        },
+
+        [getCommentDescendants.pending](state, action) {
+            const { arg: commentId } = action.meta;
+            state.descendantsPage[commentId] = 1;
+        },
+
+        [getCommentDescendants.fulfilled](state, action) {
+            const { descendants, commentId } = action.payload;
+
+            const comment = findComment(state.postComments, commentId);
+
+            if (descendants.length) {
+                if (comment.replies.length <= 2) {
+                    comment.replies = descendants;
+                } else {
+                    comment.replies = comment.replies.concat(descendants)
+                }
+            }
         },
     },
 });

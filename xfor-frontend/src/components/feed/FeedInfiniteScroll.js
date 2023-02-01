@@ -16,7 +16,7 @@ export default function FeedInfiniteScroll({ onIntersecting }) {
     useEffect(() => {
         const option = {
             root: null,
-            rootMargin: '0px',
+            rootMargin: '5px',
             threshold: 1.0,
         };
         const observer = new IntersectionObserver(handleObserver, option);

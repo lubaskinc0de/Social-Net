@@ -102,3 +102,37 @@ export const getCommentsWrapper = createAsyncThunk(
         }
     }
 );
+
+export const getCommentDescendants = createAsyncThunk(
+    'comments/getCommentDescendants',
+    async (commentId, { rejectWithValue, dispatch, getState }) => {
+        try {
+            const { user } = getState();
+
+            const config = {
+                headers: {
+                    Authorization: `Token ${user.token}`,
+                },
+            };
+
+            const response = await API.getCommentDescendants(commentId, config);
+
+            const descendants = response.data.results;
+
+            return {
+                descendants,
+                commentId,
+            };
+        } catch (err) {
+            const APIErrors = parseAPIAxiosErrors(err);
+
+            dispatch(
+                setAPIErrors({
+                    APIErrors,
+                })
+            );
+
+            return rejectWithValue();
+        }
+    }
+);
