@@ -19,10 +19,12 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = ["photo"]
 
+
 class PostCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PostCategory
         fields = ["id", "title"]
+
 
 class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     viewers_count = serializers.IntegerField(read_only=True)

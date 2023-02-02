@@ -31,12 +31,14 @@ def get_posts(user: User) -> list[Post]:
 
     return posts
 
+
 def get_post_categories() -> list[PostCategory]:
     """Get post categories"""
 
     categories = PostCategory.objects.all()
 
     return categories
+
 
 def get_comments_queryset(queryset: T, user: User) -> T:
     """Annotate and JOIN the comments queryset"""

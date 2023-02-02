@@ -24,10 +24,8 @@ class LikeMixin:
         """
 
         serializer: Serializer = self.serializer_class(data=data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except Exception as e:
-            print(e)
+        serializer.is_valid(raise_exception=True)
+
         data = serializer.validated_data
 
         instance = data.get(self.instance_name)

@@ -86,7 +86,9 @@ class PostAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.select_related("category", "author").prefetch_related("liked", "viewers", "images")
+        return qs.select_related("category", "author").prefetch_related(
+            "liked", "viewers", "images"
+        )
 
 
 class CommentAdmin(MPTTModelAdmin):

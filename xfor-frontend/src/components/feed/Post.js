@@ -6,7 +6,6 @@ import PostSkeleton from './PostSkeleton';
 import PostComments from './PostComments';
 
 import FeedContainer from './FeedContainer';
-import FeedInfiniteScroll from './FeedInfiniteScroll';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +18,6 @@ import { getTimeInfo } from '../../lib/feed';
 export default function Post() {
     const { postId } = useParams();
     const { post, postNotFound } = useSelector((state) => state.posts);
-    const { postComments } = useSelector((state) => state.comments);
     
     const [timeInfo, setTimeInfo] = useState([]);
 
@@ -82,11 +80,6 @@ export default function Post() {
                 )}
             </FeedContainer>
             <PostComments title='Комментарии'></PostComments>
-            {!postComments.length ? null : (
-                <FeedInfiniteScroll
-                    onIntersecting={fetchComments}
-                ></FeedInfiniteScroll>
-            )}
         </>
     );
 }

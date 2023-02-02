@@ -6,17 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0048_alter_post_category_alter_post_liked_and_more'),
+        ("main", "0048_alter_post_category_alter_post_liked_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='postcategory',
-            options={'ordering': ('-created_at',), 'verbose_name': 'категори(я-ю) поста', 'verbose_name_plural': 'Категории постов'},
+            name="postcategory",
+            options={
+                "ordering": ("-created_at",),
+                "verbose_name": "категори(я-ю) поста",
+                "verbose_name_plural": "Категории постов",
+            },
         ),
         migrations.AlterField(
-            model_name='post',
-            name='title',
-            field=models.CharField(blank=True, max_length=150, verbose_name='Название поста'),
+            model_name="post",
+            name="title",
+            field=models.CharField(
+                blank=True, max_length=150, verbose_name="Название поста"
+            ),
         ),
     ]
