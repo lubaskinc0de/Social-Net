@@ -5,49 +5,75 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 
 import PostComment from './PostComment';
+import PostCommentsSkeleton from './PostCommentsSkeleton';
 
-export default function PostComments({ title }) {
+import { getTimeInfo } from '../../lib/feed';
+import { useSelector } from 'react-redux';
+
+import './feed.css';
+
+export default function PostComments() {
+    const { postComments, commentsLoading } = useSelector(
+        (state) => state.comments
+    );
+
     return (
         <Container
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                mb: 3,
             }}
-            component='main'
             maxWidth='xl'
         >
-            <List
+            <Paper
                 sx={{
                     width: '100%',
                     maxWidth: 500,
-                    bgcolor: 'background.default',
-                    mb: 2,
+                    p: 1,
                 }}
             >
-                <Paper
+                <List
                     sx={{
-                        p: 1,
+                        width: '100%',
+                        mb: 0.5,
                     }}
-                    elevation={1}
+                    className='comments'
                 >
-                    {[1, 2, 3].map((el) => (
-                        <PostComment
-                            key={el}
-                            username='LUBASKIN10'
-                            text={
-                                <>
-                                    Lorem ipsum dolor sit amet
-                                </>
-                            }
-                            timesince='8 дней назад'
-                            likesCount={8}
-                            avatarAlt='lubaskin10'
-                            avatarSrc='blabla'
-                        ></PostComment>
-                    ))}
-                </Paper>
-            </List>
+                    {postComments
+                        ? postComments.map((el) => {
+                              const getCommentProps = (comment) => {
+                                  return {
+                                      id: comment.id,
+                                      username: `${comment.author.first_name} ${comment.author.last_name}`,
+                                      text: comment.body,
+                                      timesince: getTimeInfo(
+                                          comment.created_at
+                                      ).join(' в '),
+                                      likesCount: comment.like_cnt,
+                                      avatarAlt: comment.author.first_name,
+                                      avatarSrc: comment.author.avatar,
+                                      isLiked: comment.is_user_liked_comment,
+                                      replies: comment.replies,
+                                      repliesCnt: comment.replies_cnt - comment.replies.length,
+                                  };
+                              };
+
+                              return (
+                                  <li key={el.id} className='comment'>
+                                      <PostComment
+                                          {...getCommentProps(el)}
+                                      ></PostComment>
+                                  </li>
+                              );
+                          })
+                        : null}
+                    {commentsLoading ? (
+                        <PostCommentsSkeleton></PostCommentsSkeleton>
+                    ) : null}
+                </List>
+            </Paper>
         </Container>
     );
 }

@@ -1,0 +1,7 @@
+.comments > .comment:last-child .comment:not(:has(.comment__replies)) > .comment__divider {
+    display: none;
+}
+
+.comment > .comment__replies:last-child .comment__divider {
+    display: none;
+}

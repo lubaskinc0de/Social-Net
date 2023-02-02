@@ -2,12 +2,18 @@ import React from 'react';
 
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import IconButton from '@mui/material/IconButton';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-export default function PostCommentActions({ timesince, likesCount }) {
+import PostCommentLike from './PostCommentLike';
+
+export default function PostCommentActions({
+    timesince,
+    likesCount,
+    isLiked,
+    handleLikeClick,
+    isLikeDisabled,
+}) {
     return (
         <Box
             sx={{
@@ -34,19 +40,12 @@ export default function PostCommentActions({ timesince, likesCount }) {
                     </Link>
                 </Grid>
             </Grid>
-            <div className='flex-align__box' style={{ paddingTop: 'inherit' }}>
-                <IconButton aria-label='like comment'>
-                    <FavoriteIcon fontSize='small' />
-                </IconButton>
-                <Typography
-                    sx={{
-                        lineHeight: 'normal',
-                    }}
-                    variant='body2'
-                >
-                    {likesCount}
-                </Typography>
-            </div>
+            <PostCommentLike
+                disabled={isLikeDisabled}
+                isLiked={isLiked}
+                handleLikeClick={handleLikeClick}
+                likesCount={likesCount}
+            ></PostCommentLike>
         </Box>
     );
 }

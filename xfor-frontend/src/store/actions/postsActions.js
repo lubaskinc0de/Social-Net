@@ -1,7 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import API from '../../api/feed';
 import { parseAPIAxiosErrors } from '../../lib';
+import { urlParamEncode } from '../../lib/feed';
 import { setAPIErrors } from '../slices/APIErrorsSlice';
+
+import API from '../../api/feed';
 
 export const getPosts = createAsyncThunk(
     'posts/getPosts',
@@ -26,19 +28,19 @@ export const getPosts = createAsyncThunk(
                 },
             };
 
-            const urlEncode = (name, value, condition) => {
-                return `${condition ? `&${name}=${value}` : ''}`;
-            };
-
-            const urlParameters = `page=${page}${urlEncode(
-                priority,
-                'on',
-                priority
-            )}${urlEncode('ordering', ordering, ordering)}${urlEncode(
+            const priorityParam = urlParamEncode(priority, 'on', priority);
+            const orderingParam = urlParamEncode(
+                'ordering',
+                ordering,
+                ordering
+            );
+            const categoryParam = urlParamEncode(
                 'category',
                 category,
                 category
-            )}`;
+            );
+
+            const urlParameters = `page=${page}${priorityParam}${orderingParam}${categoryParam}`;
 
             const response = await API.getPosts(urlParameters, config);
             const posts = response.data.results;
