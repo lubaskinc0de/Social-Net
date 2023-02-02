@@ -15,6 +15,7 @@ const commentsSlice = createSlice({
         nextPage: 1,
         commentsLoading: null,
         descendantsPage: {},
+        descendantsLoading: {},
     },
     extraReducers: {
         // commentsLike
@@ -49,7 +50,7 @@ const commentsSlice = createSlice({
         [getComments.fulfilled](state, action) {
             const { comments, nextPage } = action.payload;
 
-            const page = nextPage ? parsePageFromNextPage(nextPage) : null;
+            const page = parsePageFromNextPage(nextPage);
 
             if (comments.length) {
                 state.postComments = state.postComments.concat(comments);
@@ -65,11 +66,20 @@ const commentsSlice = createSlice({
 
         [getCommentDescendants.pending](state, action) {
             const { arg: commentId } = action.meta;
-            state.descendantsPage[commentId] = 1;
+
+            if (!state.descendantsPage.hasOwnProperty(commentId)) {
+                state.descendantsPage[commentId] = 1;
+            }
+
+            state.descendantsLoading[commentId] = true;
         },
 
         [getCommentDescendants.fulfilled](state, action) {
-            const { descendants, commentId } = action.payload;
+            const { descendants, commentId, nextPage } = action.payload;
+
+            const page = parsePageFromNextPage(nextPage);
+
+            console.log('page in reducer: ', page);
 
             const comment = findComment(state.postComments, commentId);
 
@@ -77,9 +87,21 @@ const commentsSlice = createSlice({
                 if (comment.replies.length <= 2) {
                     comment.replies = descendants;
                 } else {
-                    comment.replies = comment.replies.concat(descendants)
+                    comment.replies = comment.replies.concat(descendants);
                 }
             }
+
+            state.descendantsPage[commentId] = page;
+
+            console.log('descendants page: ', state.descendantsPage[commentId]);
+
+            delete state.descendantsLoading[commentId];
+        },
+
+        [getCommentDescendants.rejected](state, action) {
+            const { commentId } = action.payload;
+
+            delete state.descendantsLoading[commentId];
         },
     },
 });

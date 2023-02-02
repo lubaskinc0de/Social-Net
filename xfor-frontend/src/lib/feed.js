@@ -54,6 +54,10 @@ export const findComment = (comments, commentId) => {
  * @returns {Number}
  */
 export const parsePageFromNextPage = (nextPageLink) => {
+    if (!nextPageLink) {
+        return null;
+    }
+    
     return parseInt(
         nextPageLink
             .split('?')

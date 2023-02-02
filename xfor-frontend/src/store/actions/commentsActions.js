@@ -107,7 +107,7 @@ export const getCommentDescendants = createAsyncThunk(
     'comments/getCommentDescendants',
     async (commentId, { rejectWithValue, dispatch, getState }) => {
         try {
-            const { user } = getState();
+            const { user, comments: commentsState } = getState();
 
             const config = {
                 headers: {
@@ -115,13 +115,37 @@ export const getCommentDescendants = createAsyncThunk(
                 },
             };
 
-            const response = await API.getCommentDescendants(commentId, config);
+            const { descendantsPage } = commentsState;
+
+            const page = descendantsPage[commentId];
+
+            console.log('page: ', page);
+
+            if (!page) {
+                return {
+                    descendants: [],
+                    nextPage: null,
+                    commentId,
+                };
+            }
+
+            const urlParameters = `page=${page}`;
+
+            const response = await API.getCommentDescendants(
+                commentId,
+                config,
+                urlParameters
+            );
 
             const descendants = response.data.results;
+            const nextPage = response.data.next;
+
+            console.log('nextPage: ', nextPage);
 
             return {
                 descendants,
                 commentId,
+                nextPage,
             };
         } catch (err) {
             const APIErrors = parseAPIAxiosErrors(err);
@@ -132,7 +156,20 @@ export const getCommentDescendants = createAsyncThunk(
                 })
             );
 
-            return rejectWithValue();
+            return rejectWithValue({
+                commentId,
+            });
+        }
+    }
+);
+
+export const getCommentDescendantsWrapper = createAsyncThunk(
+    'comments/getCommentDescendantsWrapper',
+    async (commentId, { dispatch, getState }) => {
+        const { descendantsLoading } = getState().comments;
+
+        if (!descendantsLoading.hasOwnProperty(commentId)) {
+            dispatch(getCommentDescendants(commentId))
         }
     }
 );

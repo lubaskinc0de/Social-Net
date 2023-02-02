@@ -70,7 +70,7 @@ export default class API {
         return axios.get(`${this.postsEndpoint}${postId}/`, config);
     }
 
-    static getCommentDescendants(commentId, config) {
-        return axios.get(`${this.commentEndpoint}/${commentId}/descendants/`, config);
+    static getCommentDescendants(commentId, config, urlParameters) {
+        return axios.get(`${this.commentEndpoint}/${commentId}/descendants?${urlParameters}`, config);
     }
 }

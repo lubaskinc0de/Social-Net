@@ -8,13 +8,19 @@ import PostCommentText from './PostCommentText';
 import PostCommentAvatar from './PostCommentAvatar';
 
 import PostCommentActions from './PostCommentActions';
+import FeedInfiniteScroll from './FeedInfiniteScroll';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { commentLike, getCommentDescendants } from '../../store/actions/commentsActions';
+import {
+    commentLike,
+    getCommentDescendantsWrapper,
+} from '../../store/actions/commentsActions';
 
 import Box from '@mui/material/Box';
 
 import { getTimeInfo } from '../../lib/feed';
+
+import PostCommentRepliesSkeleton from './PostCommentRepliesSkeleton';
 
 export default function PostComment({
     id,
@@ -29,17 +35,16 @@ export default function PostComment({
     repliesCnt,
 }) {
     const dispatch = useDispatch();
-    const { likePendingComments, descendantsPage } = useSelector(
-        (state) => state.comments
-    );
+    const { likePendingComments, descendantsPage, descendantsLoading } =
+        useSelector((state) => state.comments);
 
     const handleLikeClick = () => {
         dispatch(commentLike(id));
     };
 
     const getDescendants = () => {
-        dispatch(getCommentDescendants(id))
-    }
+        dispatch(getCommentDescendantsWrapper(id));
+    };
 
     return (
         <>
@@ -89,12 +94,24 @@ export default function PostComment({
                             replies={[]}
                         ></PostComment>
                     ))}
+                    {descendantsLoading[id] ? (
+                        <PostCommentRepliesSkeleton></PostCommentRepliesSkeleton>
+                    ) : null}
                     {repliesCnt && !descendantsPage.hasOwnProperty(id) ? (
                         <Box display='flex' justifyContent='center'>
-                            <Button onClick={getDescendants} sx={{ mt: 2 }} size='small'>
+                            <Button
+                                onClick={getDescendants}
+                                sx={{ mt: 2 }}
+                                size='small'
+                            >
                                 Показать еще {repliesCnt} ответ(ов)
                             </Button>
                         </Box>
+                    ) : null}
+                    {descendantsPage[id] ? (
+                        <FeedInfiniteScroll
+                            onIntersecting={getDescendants}
+                        ></FeedInfiniteScroll>
                     ) : null}
                 </Box>
             ) : null}
