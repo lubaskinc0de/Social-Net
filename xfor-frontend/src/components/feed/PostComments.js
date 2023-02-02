@@ -1,21 +1,26 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
-import List from '@mui/material/List';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 
-import PostComment from './PostComment';
-import PostCommentsSkeleton from './PostCommentsSkeleton';
+import PostCommentsList from './PostCommentsList';
 
-import { getTimeInfo } from '../../lib/feed';
-import { useSelector } from 'react-redux';
+import FeedInfiniteScroll from './FeedInfiniteScroll';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { getCommentsWrapper } from '../../store/actions/commentsActions';
 
 import './feed.css';
 
 export default function PostComments() {
-    const { postComments, commentsLoading } = useSelector(
-        (state) => state.comments
-    );
+    const { postComments } = useSelector((state) => state.comments);
+    const { post } = useSelector((state) => state.posts);
+
+    const dispatch = useDispatch();
+
+    const fetchComments = useCallback(() => {
+        dispatch(getCommentsWrapper(post.id));
+    }, [dispatch, post]);
 
     return (
         <Container
@@ -34,46 +39,13 @@ export default function PostComments() {
                     p: 1,
                 }}
             >
-                <List
-                    sx={{
-                        width: '100%',
-                        mb: 0.5,
-                    }}
-                    className='comments'
-                >
-                    {postComments
-                        ? postComments.map((el) => {
-                              const getCommentProps = (comment) => {
-                                  return {
-                                      id: comment.id,
-                                      username: `${comment.author.first_name} ${comment.author.last_name}`,
-                                      text: comment.body,
-                                      timesince: getTimeInfo(
-                                          comment.created_at
-                                      ).join(' в '),
-                                      likesCount: comment.like_cnt,
-                                      avatarAlt: comment.author.first_name,
-                                      avatarSrc: comment.author.avatar,
-                                      isLiked: comment.is_user_liked_comment,
-                                      replies: comment.replies,
-                                      repliesCnt: comment.replies_cnt - comment.replies.length,
-                                  };
-                              };
-
-                              return (
-                                  <li key={el.id} className='comment'>
-                                      <PostComment
-                                          {...getCommentProps(el)}
-                                      ></PostComment>
-                                  </li>
-                              );
-                          })
-                        : null}
-                    {commentsLoading ? (
-                        <PostCommentsSkeleton></PostCommentsSkeleton>
-                    ) : null}
-                </List>
+                <PostCommentsList></PostCommentsList>
             </Paper>
+            {!postComments.length ? null : (
+                <FeedInfiniteScroll
+                    onIntersecting={fetchComments}
+                ></FeedInfiniteScroll>
+            )}
         </Container>
     );
 }

@@ -21,6 +21,6 @@ class LikeGenericAPIView(LikeMixin, APIView):
         """
         The HTTP Put method, since we update the value of the like field of the object.
         """
-        
+
         action_data = self.like(request.data, request.user)
         return Response(data=action_data, status=200)

@@ -91,7 +91,7 @@ class PostsTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("results"), serializer_data)
-    
+
     def test_get_categories(self):
         """Test getting post categories"""
 

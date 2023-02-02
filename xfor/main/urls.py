@@ -40,7 +40,7 @@ urlpatterns = [
                 "get": "get_categories",
             }
         ),
-        name='post_categories'
+        name="post_categories",
     ),
     # Comments
     path(
