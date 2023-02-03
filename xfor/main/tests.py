@@ -8,13 +8,13 @@ from knox.models import AuthToken
 from django.contrib.auth.models import User
 from django.db.models import Count, OuterRef, Exists
 
-from .models import Post, PostCategory
+from .models import Post, PostCategory, Comment
 
 from django.urls import reverse
 from geo_api.helpers import build_url
 
-from .serializers import PostSerializer, PostCategorySerializer
-from .services import get_posts as get_posts_queryset
+from .serializers import PostSerializer, PostCategorySerializer, CommentSerializer
+from .services import get_posts as get_posts_queryset, get_post_comments
 
 
 class PostsTestCase(APITestCase):
@@ -714,3 +714,81 @@ class PostsTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, serializer_data)
+
+
+class CommentsTestCase(APITestCase):
+    """Comments test"""
+
+    def setUp(self) -> None:
+        self.email = "commentstestcase@gmail.com"
+        self.password = "asd123321"
+
+        self.user = User.objects.create_user(
+            "CommentsTestCase", self.email, self.password
+        )
+        self.token: str = AuthToken.objects.create(self.user)[-1]
+
+        self.post = Post(
+            profile=self.user.profile,
+            title="Post 1",
+            content="lorem ipsum",
+            author=self.user,
+        )
+
+        self.post.save()
+
+    def authenticate(self, token: str) -> None:
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+
+    def create_comments(self, page_size: int) -> None:
+        """Fill the Comments model"""
+
+        comment_objects = (
+            Comment(
+                post=self.post,
+                author=self.user,
+                body="lorem ipsum",
+                lft=0,
+                rght=0,
+                tree_id=0,
+                level=0,
+            )
+            for _ in range(page_size)
+        )
+
+        comments = Comment.objects.bulk_create(comment_objects)
+
+        return comments
+
+    def get_comments(self, page_size: int = api_settings.PAGE_SIZE):
+        """Create comments and return ready queryset"""
+
+        self.create_comments(page_size)
+
+        return get_post_comments(self.user, self.post.id)
+
+    def test_get_comments_not_authorized(self):
+        """Test getting comments not authorized"""
+
+        url = reverse("post_comments", kwargs={"pk": self.post.id})
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_get_comments(self):
+        """Test getting comments"""
+
+        url = reverse("post_comments", kwargs={"pk": self.post.id})
+
+        comments = self.get_comments()
+
+        self.authenticate(self.token)
+        response = self.client.get(url)
+
+        serializer_data = CommentSerializer(
+            instance=comments, many=True, context={"request": response.wsgi_request}
+        ).data
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get("results"), serializer_data)

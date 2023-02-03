@@ -11,6 +11,3 @@ class AuthenticationToken(PasswordResetTokenGenerator):
             + six.text_type(timestamp)
             + six.text_type(user.is_active)
         )
-
-
-authentication_token = AuthenticationToken()

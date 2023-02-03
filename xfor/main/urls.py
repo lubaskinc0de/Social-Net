@@ -32,6 +32,7 @@ urlpatterns = [
                 "get": "get_comments",
             }
         ),
+        name="post_comments",
     ),
     path(
         "categories/",

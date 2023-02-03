@@ -15,7 +15,7 @@ from knox.models import AuthToken
 from .services import activate_user, send_activation_email, create_authtoken
 from .permissions import IsAnonymous
 from .serializers import UserCreateSerializer, KnoxTokenSerializer, ActivationSerializer
-from .tokens import authentication_token
+from .tokens import AuthenticationToken
 
 
 class UserRegisterAPIView(generics.CreateAPIView):
@@ -61,7 +61,7 @@ class UserActivateAPIView(generics.GenericAPIView):
     """Endpoint for user activation (set user field is_active to True)"""
 
     serializer_class = ActivationSerializer
-    token_generator = authentication_token  # used in ActivationSerializer
+    token_generator = AuthenticationToken()  # used in ActivationSerializer
     permission_classes = (IsAnonymous,)
 
     def get(self, request, uid: str, token: str) -> Response:
@@ -96,7 +96,7 @@ class CheckTokenAPIView(APIView):
     """
     View to check is authentication token valid
 
-    * Requires token authentication.
+    Requires token authentication.
     """
 
     @extend_schema(request=None, responses=None)
