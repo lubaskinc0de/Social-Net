@@ -30,7 +30,7 @@ class TimezoneMiddleware:
                 logger.info('"%s" timezone: %s', str(request.method), str(tz))
 
             except UnknownTimeZoneError:
-                logger.warning("Unknown timezone error, timezone: %s", str(tz))
+                logger.warning("Unknown timezone error")
                 django_timezone.deactivate()
                 set_default_tz()
 

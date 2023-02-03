@@ -4,6 +4,7 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 
 import PostCommentsList from './PostCommentsList';
+import AddPostComment from './AddPostComment';
 
 import FeedInfiniteScroll from './FeedInfiniteScroll';
 
@@ -39,6 +40,7 @@ export default function PostComments() {
                     p: 1,
                 }}
             >
+                <AddPostComment></AddPostComment>
                 <PostCommentsList></PostCommentsList>
             </Paper>
             {!postComments.length ? null : (
