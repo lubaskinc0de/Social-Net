@@ -3,16 +3,16 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import { getTimeInfo } from '../../lib/feed';
+import { getTimeInfo } from '../../../lib/feed';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getCommentDescendantsWrapper } from '../../store/actions/commentsActions';
+import { getCommentDescendantsWrapper } from '../../../store/actions/commentsActions';
 
 import PostComment from './PostComment';
 import PostCommentRepliesSkeleton from './PostCommentRepliesSkeleton';
 
-import FeedInfiniteScroll from './FeedInfiniteScroll';
+import FeedInfiniteScroll from '../FeedInfiniteScroll';
 
 export default function PostCommentReplies({ replies, repliesCnt, commentId }) {
     const dispatch = useDispatch();

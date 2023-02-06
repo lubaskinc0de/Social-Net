@@ -49,7 +49,6 @@ urlpatterns = [
     # Apps
     path("", include("authentication.urls")),
     path("feed/", include("main.urls")),
-    path("api/", include("api.urls")),
     path("geo-api/", include("geo_api.urls")),
     path("peoples/", include("profiles.urls")),
     # Documentation

@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import PostCard from './card/PostCard';
+import PostCard from '../card/PostCard';
 
 export default function FeedSkeleton() {
     return (

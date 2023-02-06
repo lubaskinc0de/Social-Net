@@ -1,19 +1,19 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
 import Grid from '@mui/material/Grid';
-import PostCard from './card/PostCard';
+import PostCard from '../card/PostCard';
 import PostSkeleton from './PostSkeleton';
-import PostComments from './PostComments';
+import PostComments from '../post-comment/PostComments';
 
-import FeedContainer from './FeedContainer';
+import FeedContainer from '../FeedContainer';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
-import { getPost } from '../../store/actions/postsActions';
-import { getCommentsWrapper } from '../../store/actions/commentsActions';
-import { getTimeInfo } from '../../lib/feed';
+import { getPost } from '../../../store/actions/postsActions';
+import { getCommentsWrapper } from '../../../store/actions/commentsActions';
+import { getTimeInfo } from '../../../lib/feed';
 
 export default function Post() {
     const { postId } = useParams();

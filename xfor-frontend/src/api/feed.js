@@ -8,8 +8,8 @@ const baseUrl = process.env.REACT_APP_BACKEND_URL;
 export default class API {
     static postsEndpoint = baseUrl + '/feed/';
     static categoriesEndpoint = baseUrl + '/feed/categories/';
-    static postLikeEndpoint = baseUrl + '/api/add-like/';
-    static commentLikeEndpoint = baseUrl + '/api/add-like-comment/';
+    static postLikeEndpoint = baseUrl + '/feed/like/';
+    static commentLikeEndpoint = baseUrl + '/feed/comment/like/';
     static commentEndpoint = baseUrl + '/feed/comment';
 
     /**

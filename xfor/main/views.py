@@ -19,7 +19,7 @@ from .services import (
 from .filters import PostFilter, filters
 
 from .mixins import CacheTreeQuerysetMixin, IsAuthorPermissionsMixin
-from .models import Comment
+from .models import Comment, Post
 
 from .helpers.viewsets import CreateRetrieveUpdateDestroyViewSet
 
@@ -88,7 +88,7 @@ class PostViewSet(IsAuthorPermissionsMixin, CacheTreeQuerysetMixin, ModelViewSet
         return Response(serializer.data)
 
     @action(detail=True, methods=["get"])
-    def get_comments(self, request, pk: int = None):
+    def get_comments(self, request, pk: int = None) -> Response:
         """Get post comments"""
 
         comments = self.get_cached_queryset(get_post_comments(request.user, pk))
@@ -102,8 +102,26 @@ class PostViewSet(IsAuthorPermissionsMixin, CacheTreeQuerysetMixin, ModelViewSet
         serializer = self.get_serializer(comments, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=["put"])
+    def like_post(self, request) -> Response:
+        """Like the post"""
+
+        pk = request.data.get("post")
+
+        if not pk:
+            return Response(status=400)
+
+        post = get_object_or_404(Post, pk=pk)
+
+        is_like = post.like(request.user)
+
+        if is_like:
+            return Response({"action": "add"})
+
+        return Response({"action": "remove"})
+
     @action(detail=False, methods=["get"])
-    def get_categories(self, request):
+    def get_categories(self, request) -> Response:
         """Get categories"""
 
         categories = get_post_categories()
@@ -148,3 +166,21 @@ class CommentViewSet(IsAuthorPermissionsMixin, CreateRetrieveUpdateDestroyViewSe
 
         serializer = self.get_serializer(descendants, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["put"])
+    def like_comment(self, request) -> Response:
+        """Like the comment"""
+
+        pk = request.data.get("comment")
+
+        if not pk:
+            return Response(status=400)
+
+        comment = get_object_or_404(Comment, pk=pk)
+
+        is_like = comment.like(request.user)
+
+        if is_like:
+            return Response({"action": "add"})
+
+        return Response({"action": "remove"})

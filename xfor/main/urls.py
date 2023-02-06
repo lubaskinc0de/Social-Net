@@ -35,6 +35,15 @@ urlpatterns = [
         name="post_comments",
     ),
     path(
+        "like/",
+        PostViewSet.as_view(
+            {
+                "put": "like_post"
+            }
+        ),
+        name="like",
+    ),
+    path(
         "categories/",
         PostViewSet.as_view(
             {
@@ -69,5 +78,14 @@ urlpatterns = [
                 "get": "get_descendants",
             }
         ),
+    ),
+    path(
+        "comment/like/",
+        CommentViewSet.as_view(
+            {
+                "put": "like_comment"
+            }
+        ),
+        name="like_comment",
     ),
 ]

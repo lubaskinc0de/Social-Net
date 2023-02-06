@@ -9,7 +9,7 @@ import PostCommentActions from './PostCommentActions';
 import PostCommentReplies from './PostCommentReplies';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { commentLike } from '../../store/actions/commentsActions';
+import { commentLike } from '../../../store/actions/commentsActions';
 
 export default function PostComment({
     id,

@@ -1,10 +1,10 @@
-import Register from './components/authentication/Register/Register';
-import Login from './components/authentication/Login/Login';
-import Logout from './components/authentication/Logout/Logout';
-import Activation from './components/authentication/Activation/Activation';
+import Register from './components/authentication/register/Register';
+import Login from './components/authentication/login/Login';
+import Logout from './components/authentication/logout/Logout';
+import Activation from './components/authentication/activation/Activation';
 
 import Feed from './components/feed/Feed';
-import Post from './components/feed/Post';
+import Post from './components/feed/post/Post';
 
 import Page404 from './components/pages/Page404';
 
