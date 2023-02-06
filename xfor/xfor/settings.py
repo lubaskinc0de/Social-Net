@@ -66,7 +66,6 @@ INSTALLED_APPS = [
     "cities_light",
     "main.apps.MainConfig",
     "authentication.apps.AuthenticationConfig",
-    "api.apps.ApiConfig",
     "geo_api.apps.GeoApiConfig",
     "profiles.apps.ProfilesConfig",
     "corsheaders",

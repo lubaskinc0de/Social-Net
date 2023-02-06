@@ -17,7 +17,7 @@ from rest_framework.response import Response
 from rest_framework.test import APITestCase
 
 from .models import Profile
-from .tokens import authentication_token
+from .tokens import AuthenticationToken
 
 
 class AuthenticationTestCase(APITestCase):
@@ -174,7 +174,7 @@ class AuthenticationTestCase(APITestCase):
             },
         )
 
-        activation_token = authentication_token.make_token(user)
+        activation_token = AuthenticationToken().make_token(user)
         uid = encode_uid(user.id)
 
         response = self.activate_user(activation_token, uid)
@@ -247,7 +247,7 @@ class AuthenticationTestCase(APITestCase):
         inactive_user.is_active = False
         inactive_user.save()
 
-        token = authentication_token.make_token(inactive_user)
+        token = AuthenticationToken().make_token(inactive_user)
         uid = encode_uid(inactive_user.pk)
 
         response = self.activate_user(token, uid)
@@ -267,7 +267,7 @@ class AuthenticationTestCase(APITestCase):
         inactive_user.is_active = False
         inactive_user.save()
 
-        token = authentication_token.make_token(inactive_user)
+        token = AuthenticationToken().make_token(inactive_user)
         uid = encode_uid(inactive_user.pk)
 
         self.authenticate(self.token)

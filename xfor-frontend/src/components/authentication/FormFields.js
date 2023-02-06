@@ -1,6 +1,6 @@
 import React from 'react';
 import { handleEnter } from '../../lib/authentication';
-import Input from './FormComponents/FormInput';
+import Input from './form-components/FormInput';
 
 export default function FormFields(props) {
     const getValue = (element) => {

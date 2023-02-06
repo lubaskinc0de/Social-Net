@@ -110,7 +110,7 @@ class Post(models.Model):
 
         self.viewers.add(user)
 
-    def like(self, user: User) -> None:
+    def like(self, user: User) -> bool:
         """Like/dislike post, returns True if like false otherwise"""
 
         is_like = self.liked.filter(id=user.id).exists()
@@ -169,9 +169,11 @@ class Comment(MPTTModel):
 
     @property
     def replies_cnt(self):
+        """Count of comment replies"""
+
         return self.get_descendant_count()
 
-    def like(self, user: User) -> None:
+    def like(self, user: User) -> bool:
         """Like/dislike comment, returns True if like false otherwise"""
 
         is_like = self.liked.filter(id=user.id).exists()

@@ -2,15 +2,17 @@ import React, { useCallback } from 'react';
 
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+import Divider from '@mui/material/Divider';
 
 import PostCommentsList from './PostCommentsList';
+import AddPostComment from './AddPostComment';
 
-import FeedInfiniteScroll from './FeedInfiniteScroll';
+import FeedInfiniteScroll from '../FeedInfiniteScroll';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { getCommentsWrapper } from '../../store/actions/commentsActions';
+import { getCommentsWrapper } from '../../../store/actions/commentsActions';
 
-import './feed.css';
+import './comments.css';
 
 export default function PostComments() {
     const { postComments } = useSelector((state) => state.comments);
@@ -39,6 +41,8 @@ export default function PostComments() {
                     p: 1,
                 }}
             >
+                <AddPostComment></AddPostComment>
+                <Divider variant='fullwidth' sx={{mx: -1, mt: 1}}></Divider>
                 <PostCommentsList></PostCommentsList>
             </Paper>
             {!postComments.length ? null : (

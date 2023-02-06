@@ -5,7 +5,7 @@ import List from '@mui/material/List';
 import PostComment from './PostComment';
 import PostCommentsSkeleton from './PostCommentsSkeleton';
 
-import { getTimeInfo } from '../../lib/feed';
+import { getTimeInfo } from '../../../lib/feed';
 import { useSelector } from 'react-redux';
 
 export default function PostCommentsList() {
