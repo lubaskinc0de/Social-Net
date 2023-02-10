@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 
 import PostCommentsList from './PostCommentsList';
-import AddPostComment from './AddPostComment';
+import AddPostComment from './add-comment/AddPostComment';
 
 import FeedInfiniteScroll from '../FeedInfiniteScroll';
 
