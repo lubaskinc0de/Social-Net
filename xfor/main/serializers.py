@@ -103,7 +103,7 @@ class PostSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer)
 
 class CommentSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializer):
     is_user_liked_comment = serializers.BooleanField(read_only=True)
-    like_cnt = serializers.IntegerField(read_only=True)
+    like_cnt = serializers.IntegerField(read_only=True, default=0)
     replies_cnt = serializers.IntegerField(read_only=True)
     images = ImageSerializer(many=True, read_only=True, source="images_comment")
     author = CurrentAuthorField(default=serializers.CurrentUserDefault())
@@ -151,7 +151,7 @@ class CommentSerializer(ErrorMessagesSerializersMixin, serializers.ModelSerializ
         """
 
         if obj.level != 0 or self.context.get("show_replies") is False:
-            return
+            return []
 
         childrens = obj.get_children()[:2]
         descendants = self.get_grandchildren(childrens)

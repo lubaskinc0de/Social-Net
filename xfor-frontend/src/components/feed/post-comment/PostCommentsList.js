@@ -17,6 +17,7 @@ export default function PostCommentsList() {
         <List
             sx={{
                 width: '100%',
+                pb: 0,
                 mb: 0.5,
             }}
             className='comments'

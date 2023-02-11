@@ -121,7 +121,7 @@ class CommentAdmin(MPTTModelAdmin):
     list_select_related = ["parent", "author", "post"]
     autocomplete_fields = ["author", "post"]
 
-    def is_reply(self, obj: Comment) -> bool:
+    def is_reply(self, obj: Comment) -> str:
         if not obj.parent:
             return "Нет"
         else:

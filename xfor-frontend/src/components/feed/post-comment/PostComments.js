@@ -15,7 +15,9 @@ import { getCommentsWrapper } from '../../../store/actions/commentsActions';
 import './comments.css';
 
 export default function PostComments() {
-    const { postComments } = useSelector((state) => state.comments);
+    const { postComments, commentsLoading } = useSelector(
+        (state) => state.comments
+    );
     const { post } = useSelector((state) => state.posts);
 
     const dispatch = useDispatch();
@@ -42,8 +44,15 @@ export default function PostComments() {
                 }}
             >
                 <AddPostComment></AddPostComment>
-                <Divider variant='fullwidth' sx={{mx: -1, mt: 1}}></Divider>
-                <PostCommentsList></PostCommentsList>
+                {!postComments.length && !commentsLoading ? null : (
+                    <>
+                        <Divider
+                            variant='fullwidth'
+                            sx={{ mx: -1, mt: 1 }}
+                        ></Divider>
+                        <PostCommentsList></PostCommentsList>
+                    </>
+                )}
             </Paper>
             {!postComments.length ? null : (
                 <FeedInfiniteScroll

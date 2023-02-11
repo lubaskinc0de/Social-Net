@@ -4,8 +4,38 @@ import Box from '@mui/material/Box';
 
 import AddPostCommentAvatar from './AddPostCommentAvatar';
 import AddPostCommentBody from './AddPostCommentBody';
+import AddPostCommentButton from './AddPostCommentButton';
+
+import { useFormik } from 'formik';
+import { useSelector, useDispatch } from 'react-redux';
+import { addComment } from '../../../../store/actions/commentsActions';
+
+import * as Yup from 'yup';
 
 export default function AddPostComment() {
+    const { post } = useSelector((state) => state.posts);
+
+    const dispatch = useDispatch();
+
+    const validationSchema = Yup.object({
+        body: Yup.string().required('Вы не можете оставить пустой комментарий'),
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            body: '',
+        },
+        validationSchema,
+        onSubmit: (values) => {
+            dispatch(
+                addComment({
+                    post: post.id,
+                    body: values.body,
+                })
+            );
+        },
+    });
+
     return (
         <Box
             component='form'
@@ -15,10 +45,23 @@ export default function AddPostComment() {
             noValidate
             autoComplete='off'
             flexDirection='column'
+            onSubmit={formik.handleSubmit}
         >
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <AddPostCommentAvatar></AddPostCommentAvatar>
-                <AddPostCommentBody></AddPostCommentBody>
+                <AddPostCommentBody
+                    handleChange={formik.handleChange}
+                    value={formik.values.body}
+                    name='body'
+                    id='body'
+                    isError={formik.errors.body && formik.touched.body}
+                    helperText={
+                        formik.errors.body && formik.touched.body
+                            ? formik.errors.body
+                            : undefined
+                    }
+                ></AddPostCommentBody>
+                <AddPostCommentButton></AddPostCommentButton>
             </Box>
         </Box>
     );

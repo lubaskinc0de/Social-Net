@@ -1,31 +1,27 @@
 import React from 'react';
 
-import OutlinedInput from '@mui/material/OutlinedInput';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import SendIcon from '@mui/icons-material/Send';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
 
-export default function AddPostCommentBody() {
+export default function AddPostCommentBody({
+    handleChange,
+    value,
+    name,
+    id,
+    isError,
+    helperText,
+}) {
     return (
-        <FormControl variant='outlined' fullWidth>
-            <InputLabel htmlFor='comment-body-input'>
-                Что вы думаете об этом посте?
-            </InputLabel>
-            <OutlinedInput
-                id='comment-body-input'
-                label='Что вы думаете об этом посте?'
-                fullWidth
-                endAdornment={
-                    <InputAdornment position='end'>
-                        <IconButton edge='end'>
-                            <SendIcon></SendIcon>
-                        </IconButton>
-                    </InputAdornment>
-                }
-                multiline
-            />
-        </FormControl>
+        <TextField
+            id={id}
+            label='Что вы думаете об этом посте?'
+            fullWidth
+            value={value}
+            name={name}
+            onChange={handleChange}
+            multiline
+            error={isError}
+            helperText={helperText}
+            FormHelperTextProps={{ sx: { ml: 0 } }}
+        />
     );
 }

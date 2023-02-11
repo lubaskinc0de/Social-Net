@@ -3,6 +3,7 @@ import {
     commentLike,
     getComments,
     getCommentDescendants,
+    addComment,
 } from '../../actions/commentsActions';
 
 import { findComment, parsePageFromNextPage } from '../../../lib/feed';
@@ -16,6 +17,7 @@ const commentsSlice = createSlice({
         commentsLoading: null,
         descendantsPage: {},
         descendantsLoading: {},
+        addCommentLoading: null,
     },
     extraReducers: {
         // commentsLike
@@ -102,6 +104,20 @@ const commentsSlice = createSlice({
             const { commentId } = action.payload;
 
             delete state.descendantsLoading[commentId];
+        },
+
+        [addComment.pending](state) {
+            state.addCommentLoading = true;
+        },
+
+        [addComment.fulfilled](state, action) {
+            state.postComments.unshift(action.payload.comment);
+
+            state.addCommentLoading = false;
+        },
+
+        [addComment.rejected](state) {
+            state.addCommentLoading = false;
         },
     },
 });

@@ -119,8 +119,6 @@ export const getCommentDescendants = createAsyncThunk(
 
             const page = descendantsPage[commentId];
 
-            console.log('page: ', page);
-
             if (!page) {
                 return {
                     descendants: [],
@@ -139,8 +137,6 @@ export const getCommentDescendants = createAsyncThunk(
 
             const descendants = response.data.results;
             const nextPage = response.data.next;
-
-            console.log('nextPage: ', nextPage);
 
             return {
                 descendants,
@@ -169,7 +165,40 @@ export const getCommentDescendantsWrapper = createAsyncThunk(
         const { descendantsLoading } = getState().comments;
 
         if (!descendantsLoading.hasOwnProperty(commentId)) {
-            dispatch(getCommentDescendants(commentId))
+            dispatch(getCommentDescendants(commentId));
+        }
+    }
+);
+
+export const addComment = createAsyncThunk(
+    'comments/addComment',
+    async (data, { rejectWithValue, dispatch, getState }) => {
+        try {
+            const { user } = getState();
+
+            const config = {
+                headers: {
+                    Authorization: `Token ${user.token}`,
+                },
+            };
+
+            const response = await API.addComment(data, config)
+
+            const comment = response.data
+
+            return {
+                comment,
+            };
+        } catch (err) {
+            const APIErrors = parseAPIAxiosErrors(err);
+
+            dispatch(
+                setAPIErrors({
+                    APIErrors,
+                })
+            );
+
+            return rejectWithValue();
         }
     }
 );
