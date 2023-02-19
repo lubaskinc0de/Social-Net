@@ -81,8 +81,6 @@ const commentsSlice = createSlice({
 
             const page = parsePageFromNextPage(nextPage);
 
-            console.log('page in reducer: ', page);
-
             const comment = findComment(state.postComments, commentId);
 
             if (descendants.length) {
@@ -94,8 +92,6 @@ const commentsSlice = createSlice({
             }
 
             state.descendantsPage[commentId] = page;
-
-            console.log('descendants page: ', state.descendantsPage[commentId]);
 
             delete state.descendantsLoading[commentId];
         },
@@ -111,7 +107,15 @@ const commentsSlice = createSlice({
         },
 
         [addComment.fulfilled](state, action) {
-            state.postComments.unshift(action.payload.comment);
+            if (!action.payload.parent) {
+                state.postComments.unshift(action.payload.comment);
+            } else {
+                const rootComment = findComment(
+                    state.postComments,
+                    action.payload.parent
+                );
+                rootComment.replies.unshift(action.payload.comment);
+            }
 
             state.addCommentLoading = false;
         },

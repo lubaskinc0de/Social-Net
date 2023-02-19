@@ -188,6 +188,7 @@ export const addComment = createAsyncThunk(
 
             return {
                 comment,
+                parent: data.parent,
             };
         } catch (err) {
             const APIErrors = parseAPIAxiosErrors(err);

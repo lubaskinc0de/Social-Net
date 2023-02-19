@@ -43,7 +43,7 @@ export default function PostComments() {
                     p: 1,
                 }}
             >
-                <AddPostComment></AddPostComment>
+                <AddPostComment id='add-comment'></AddPostComment>
                 {!postComments.length && !commentsLoading ? null : (
                     <>
                         <Divider

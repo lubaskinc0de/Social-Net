@@ -12,7 +12,7 @@ import { addComment } from '../../../../store/actions/commentsActions';
 
 import * as Yup from 'yup';
 
-export default function AddPostComment() {
+export default function AddPostComment({id, parent=null}) {
     const { post } = useSelector((state) => state.posts);
 
     const dispatch = useDispatch();
@@ -31,6 +31,7 @@ export default function AddPostComment() {
                 addComment({
                     post: post.id,
                     body: values.body,
+                    parent,
                 })
             );
         },
@@ -53,7 +54,7 @@ export default function AddPostComment() {
                     handleChange={formik.handleChange}
                     value={formik.values.body}
                     name='body'
-                    id='body'
+                    id={id}
                     isError={formik.errors.body && formik.touched.body}
                     helperText={
                         formik.errors.body && formik.touched.body

@@ -12,6 +12,7 @@ export default function PostCommentActions({
     likesCount,
     isLiked,
     handleLikeClick,
+    handleReplyClick,
     isLikeDisabled,
 }) {
     return (
@@ -35,7 +36,7 @@ export default function PostCommentActions({
                     <Typography variant='body2'>{timesince}</Typography>
                 </Grid>
                 <Grid item>
-                    <Link underline='none' variant='body2'>
+                    <Link onClick={handleReplyClick} underline='none' variant='body2'>
                         Ответить
                     </Link>
                 </Grid>
