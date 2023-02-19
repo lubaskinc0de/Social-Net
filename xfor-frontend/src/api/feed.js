@@ -11,6 +11,7 @@ export default class API {
     static postLikeEndpoint = baseUrl + '/feed/like/';
     static commentLikeEndpoint = baseUrl + '/feed/comment/like/';
     static commentEndpoint = baseUrl + '/feed/comment';
+    static addCommentEndpoint = baseUrl + '/feed/comments/';
 
     /**
      * Get posts with GET-params
@@ -37,7 +38,10 @@ export default class API {
      * @returns {Promise<import('axios').AxiosResponse}
      */
     static getComments(postId, urlParameters, config) {
-        return axios.get(`${this.postsEndpoint}${postId}/comments?${urlParameters}`, config);
+        return axios.get(
+            `${this.postsEndpoint}${postId}/comments?${urlParameters}`,
+            config
+        );
     }
 
     /**
@@ -70,7 +74,26 @@ export default class API {
         return axios.get(`${this.postsEndpoint}${postId}/`, config);
     }
 
+    /**
+     * Get comment descendants
+     * @param {Number} commentId
+     * @param {Object} config
+     * @param {String} urlParameters
+     * @returns {Promise<import('axios').AxiosResponse}
+     */
     static getCommentDescendants(commentId, config, urlParameters) {
-        return axios.get(`${this.commentEndpoint}/${commentId}/descendants?${urlParameters}`, config);
+        return axios.get(
+            `${this.commentEndpoint}/${commentId}/descendants?${urlParameters}`,
+            config
+        );
+    }
+
+    /**
+     * Add new comment
+     * @param {Object} data
+     * @returns {Promise<import('axios').AxiosResponse}
+     */
+    static addComment(data, config) {
+        return axios.post(this.addCommentEndpoint, data, config);
     }
 }

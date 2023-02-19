@@ -3,6 +3,7 @@ import {
     commentLike,
     getComments,
     getCommentDescendants,
+    addComment,
 } from '../../actions/commentsActions';
 
 import { findComment, parsePageFromNextPage } from '../../../lib/feed';
@@ -16,6 +17,7 @@ const commentsSlice = createSlice({
         commentsLoading: null,
         descendantsPage: {},
         descendantsLoading: {},
+        addCommentLoading: null,
     },
     extraReducers: {
         // commentsLike
@@ -79,8 +81,6 @@ const commentsSlice = createSlice({
 
             const page = parsePageFromNextPage(nextPage);
 
-            console.log('page in reducer: ', page);
-
             const comment = findComment(state.postComments, commentId);
 
             if (descendants.length) {
@@ -93,8 +93,6 @@ const commentsSlice = createSlice({
 
             state.descendantsPage[commentId] = page;
 
-            console.log('descendants page: ', state.descendantsPage[commentId]);
-
             delete state.descendantsLoading[commentId];
         },
 
@@ -102,6 +100,28 @@ const commentsSlice = createSlice({
             const { commentId } = action.payload;
 
             delete state.descendantsLoading[commentId];
+        },
+
+        [addComment.pending](state) {
+            state.addCommentLoading = true;
+        },
+
+        [addComment.fulfilled](state, action) {
+            if (!action.payload.parent) {
+                state.postComments.unshift(action.payload.comment);
+            } else {
+                const rootComment = findComment(
+                    state.postComments,
+                    action.payload.parent
+                );
+                rootComment.replies.unshift(action.payload.comment);
+            }
+
+            state.addCommentLoading = false;
+        },
+
+        [addComment.rejected](state) {
+            state.addCommentLoading = false;
         },
     },
 });
