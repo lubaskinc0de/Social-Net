@@ -4,6 +4,7 @@ import NavBarIcon from './NavBarIcon';
 import NavBarMenu from './NavBarMenu';
 import NavBarUserIcon from './NavBarUserIcon';
 import NavBarSettingsToggler from './NavBarSettingsToggler';
+
 import { useSelector } from 'react-redux';
 import useSelectedTheme from '../../hooks/useSelectedTheme';
 

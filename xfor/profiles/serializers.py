@@ -1,7 +1,12 @@
+from datetime import datetime
+
 from authentication.models import Profile
-from rest_framework import serializers
 from django.contrib.auth.models import User
+
+from rest_framework import serializers
+
 from geo_api.serializers import CitySerializer
+from main.fields import DateTimeTimezoneField
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,6 +29,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     followers = FollowersSerializer(read_only=True, many=True)
     city = CitySerializer()
+    date_joined = serializers.SerializerMethodField(read_only=True)
+
+    def get_date_joined(self, obj: Profile) -> datetime:
+        field = DateTimeTimezoneField(read_only=True)
+        return field.to_representation(obj.user.date_joined)
 
     class Meta:
         model = Profile
@@ -36,4 +46,5 @@ class ProfileSerializer(serializers.ModelSerializer):
             "followers",
             "birthday",
             "city",
+            "date_joined",
         ]

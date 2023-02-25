@@ -17,7 +17,7 @@ export default function PostCard(props) {
         dispatch(postLike(props.id));
     };
 
-    const postUrl = `/feed/${props.id}`
+    const postUrl = `/feed/${props.id}`;
 
     return (
         <Card sx={{ maxWidth: props.maxWidth || 345, width: '100%' }}>

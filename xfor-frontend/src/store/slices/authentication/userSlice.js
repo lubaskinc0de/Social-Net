@@ -24,6 +24,7 @@ const initialState = {
         first_name: null,
         last_name: null,
         avatar: null,
+        bio: null,
     },
     token: userToken,
     loading: null,

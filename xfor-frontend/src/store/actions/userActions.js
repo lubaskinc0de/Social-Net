@@ -1,10 +1,9 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../api/authentication';
+
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { parseAPIAxiosErrors } from '../../lib';
-import {
-    setAPIErrors,
-    clearAPIErrors,
-} from '../slices/APIErrorsSlice';
+import { getAge } from '../../lib/peoples';
+import { setAPIErrors, clearAPIErrors } from '../slices/APIErrorsSlice';
 
 export const userRegister = createAsyncThunk(
     'user/register',
@@ -114,13 +113,29 @@ export const getUserDetails = createAsyncThunk(
             const response = await API.getUserDetails(config);
 
             const { first_name, last_name } = response.data.user;
-            const { avatar, id } = response.data;
+            const {
+                avatar,
+                bio,
+                id,
+                city: { alternate_names: city },
+                followers,
+                birthday,
+                date_joined,
+            } = response.data;
+
+            const dateJoined = date_joined.split("T")[0] // bad hardcoding
+            const age = getAge(birthday)
 
             return {
                 profile_id: id,
                 first_name,
                 last_name,
                 avatar,
+                bio,
+                city,
+                followers,
+                age,
+                dateJoined,
             };
         } catch (err) {
             const APIErrors = [

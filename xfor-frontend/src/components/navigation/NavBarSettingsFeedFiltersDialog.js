@@ -9,7 +9,7 @@ import NavBarSettingsFeedFiltersDialogCategory from './NavBarSettingsFeedFilters
 
 export default function NavBarSettingsFeedFiltersDialog(props) {
     return (
-        <FormDialog open={props.open} handleClose={props.handleClose}>
+        <FormDialog title='Фильтры постов' open={props.open} handleClose={props.handleClose}>
             <Stack spacing={1} sx={{ display: 'flex', flexWrap: 'wrap' }}>
                 <div>
                     <FormControl>

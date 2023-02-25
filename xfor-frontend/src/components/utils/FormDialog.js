@@ -9,7 +9,7 @@ export default function FormDialog(props) {
     return (
         <div>
             <Dialog open={props.open} onClose={props.handleClose}>
-                <DialogTitle>Фильтры ленты</DialogTitle>
+                <DialogTitle>{props.title}</DialogTitle>
                 <DialogContent>{props.children}</DialogContent>
                 <DialogActions>
                     <Button onClick={props.handleClose}>Закрыть</Button>

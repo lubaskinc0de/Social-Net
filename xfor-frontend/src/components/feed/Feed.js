@@ -1,9 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
 
 import FeedContainer from './FeedContainer';
+import FeedPostsContainer from './FeedPostsContainer';
+
 import FeedCards from './FeedCards';
 import FeedInfiniteScroll from './FeedInfiniteScroll';
-import FeedErrors from './FeedErrors';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { getPostsWrapper } from '../../store/actions/postsActions';
@@ -29,8 +30,9 @@ export default function Feed() {
     return (
         <>
             <FeedContainer>
-                <FeedErrors></FeedErrors>
-                <FeedCards></FeedCards>
+                <FeedPostsContainer>
+                    <FeedCards></FeedCards>
+                </FeedPostsContainer>
                 {rejected || !posts.length ? null : (
                     <FeedInfiniteScroll
                         onIntersecting={fetchPosts}

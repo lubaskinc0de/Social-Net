@@ -4,7 +4,9 @@ import Logout from './components/authentication/logout/Logout';
 import Activation from './components/authentication/activation/Activation';
 
 import Feed from './components/feed/Feed';
-import Post from './components/feed/post/Post';
+import PostPage from './components/feed/post/PostPage';
+
+import MyProfile from './components/peoples/MyProfile';
 
 import Page404 from './components/pages/Page404';
 
@@ -26,11 +28,7 @@ import reduxStore from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const routes = [
-    {
-        path: '/not-found/',
-        component: <Page404></Page404>,
-    },
+const authenticationRoutes = [
     {
         path: '/',
         component: <Register></Register>,
@@ -53,6 +51,9 @@ const routes = [
         component: <Activation></Activation>,
         protection: <AnonymousProtectedRoute></AnonymousProtectedRoute>,
     },
+];
+
+const feedRoutes = [
     {
         path: '/feed/',
         component: <Feed></Feed>,
@@ -62,11 +63,31 @@ const routes = [
     },
     {
         path: '/feed/:postId/',
-        component: <Post></Post>,
+        component: <PostPage></PostPage>,
         protection: (
             <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
         ),
     },
+];
+
+const peopleRoutes = [
+    {
+        path: '/peoples/me/',
+        component: <MyProfile></MyProfile>,
+        protection: (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
+    },
+];
+
+const routes = [
+    {
+        path: '/not-found/',
+        component: <Page404></Page404>,
+    },
+    ...authenticationRoutes,
+    ...feedRoutes,
+    ...peopleRoutes,
 ];
 
 export default function App() {

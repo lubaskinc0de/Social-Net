@@ -1,11 +1,13 @@
 import React from 'react';
+
 import { showComponent } from '../../lib';
 import { shiftAPIErrors } from '../../store/slices/APIErrorsSlice';
 import { useSelector, useDispatch } from 'react-redux';
+
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 
-export default function FeedErrors() {
+export default function Errors() {
     const APIErrors = useSelector((state) => state.APIErrors.APIErrors);
     const dispatch = useDispatch();
 
