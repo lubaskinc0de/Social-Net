@@ -15,8 +15,9 @@ class ProfileAPIView(ListAPIView):
 
 class ProfileDetailsAPIView(RetrieveAPIView):
     serializer_class = ProfileSerializer
+    queryset = get_profiles()
 
     def get_object(self):
-        obj = self.request.user.profile
+        obj = self.get_queryset().get(id=self.request.user.profile.id)
         self.check_object_permissions(self.request, obj)
         return obj

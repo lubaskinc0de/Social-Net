@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Profile from './profile/Profile';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { getUserPosts } from '../../store/actions/userActions';
 
 export default function MyProfile() {
     const {
@@ -11,11 +13,24 @@ export default function MyProfile() {
         bio,
         avatar,
         city,
-        followers,
+        followersCount,
         age,
         dateJoined,
     } = useSelector((state) => state.user.userInfo);
     const { loading } = useSelector((state) => state.user);
+
+    const {
+        posts,
+        postsLoading,
+        userInfo: { userId },
+    } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (userId) {
+            dispatch(getUserPosts());
+        }
+    }, [dispatch, userId]);
 
     return (
         <Profile
@@ -25,9 +40,11 @@ export default function MyProfile() {
             src={avatar}
             loading={loading}
             city={city}
-            followersCount={followers ? followers.length : 0}
+            followersCount={followersCount}
             yearsOld={age}
             dateJoined={dateJoined}
+            posts={posts}
+            postsLoading={!userId ? true : postsLoading}
         ></Profile>
     );
 }

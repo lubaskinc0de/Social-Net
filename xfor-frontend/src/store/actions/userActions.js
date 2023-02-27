@@ -1,4 +1,5 @@
 import API from '../../api/authentication';
+import PostsAPI from '../../api/feed';
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { parseAPIAxiosErrors } from '../../lib';
@@ -112,28 +113,29 @@ export const getUserDetails = createAsyncThunk(
 
             const response = await API.getUserDetails(config);
 
-            const { first_name, last_name } = response.data.user;
+            const { first_name, last_name, id: userId } = response.data.user;
             const {
                 avatar,
                 bio,
                 id,
                 city: { alternate_names: city },
-                followers,
+                followers_count: followersCount,
                 birthday,
                 date_joined,
             } = response.data;
 
-            const dateJoined = date_joined.split("T")[0] // bad hardcoding
-            const age = getAge(birthday)
+            const dateJoined = date_joined.split('T')[0]; // bad hardcoding
+            const age = getAge(birthday);
 
             return {
+                userId,
                 profile_id: id,
                 first_name,
                 last_name,
                 avatar,
                 bio,
                 city,
-                followers,
+                followersCount,
                 age,
                 dateJoined,
             };
@@ -201,6 +203,40 @@ export const getCities = createAsyncThunk(
             return rejectWithValue({
                 APIErrors,
             });
+        }
+    }
+);
+
+export const getUserPosts = createAsyncThunk(
+    'user/getUserPosts',
+    async (_, { rejectWithValue, dispatch, getState }) => {
+        try {
+            const { user } = getState();
+
+            const config = {
+                headers: {
+                    Authorization: `Token ${user.token}`,
+                },
+            };
+
+            const urlParameters = `author=${user.userInfo.userId}`;
+
+            const response = await PostsAPI.getPosts(urlParameters, config);
+            const posts = response.data.results;
+
+            return {
+                posts,
+            };
+        } catch (err) {
+            const APIErrors = parseAPIAxiosErrors(err);
+
+            dispatch(
+                setAPIErrors({
+                    APIErrors,
+                })
+            );
+
+            return rejectWithValue();
         }
     }
 );

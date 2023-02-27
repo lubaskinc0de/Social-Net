@@ -24,7 +24,7 @@ def get_posts(user: User) -> list[Post]:
             ),  # Thx to Nikolay Cherniy
             is_user_liked_post=Exists(user.liked_posts.filter(id=OuterRef("id"))),
         )
-        .select_related("author__profile", "category")
+        .select_related("author__profile", "author", "category")
         .prefetch_related("images")
         .order_by("-created_at")
     )

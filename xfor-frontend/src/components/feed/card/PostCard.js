@@ -20,7 +20,7 @@ export default function PostCard(props) {
     const postUrl = `/feed/${props.id}`;
 
     return (
-        <Card sx={{ maxWidth: props.maxWidth || 345, width: '100%' }}>
+        <Card sx={{ maxWidth: props.maxWidth || 500, width: '100%' }}>
             {props.loading ? (
                 <PostCardSkeleton></PostCardSkeleton>
             ) : (

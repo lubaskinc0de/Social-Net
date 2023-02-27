@@ -8,6 +8,7 @@ import {
     getUserDetails,
     getCountries,
     getCities,
+    getUserPosts,
 } from '../../actions/userActions';
 
 import {
@@ -25,6 +26,11 @@ const initialState = {
         last_name: null,
         avatar: null,
         bio: null,
+        city: null,
+        followersCount: null,
+        age: null,
+        dateJoined: null,
+        userId: null,
     },
     token: userToken,
     loading: null,
@@ -33,6 +39,8 @@ const initialState = {
     countries: [],
     cities: [],
     rejected: null,
+    posts: [],
+    postsLoading: null,
 };
 
 const userSlice = createSlice({
@@ -189,6 +197,21 @@ const userSlice = createSlice({
 
         [getCities.rejected](state) {
             state.loading = false;
+        },
+
+        [getUserPosts.pending](state) {
+            state.postsLoading = true;
+        },
+
+        [getUserPosts.fulfilled](state, action) {
+            const { posts } = action.payload;
+
+            state.posts = posts;
+            state.postsLoading = false;
+        },
+
+        [getUserPosts.rejected](state) {
+            state.postsLoading = false;
         },
     },
 });

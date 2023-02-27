@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 from .serializers import ProfileSerializer
+from .services import get_profiles
 
 from geo_api.models import Country, City
 from authentication.models import Profile
@@ -117,7 +118,7 @@ class ProfilesTestCase(APITestCase):
         self.authenticate(self.token)
 
         self.create_profiles()
-        profiles = Profile.objects.all()
+        profiles = get_profiles()
 
         response = self.client.get(url)
 
@@ -131,7 +132,7 @@ class ProfilesTestCase(APITestCase):
         """Test getting profile"""
 
         self.create_profiles()
-        profile = Profile.objects.last()
+        profile = get_profiles().last()
 
         url = reverse("profile", kwargs={"pk": profile.id})
         self.authenticate(self.token)

@@ -44,7 +44,9 @@ export function parseAPIAxiosErrors(err, recursionDepth = 10) {
         return ['Что то пошло не так, мы уже разбираемся с этим.'];
     }
 
-    console.error(`ERROR! ERROR! ${err}`)
+    console.error(
+        `Произошла ошибка!\n----------------------------------\n Ошибка:\n ${err}`
+    );
     return ['Ошибка! Программист что то натворил, мы уже разбираемся с этим.'];
 }
 

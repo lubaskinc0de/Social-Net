@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 
 import ProfileHeader from './profile-header/ProfileHeader';
 import ProfileStats from './profile-stats/ProfileStats';
+import ProfileFeed from './profile-feed/ProfileFeed';
 
 export default function Profile({
     alt,
@@ -20,6 +21,8 @@ export default function Profile({
     city,
     yearsOld,
     dateJoined,
+    posts,
+    postsLoading,
 }) {
     return (
         <AppContainer>
@@ -50,6 +53,10 @@ export default function Profile({
                         ></ProfileStats>
                     </Stack>
                 </Paper>
+                <ProfileFeed
+                    posts={posts}
+                    postsLoading={postsLoading}
+                ></ProfileFeed>
             </Container>
         </AppContainer>
     );

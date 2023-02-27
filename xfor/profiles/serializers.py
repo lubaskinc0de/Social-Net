@@ -14,20 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "groups"]
-
-
-class FollowersSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Profile
-        fields = ["user", "avatar"]
+        fields = ["id", "first_name", "last_name", "groups"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    followers = FollowersSerializer(read_only=True, many=True)
+    followers_count = serializers.IntegerField(read_only=True)
     city = CitySerializer()
     date_joined = serializers.SerializerMethodField(read_only=True)
 
@@ -43,7 +35,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "avatar",
             "created_at",
             "bio",
-            "followers",
+            "followers_count",
             "birthday",
             "city",
             "date_joined",
