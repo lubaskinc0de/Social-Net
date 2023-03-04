@@ -1,8 +1,10 @@
 from django_filters import rest_framework as filters
+from django.forms import CheckboxInput, Select, NumberInput
+
 from .models import Post
-from django.forms import CheckboxInput, Select
 from django.db.models import Count
 from django.db.models import Exists, OuterRef
+
 from typing import TypeVar
 
 
@@ -14,11 +16,18 @@ class PostFilter(filters.FilterSet):
         ("-created_at", "Сначала новые"),
     )
 
+    author = filters.NumberFilter(
+        method="filter_by_author",
+        distinct=True,
+        widget=NumberInput(),
+        label="Автор",
+    )
+
     is_interesting = filters.BooleanFilter(
         method="filter_interesting",
         distinct=True,
         widget=CheckboxInput(
-            attrs={"class": "filter", "id": "radio1", "checked": False}
+            attrs={"checked": False}
         ),
         label="Интересные",
     )
@@ -27,7 +36,7 @@ class PostFilter(filters.FilterSet):
         method="filter_popular",
         distinct=True,
         widget=CheckboxInput(
-            attrs={"class": "filter", "id": "radio2", "checked": False}
+            attrs={"checked": False}
         ),
         label="Популярные",
     )
@@ -57,8 +66,13 @@ class PostFilter(filters.FilterSet):
         """Will return a QuerySet annotated with liked_cnt"""
 
         return queryset.annotate(liked_cnt=Count("liked"))
+    
+    def filter_author(self, queryset: T, author_id: int) -> T:
+        """Will return a QuerySet filtered by author id"""
 
-    def ordering_filter(self, queryset: T, name: str, value: str) -> T:
+        return queryset.filter(author_id=author_id)
+
+    def ordering_filter(self, queryset: T, _, value: str) -> T:
         """Order by created_at"""
 
         if self.data.get("is_interesting"):
@@ -71,7 +85,7 @@ class PostFilter(filters.FilterSet):
 
         return queryset.order_by(value)
 
-    def filter_interesting(self, queryset: T, name: str, value: bool) -> T:
+    def filter_interesting(self, queryset: T, _, value: bool) -> T:
         """Filter by user.profile.following posts"""
 
         if not value:
@@ -81,7 +95,7 @@ class PostFilter(filters.FilterSet):
             "-is_interesting", "-created_at"
         )  # thx to Dan Tyan (this is fix bug with paginate_by)
 
-    def filter_popular(self, queryset, name: str, value: bool):
+    def filter_popular(self, queryset: T, _, value: bool) -> T:
         """Order by likes count"""
 
         if not value:
@@ -90,3 +104,8 @@ class PostFilter(filters.FilterSet):
         return self.annotate_by_liked_cnt(queryset).order_by(
             "-liked_cnt", "-created_at"
         )
+    
+    def filter_by_author(self, queryset: T, _, value: int) -> T:
+        """Filter by author"""
+
+        return self.filter_author(queryset, value)
