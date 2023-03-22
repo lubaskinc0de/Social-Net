@@ -106,7 +106,6 @@ const userSlice = createSlice({
         [userLogin.fulfilled](state, action) {
             state.loading = false;
             state.token = action.payload.token;
-            state.userInfo = action.payload.userInfo;
             setToLocalStorage('userToken', action.payload.token);
         },
 
