@@ -2,11 +2,15 @@ import React, { useEffect } from 'react';
 
 import Profile from './profile/Profile';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { getUserPosts } from '../../store/actions/userActions';
+import { getPeople, getPeoplePosts } from '../../store/actions/peoplesActions';
 
-export default function MyProfile() {
+export default function People() {
+    const { profileId } = useParams();
+    const dispatch = useDispatch();
+
     const {
         first_name,
         last_name,
@@ -16,19 +20,22 @@ export default function MyProfile() {
         followersCount,
         age,
         dateJoined,
-    } = useSelector((state) => state.user.userInfo);
-    const { loading } = useSelector((state) => state.user);
+    } = useSelector((state) => state.peoples.peopleInfo);
+    const { loading } = useSelector((state) => state.peoples);
 
     const {
         posts,
         postsLoading,
-        userInfo: { userId },
-    } = useSelector((state) => state.user);
-    const dispatch = useDispatch();
+        peopleInfo: { userId },
+    } = useSelector((state) => state.peoples);
+
+    useEffect(() => {
+        dispatch(getPeople(profileId));
+    }, [dispatch, profileId]);
 
     useEffect(() => {
         if (userId) {
-            dispatch(getUserPosts());
+            dispatch(getPeoplePosts());
         }
     }, [dispatch, userId]);
 
@@ -45,7 +52,7 @@ export default function MyProfile() {
             dateJoined={dateJoined}
             posts={posts}
             postsLoading={!userId ? true : postsLoading}
-            feedTitle='Ваша стена'
+            feedTitle='Стена'
         ></Profile>
     );
 }

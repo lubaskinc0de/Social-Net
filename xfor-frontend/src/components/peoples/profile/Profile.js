@@ -23,6 +23,7 @@ export default function Profile({
     dateJoined,
     posts,
     postsLoading,
+    feedTitle,
 }) {
     return (
         <AppContainer>
@@ -56,6 +57,7 @@ export default function Profile({
                 <ProfileFeed
                     posts={posts}
                     postsLoading={postsLoading}
+                    feedTitle={feedTitle}
                 ></ProfileFeed>
             </Container>
         </AppContainer>

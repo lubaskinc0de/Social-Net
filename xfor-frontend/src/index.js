@@ -7,6 +7,7 @@ import Feed from './components/feed/Feed';
 import PostPage from './components/feed/post/PostPage';
 
 import MyProfile from './components/peoples/MyProfile';
+import People from './components/peoples/People';
 
 import Page404 from './components/pages/Page404';
 
@@ -74,6 +75,13 @@ const peopleRoutes = [
     {
         path: '/peoples/me/',
         component: <MyProfile></MyProfile>,
+        protection: (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
+    },
+    {
+        path: '/peoples/:profileId/',
+        component: <People></People>,
         protection: (
             <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
         ),

@@ -13,6 +13,7 @@ export default class API {
     static countriesEndpoint = baseUrl + '/geo-api/countries/';
     static citiesEndpoint = baseUrl + '/geo-api/cities/?country=';
     static getUserDetailsEndpoint = baseUrl + '/peoples/me/';
+    static getUserProfileEndpoint = baseUrl + '/peoples/'
     static checkTokenEndpoint = baseUrl + '/check-token/';
 
     /**
@@ -81,6 +82,15 @@ export default class API {
      */
     static getUserDetails(config) {
         return axios.get(this.getUserDetailsEndpoint, config);
+    }
+
+    /**
+     * Get user profile
+     * @param {Object} config
+     * @param {Number} profileId
+     */
+    static getUserProfile(config, profileId) {
+        return axios.get(`${this.getUserProfileEndpoint}${profileId}/`)
     }
 
     /**
